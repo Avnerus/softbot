@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
+        <link type="text/css" href="css/softbot.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+        <title>Softbot</title>
+    </head>
+    <body>
+        <script src="lib/dat.gui.min.js"></script>
+        <script src="lib/jquery-2.2.4.min.js"></script>
+        <script src="lib/socket.io-1.4.5.js"></script>
+        <script src="lib/bootstrap.min.js"></script>
+
+        <script src="bundle.js"></script>
+        <div id="game">
+            <div class="button-container">
+                <a href="#" id="key_65" target="_self">A</a>
+                <a href="#" id="key_83" target="_self">S</a>
+                <a href="#" id="key_68" target="_self">D</a>
+                <a href="#" id="key_70" target="_self">F</a>
+            </div>
+        </div>
+        <div id="splash-container" class="splash">
+            <div id="loading-container" class="splash-container" style="display:none;">
+                <div id="loading-image">
+                    <img src="assets/splash/loading.gif" width="400px"></img>
+                </div>
+            </div>
+            <div id="start-container" class="splash-container" style="display:none">
+                <a target="_self" href="#" id="start-button">
+                    <img width="200px" src="assets/splash/start.png"></img>
+                </a>
+            </div>
+        </div>
+    </body>
+</html>
