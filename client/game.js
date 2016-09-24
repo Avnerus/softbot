@@ -23,6 +23,7 @@ export default class  {
                 element.style["background-color"] = "white";
                 element.style.color = "black";
             }
+
             return false;
         }, false);
 
@@ -32,6 +33,8 @@ export default class  {
             if (element) {
                 element.style["background-color"] = "black";
                 element.style.color = "white";
+
+                this.socketController.emit("key-command", event.keyCode);
             }
             return false;
         }, false);
