@@ -59,3 +59,14 @@ body {
 #loading-image {
     margin: auto;
 }
+#avatar {
+    height: 50%;
+    background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#interface {
+    height: 50%;
+    background-color: grey;
+}
