@@ -12,9 +12,14 @@ export default class RTCController {
             remoteVideosEl: 'client-remote-videos',
             // immediately ask for camera access
             autoRequestMedia: true,
-            url: document.URL
+            url: document.URL,
+            media: {
+                audio: 0,
+                video: 1 
+            }
         })
         webrtc.on('readyToCall', function () {
+            console.log("Ready to call!");
             // you can name it anything
             webrtc.joinRoom('softbot');
         });

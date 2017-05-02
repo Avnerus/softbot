@@ -13,7 +13,11 @@ export default class Control {
             remoteVideosEl: 'control-remote-videos',
             // immediately ask for camera access
             autoRequestMedia: true,
-            url: document.location.protocol + "//" + document.location.host
+            url: document.location.protocol + "//" + document.location.host,
+            media : {
+                audio: false,
+                video: false
+            }
         })
         webrtc.on('readyToCall', function () {
             // you can name it anything

@@ -134,9 +134,7 @@ export default class Signaling {
         var result = {
             clients: {}
         };
-        console.log("Adapter",adapter);
         Object.keys(clients).forEach(function (id) {
-            console.log("Checking ID", id);
             result.clients[id] = adapter.nsp.connected[id].resources;
         });
         return result;
