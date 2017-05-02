@@ -1,5 +1,6 @@
 import EventEmitter from 'events'
 import SocketController from './socket-controller'
+import RTCController from './rtc-controller'
 
 export default class  {
     constructor(config) {
@@ -15,6 +16,9 @@ export default class  {
 
         this.socketController = new SocketController();
         this.socketController.init();
+
+        this.rtcController = new RTCController();
+        this.rtcController.init();
 
         document.addEventListener('keydown', (event) => {
             // 87, 65, 83, 68

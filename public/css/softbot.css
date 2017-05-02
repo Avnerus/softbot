@@ -70,3 +70,10 @@ body {
     height: 50%;
     background-color: grey;
 }
+
+#client-local-video  {
+    display: none;
+}
+#client-remote-videos video {
+    display: none;
+}

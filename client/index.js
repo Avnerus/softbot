@@ -1,5 +1,6 @@
 var Game = require('./game').default;
 var config = require('./config').default;
+global.Control = require('./control').default;
 var Stats = require('stats.js');
 
 var game = new Game(config);
@@ -15,8 +16,8 @@ var el = document.documentElement;
 var startTime = null;
 
 window.onload = function() {
+    /*
     document.getElementById('start-button').addEventListener('click',function(event) {
-        /*
            if (!Modernizr.touchevents && cdivinonfig = require('./config')nfig.controls == "locked" && lock.available()) {
             
             var pointer = lock(document.getElementById('game'));
@@ -29,7 +30,7 @@ window.onload = function() {
                 });
 
                 pointer.request(); 
-        }*/
+        }
 
         
         if (0 && fullscreen.available()) {
@@ -53,7 +54,7 @@ window.onload = function() {
         }
 
         //start(); 
-    });
+    }); */
     game.load(function() {
         /*
         document.getElementById('start-container').style.display = "flex";
@@ -63,11 +64,12 @@ window.onload = function() {
 }
 
 function start() {
+    /*
     document.getElementById('splash-container').style.display = "none";
     document.getElementById('game').appendChild(stats.dom);
-    game.start();
     window.addEventListener('resize', resize, false);
-    window.addEventListener('vrdisplaypresentchange', resize, true);
+    window.addEventListener('vrdisplaypresentchange', resize, true); */
+    game.start();
     game.resize();
     stats.begin();
     requestAnimationFrame(animate);

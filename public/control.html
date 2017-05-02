@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
+        <link type="text/css" href="css/softbot.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+        <title>Softbot Controlt</title>
+    </head>
+    <body>
+        <script src="lib/dat.gui.min.js"></script>
+        <script src="lib/jquery-2.2.4.min.js"></script>
+        <script src="lib/socket.io-1.4.5.js"></script>
+        <script src="lib/bootstrap.min.js"></script>
+
+        <script src="bundle.js"></script>
+        <div id="game">
+            <video id="control-local-video"></video>
+            <div id="control-remote-videos"></div>
+        </div>
+        <script>
+        console.log("Softbot control");
+        var control = new Control();
+        window.onload = function() {
+            console.log("Loading...");
+            control.init();
+        }
+        </script>
+    </body>
+</html>

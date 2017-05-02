@@ -3,7 +3,8 @@ export default class SocketController {
         console.log("Socket controller constructed!")
     }
     init() {
-        this.socket = io('http://192.168.1.15:3000');
+        let host = document.location.host;
+        this.socket = io(host);
     }
     emit(message, args) {
         console.log("Sending message ", message);
