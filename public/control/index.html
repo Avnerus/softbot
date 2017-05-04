@@ -14,19 +14,23 @@
         <script src="lib/jquery-2.2.4.min.js"></script>
         <script src="lib/socket.io-1.4.5.js"></script>
         <script src="lib/bootstrap.min.js"></script>
+        <script src="lib/adapter.min.js"></script>
+        <script src="lib/janus.js"></script>
 
         <script src="bundle.js"></script>
         <div id="game">
-            <video id="control-local-video"></video>
-            <div id="control-remote-videos"></div>
+            <video class="rounded centered" id="waitingvideo" width=1280 height=720 autoplay />
         </div>
         <script>
-        console.log("Softbot control");
-        var control = new Control();
-        window.onload = function() {
-            console.log("Loading...");
-            control.init();
-        }
+/*
+        Janus.init({debug: "all", callback: function() {
+			if(!Janus.isWebrtcSupported()) {
+                console.log("No WebRTC support... ");
+                console.log(window.RTCPeerConnection);
+                console.log(navigator.getUserMedia);
+				return;
+            }
+            }});*/
         </script>
     </body>
 </html>

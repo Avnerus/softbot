@@ -1,6 +1,5 @@
-var Game = require('./game').default;
-var config = require('./config').default;
-global.Control = require('./control').default;
+var Game = require('./avatar/game').default;
+var config = require('./avatar/config').default;
 var Stats = require('stats.js');
 
 var game = new Game(config);
