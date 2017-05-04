@@ -10,32 +10,41 @@ var gutil = require('gulp-util');
 var assign = require('lodash.assign');
 var babelify = require("babelify");
 var nodemon = require('gulp-nodemon');
+var transform = require('vinyl-transform');
+var eventStream = require('event-stream');
 
-// add custom browserify options here
-var customOpts = {
-  entries: ['./client/index.js'],
-  transform: [babelify.configure({presets: ["es2015"]})],
-  debug: true
-};
-var opts = assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts)); 
+var entries = ['./client/avatar.js', './client/control.js'];
 
-// add transformations here
-// i.e. b.transform(coffeeify);
+gulp.task('client', function () {
+    var streams = entries.map(function(fileName) {
+        var bundler = watchify(browserify(fileName,
+            {debug: true})
+          ).transform(babelify.configure({
+            presets: ['es2015']
+          }));
 
-gulp.task('client', bundle); 
-b.on('update', bundle); // on any dep update, runs the bundler
-b.on('log', gutil.log); // output build logs to terminal
+        var watchfn = getWatchifyHandler(bundler, fileName);
 
-function bundle() {
-  return b.bundle()
-    // log errors if they happen
+        bundler.on('update', watchfn);
+        bundler.on('log', gutil.log); // watchify doesn't log by itself
+
+        return watchfn(); // run the actual build for the first time
+    });
+    return eventStream.merge(streams)
+});
+
+function getWatchifyHandler(bundler, fileName) {
+  return function() {
+    gutil.log('Begin build for', fileName);
+    var moduleName = /\/\w+\/(\w+)\.js/g.exec(fileName)[1];
+
+    return bundler.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source('bundle.js'))
+    .pipe(source(moduleName + '/bundle.js'))
     .pipe(buffer())
     .pipe(gulp.dest('./public'));
+  }
 }
-
 
 gulp.task('server', ['client'], function (cb) {
   return nodemon({

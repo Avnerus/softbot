@@ -1,4 +1,4 @@
-import SimpleWebRTC from 'simplewebrtc'
+//import SimpleWebRTC from 'simplewebrtc'
 
 export default class Control {
     constructor() {
@@ -6,6 +6,7 @@ export default class Control {
     }
     init() {
         console.log("Conrol init ", document.host)
+        /*
         let webrtc = new SimpleWebRTC({
             // the id/element dom element that will hold "our" video
             localVideoEl: 'control-local-video',
@@ -23,6 +24,6 @@ export default class Control {
             // you can name it anything
             console.log("Control joining room softbot")
             webrtc.joinRoom('softbot');
-        });
+            });*/
     }
 }
