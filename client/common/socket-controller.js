@@ -1,3 +1,4 @@
+// For real time communication
 import WebSocket from 'reconnecting-websocket'
 
 export default class SocketController {

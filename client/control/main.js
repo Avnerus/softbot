@@ -1,8 +1,10 @@
 import Streamer from './streamer'
 import Body from './body'
 import Camera from './camera'
+import Speech from './speech'
 import JanusConnection from './janus-connection'
 import SocketController from '../common/socket-controller'
+import SocketMessenger from '../common/socket-messenger'
 import Events from 'events'
 
 export default class Main {
@@ -18,6 +20,9 @@ export default class Main {
         this.socketController = new SocketController("ws://192.168.8.232:9540/ws");
         this.socketController.init();
 
+        this.socketMessenger = new SocketMessenger();
+        this.socketMessenger.init();
+
         this.streamer = new Streamer();
         this.streamer.init();
 
@@ -26,6 +31,9 @@ export default class Main {
 
         this.camera = new Camera(this.socketController);
         this.camera.init();
+
+        this.speech = new Speech(this.SocketMessenger, $("#speech-form"));
+        this.speech.init();
 
         this.janusConnection = new JanusConnection('http://192.168.8.232:8088/janus');
         this.janusConnection.init();
