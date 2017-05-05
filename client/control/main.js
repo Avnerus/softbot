@@ -20,7 +20,7 @@ export default class Main {
         this.socketController = new SocketController("ws://192.168.8.232:9540/ws");
         this.socketController.init();
 
-        this.socketMessenger = new SocketMessenger();
+        this.socketMessenger = new SocketMessenger('registerControl');
         this.socketMessenger.init();
 
         this.streamer = new Streamer();
@@ -32,7 +32,7 @@ export default class Main {
         this.camera = new Camera(this.socketController);
         this.camera.init();
 
-        this.speech = new Speech(this.SocketMessenger, $("#speech-form"));
+        this.speech = new Speech(this.socketMessenger, $("#speech-form"));
         this.speech.init();
 
         this.janusConnection = new JanusConnection('http://192.168.8.232:8088/janus');

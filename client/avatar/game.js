@@ -1,5 +1,6 @@
 import EventEmitter from 'events'
-import SocketController from '../common/socket-controller'
+import SocketMessenger from '../common/socket-messenger'
+import Voice from './voice';
 
 export default class  {
     constructor(config) {
@@ -13,43 +14,17 @@ export default class  {
         global.events = this.emitter;
 
 
-        this.socketController = new SocketController();
-        this.socketController.init();
+        this.socketMessenger = new SocketMessenger('registerAvatar');
+        this.socketMessenger.init();
+
+        this.voice = new Voice(this.socketMessenger, $('#text-output'));
+        this.voice.init();
+
 
         /*
         this.rtcController = new RTCController();
         this.rtcController.init();*/
-
-        document.addEventListener('keydown', (event) => {
-            // 87, 65, 83, 68
-            let element = document.getElementById('key_' + event.keyCode);
-            if (element) {
-                element.style["background-color"] = "white";
-                element.style.color = "black";
-            }
-
-            return false;
-        }, false);
-
-        document.addEventListener('keyup', (event) => {
-            // 87, 65, 83, 68
-            let element = document.getElementById('key_' + event.keyCode);
-            if (element) {
-                element.style["background-color"] = "black";
-                element.style.color = "white";
-
-                this.socketController.emit("key-command", event.keyCode);
-            }
-            return false;
-        }, false);
     }
-
-    load(onLoad) {
-
-        onLoad();
-
-    }
-
 
     start() {
         this.resize();

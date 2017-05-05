@@ -2,6 +2,7 @@ import express from 'express';
 import socketio from 'socket.io'
 import _ from 'lodash';
 import fs from 'fs';
+import Comm from './comm';
 //import Signaling from './signaling'
 
 const options = {
@@ -16,6 +17,9 @@ const io = socketio(server);
 /*
 const signaling = new Signaling(io);
 signaling.init(); */
+
+const comm = new Comm(io);
+comm.init();
 
 
 app.use(express.static('public'));
