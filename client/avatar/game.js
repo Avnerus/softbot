@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-import SocketController from '../socket-controller'
+import SocketController from '../common/socket-controller'
 
 export default class  {
     constructor(config) {
