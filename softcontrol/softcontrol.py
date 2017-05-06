@@ -17,7 +17,7 @@ PORT = 9540
 
 class MainHandler(tornado.web.RequestHandler):
   def get(self):
-     print "[HTTP](MainHandler) User Connected."
+     print ("[HTTP](MainHandler) User Connected.")
      self.write('OK');
 
   def check_origin(self, origin):
@@ -25,7 +25,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 
   def set_default_headers(self):
-       print "setting headers!!!"
+       print ("setting headers!!!")
        self.set_header("Access-Control-Allow-Origin", "*")
        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
@@ -39,7 +39,7 @@ class MainHandler(tornado.web.RequestHandler):
 	
 class WSHandler(tornado.websocket.WebSocketHandler):
   def set_default_headers(self):
-       print "setting WS headers!!!"
+       print ("setting WS headers!!!")
        self.set_header("Access-Control-Allow-Origin", "*")
        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
@@ -48,13 +48,15 @@ class WSHandler(tornado.websocket.WebSocketHandler):
     return True
 
   def open(self):
-    print '[WS] Connection was opened.'
+    print ('[WS] Connection was opened.')
  
   def on_message(self, message):
-    print '[WS] Incoming message:', message
+    print ('[WS] Incoming message:', type(message))
+    num = int.from_bytes(message[0:3], byteorder='little')
+    print (num)
 
   def on_close(self):
-    print '[WS] Connection was closed.'
+    print ('[WS] Connection was closed.')
 
 
 application = tornado.web.Application([
@@ -69,11 +71,11 @@ if __name__ == "__main__":
         http_server.listen(PORT)
         main_loop = tornado.ioloop.IOLoop.instance()
 
-        print "Tornado Server started"
+        print ("Tornado Server started")
         main_loop.start()
 
     except:
-        print "Exception triggered - Tornado Server stopped."
+        print ("Exception triggered - Tornado Server stopped.")
 
 #End of Program
 
