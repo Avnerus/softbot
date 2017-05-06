@@ -5,32 +5,46 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
-        <link type="text/css" href="css/softbot.css" rel="stylesheet">
+        <link type="text/css" href="css/control.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
-        <title>Softbot Controlt</title>
+        <title>Softbot Control</title>
     </head>
     <body>
         <script src="lib/dat.gui.min.js"></script>
         <script src="lib/jquery-2.2.4.min.js"></script>
-        <script src="lib/socket.io-1.4.5.js"></script>
         <script src="lib/bootstrap.min.js"></script>
         <script src="lib/adapter.min.js"></script>
         <script src="lib/janus.js"></script>
-
         <script src="bundle.js"></script>
         <div id="game">
-            <video class="rounded centered" id="waitingvideo" width=1280 height=720 autoplay />
+            <div id="main" class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <form id="speech-form">
+                                <div class="form-group">
+                                    <label for="speech">Say:</label>
+                                    <input type="text" class="form-control" id="speech-text">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div id="stream">
+                                <video class="rounded centered" id="waitingvideo" autoplay>
+                                </video>
+                                <img id="hud" src="assets/hud.png"></img>
+                                <img id="loading" src="assets/loading.gif"></img>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="joystick" style="display:none;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
         </div>
-        <script>
-/*
-        Janus.init({debug: "all", callback: function() {
-			if(!Janus.isWebrtcSupported()) {
-                console.log("No WebRTC support... ");
-                console.log(window.RTCPeerConnection);
-                console.log(navigator.getUserMedia);
-				return;
-            }
-            }});*/
-        </script>
     </body>
 </html>

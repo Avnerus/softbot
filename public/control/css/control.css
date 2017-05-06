@@ -1,6 +1,6 @@
 body {
     margin: 0px;
-    background-color: #000000;
+    background-color: #1A1A1A;
     overflow: hidden;
 }
 
@@ -12,10 +12,44 @@ body {
     bottom: 0;
 }
 
-#control-local-video  {
-    height: 150px;
+#stream {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
 }
-#control-remote-videos video {
-    height: 600px;
+
+#stream video {
+    margin: auto;
+    display: block;
+}
+
+#hud {
+    position: absolute;
+    top: 0;
+    height: 500px;
+    width: 92%;
+    left: 4%;
+}
+
+#main {
+    padding: 0;
+    margin: 0;
+}
+
+#nipple_0_0 {
+    left: 50%;
+    bottom: -60px;
+}
+
+#loading {
+    display: block;
+    margin: auto;
+    position: relative;
+    bottom: 50px;
+}
+
+#speech-form {
+    color: white;
+    margin: 30px;
 }
 

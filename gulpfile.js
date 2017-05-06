@@ -17,9 +17,9 @@ var entries = ['./client/avatar.js', './client/control.js'];
 
 gulp.task('client', function () {
     var streams = entries.map(function(fileName) {
-        var bundler = watchify(browserify(fileName,
-            {debug: true})
-          ).transform(babelify.configure({
+        var bundler = browserify(fileName,
+            {debug: true, cache: {}, packageCache: {}, plugin: [watchify]
+        }).transform(babelify.configure({
             presets: ['es2015']
           }));
 
@@ -34,7 +34,8 @@ gulp.task('client', function () {
 });
 
 function getWatchifyHandler(bundler, fileName) {
-  return function() {
+  console.log("Getting watchify handler for", fileName);
+  return function(upd) {
     gutil.log('Begin build for', fileName);
     var moduleName = /\/\w+\/(\w+)\.js/g.exec(fileName)[1];
 
