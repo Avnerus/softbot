@@ -18,6 +18,11 @@ export default class Camera {
 
     onMove(data) {
         console.log("Camera move", data);
-        this.socketController.send("Move!");
+        var buffer = new ArrayBuffer(8);
+        var z = new Int32Array(buffer);
+        z[0] = 42;
+        z[1] = 13;
+        console.log(buffer);
+        this.socketController.send(buffer);
     }
 }

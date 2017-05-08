@@ -63,6 +63,8 @@ export default class Streamer {
             $("#waitingvideo").bind("playing", function () {
                 $("#loading").hide();
                 $("#joystick").show();
+                // For some reason this is needed for the joystick to start functioning
+                window.dispatchEvent(new Event('resize'));
             });
         });
     }

@@ -17,7 +17,7 @@ export default class Main {
         this.emitter = new CustomEmitter();
         global.events = this.emitter;
 
-        this.socketController = new SocketController("ws://192.168.8.232:9540/ws");
+        this.socketController = new SocketController("ws://10.0.1.26:9540/ws");
         this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
@@ -35,7 +35,7 @@ export default class Main {
         this.speech = new Speech(this.socketMessenger, $("#speech-form"));
         this.speech.init();
 
-        this.janusConnection = new JanusConnection('http://192.168.8.232:8088/janus');
+        this.janusConnection = new JanusConnection('http://10.0.1.26:8088/janus');
         this.janusConnection.init();
 
     }

@@ -10,6 +10,7 @@ export default class SocketController {
         //let host = document.location.host;
         console.log("Initializing socket client to " + this.host);
         this.socket = new WebSocket(this.host);
+        this.socket.binaryType = "arraybuffer";
         this.socket.addEventListener('open', () => {this.onConnect()});
     }
     onConnect() {
