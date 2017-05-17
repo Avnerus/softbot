@@ -5,6 +5,9 @@ import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import serialworker
+import struct
+import multiprocessing
 
 #Tornado Folder Paths
 settings = dict(
@@ -14,6 +17,9 @@ settings = dict(
 
 #Tonado server port
 PORT = 9540
+
+input_queue = multiprocessing.Queue()
+output_queue = multiprocessing.Queue()
 
 class MainHandler(tornado.web.RequestHandler):
   def get(self):
@@ -38,6 +44,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 	
 class WSHandler(tornado.websocket.WebSocketHandler):
+
   def set_default_headers(self):
        print ("setting WS headers!!!")
        self.set_header("Access-Control-Allow-Origin", "*")
@@ -54,10 +61,12 @@ class WSHandler(tornado.websocket.WebSocketHandler):
     print ('[WS] Incoming message:', type(message))
     num = int.from_bytes(message[0:3], byteorder='little')
     print (num)
+    #self.ser.write(str(num).encode('ascii'))
+    byte = struct.pack('>B', num)
+    input_queue.put(byte)
 
   def on_close(self):
     print ('[WS] Connection was closed.')
-
 
 application = tornado.web.Application([
   (r'/', MainHandler),
@@ -67,6 +76,11 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
     try:
+        ## start the serial worker in background (as a deamon)
+        sp = serialworker.SerialProcess(input_queue, output_queue)
+        sp.daemon = True
+        sp.start()
+
         http_server = tornado.httpserver.HTTPServer(application)
         http_server.listen(PORT)
         main_loop = tornado.ioloop.IOLoop.instance()
