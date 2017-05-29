@@ -40,3 +40,4 @@ jspm_packages
 *.swo
 
 bundle.js
+.DS_Store
