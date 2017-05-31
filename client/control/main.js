@@ -17,14 +17,15 @@ export default class Main {
         this.emitter = new CustomEmitter();
         global.events = this.emitter;
 
-        this.socketController = new SocketController("ws://10.0.1.26:9540/ws");
+        this.socketController = new SocketController("ws://127.0.0.1:9540/ws");
         this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
         this.socketMessenger.init();
 
+        /*
         this.streamer = new Streamer();
-        this.streamer.init();
+        this.streamer.init();*/
 
         this.body = new Body();
         this.body.init();
@@ -36,7 +37,7 @@ export default class Main {
         this.speech.init();
 
         this.janusConnection = new JanusConnection('http://10.0.1.26:8088/janus');
-        this.janusConnection.init();
+        //this.janusConnection.init();
 
     }
 }

@@ -58,12 +58,12 @@ class WSHandler(tornado.websocket.WebSocketHandler):
     print ('[WS] Connection was opened.')
  
   def on_message(self, message):
-    print ('[WS] Incoming message:', type(message))
-    num = int.from_bytes(message[0:3], byteorder='little')
-    print (num)
+    print ('[WS] Incoming message:', type(message),message)
+    #num = int.from_bytes(message[0:3], byteorder='little')
+    #print (num)
     #self.ser.write(str(num).encode('ascii'))
-    byte = struct.pack('>B', num)
-    input_queue.put(byte)
+    #byte = struct.pack('>B', num)
+    input_queue.put(message)
 
   def on_close(self):
     print ('[WS] Connection was closed.')
@@ -88,8 +88,8 @@ if __name__ == "__main__":
         print ("Tornado Server started")
         main_loop.start()
 
-    except:
-        print ("Exception triggered - Tornado Server stopped.")
+    except Exception as inst:
+        print ("Exception triggered - Tornado Server stopped.",inst)
 
 #End of Program
 

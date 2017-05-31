@@ -1,14 +1,13 @@
-int E1 = 6;
-int M1 = 7;
-int V1 = 9;
+#include "chamber.h"
+#include "pump.h"
 
-int motorSpeed = 0;
+Chamber chamber1(10,9,A0,300);
+Pump pump(6,7);
 
 void setup() {
-  pinMode(E1, OUTPUT);
-  pinMode(V1, OUTPUT);
   Serial.begin(9600); 
-  int sensorValue = analogRead(A0);
+  chamber1.init();
+  pump.init();
 }
 
 void loop() {
@@ -19,21 +18,20 @@ void loop() {
  */
      
     if (Serial.available()) {
-      motorSpeed = Serial.read();
-     // Serial.println(motorSpeed);
+      char command = Serial.read();
+      int value = Serial.read();
+
+      //motorSpeed = Serial.read();
+      Serial.println(command);
+      Serial.println(value);
+
+      switch(command)  {
+        case 'P':
+            pump.setSpeed(value);
+            break;
+      }
     } 
-    digitalWrite(M1,HIGH);
-    analogWrite(E1, motorSpeed);
 
 
-    // Protection
-    int pressure = analogRead(A1);
-    if (pressure > 300) {
-     digitalWrite(V1, HIGH);
-    } else if (pressure < 80) {
-      digitalWrite(V1, LOW);
-    }
-    Serial.println(pressure); 
-    
     delay(30);
 }
