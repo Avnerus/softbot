@@ -25,4 +25,13 @@ export default class SocketController {
     send(message) {
         this.socket.send(message);
     }
+
+    sendValueCommand(command, value) {
+        var buffer = new ArrayBuffer(3);
+        var z = new Uint8Array(buffer);
+        z[0] = ">".charCodeAt(0);
+        z[1] = command.charCodeAt(0); // PUMP
+        z[2] = value;
+        this.send(buffer);
+    }
 }

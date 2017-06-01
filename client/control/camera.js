@@ -8,12 +8,20 @@ export default class Camera {
     init() {
         let joystickOptions = {
             zone: document.getElementById('joystick'),
-            mode: 'static'
+            mode: 'static',
+            threshold: 0.5
         };
         this.joystick = Nipple.create(joystickOptions);
+        /*
         this.joystick.on('move', (evt,data) => {
             this.onMove(data);
-        })
+        });*/
+        this.joystick.on('dir', (evt,data) => {
+            this.onDir(data);
+        });
+        this.joystick.on('end', (evt,data) => {
+            this.onEnd(data);
+        });
         $("#loading").hide();
         $("#joystick").show();
         // For some reason this is needed for the joystick to start functioning
@@ -24,25 +32,25 @@ export default class Camera {
             max:255,
             slide: (event,ui) => {
                 this.onSlide(ui.value);
-            }
+            },
+
         });
     }
 
     onMove(data) {
-        console.log("Camera move", data);
-        var buffer = new ArrayBuffer(8);
-        var z = new Int32Array(buffer);
-        z[0] = 42;
-        z[1] = 13;
-        console.log(buffer);
-        this.socketController.send(buffer);
+        //  console.log("Camera move", data.angle.degree);
+    }
+    onDir(data) {
+        console.log("Camera dir!", data.direction.angle);
+        let command = data.direction.angle.substring(0,1).toUpperCase();
+        this.socketController.sendValueCommand(command,1)
+    }
+    onEnd(data) {
+        console.log("End!");
+        this.socketController.sendValueCommand("S",1)
     }
     onSlide(value) {
         console.log("Slide!", value);
-        var buffer = new ArrayBuffer(2);
-        var z = new Uint8Array(buffer);
-        z[0] = "P".charCodeAt(0)// PUMP;
-        z[1] = value;
-        this.socketController.send(buffer);
+        this.socketController.sendValueCommand("P",value);
     }
 }

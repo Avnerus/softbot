@@ -1,13 +1,18 @@
 #include "chamber.h"
 #include "pump.h"
 
-Chamber chamber1(10,9,A0,300);
 Pump pump(6,7);
+
+Chamber chambers[1] = {
+    Chamber(&pump,10,9,A0,300)
+};
 
 void setup() {
   Serial.begin(9600); 
-  chamber1.init();
   pump.init();
+  for (int i = 0; i < sizeof(chambers); i++) {
+      chambers[i].init();
+  }
 }
 
 void loop() {
@@ -18,20 +23,42 @@ void loop() {
  */
      
     if (Serial.available()) {
-      char command = Serial.read();
-      int value = Serial.read();
+      char start = Serial.read();
+      if (start == '>') {
+            char command = Serial.read();
+            int value = Serial.read();
 
-      //motorSpeed = Serial.read();
-      Serial.println(command);
-      Serial.println(value);
+            //motorSpeed = Serial.read();
+            //Serial.println(command);
+            //Serial.println(value);
 
-      switch(command)  {
-        case 'P':
-            pump.setSpeed(value);
-            break;
+            switch(command)  {
+                case 'P': {
+                    pump.setSpeed(value);
+                    break;
+                }
+                case 'D': {
+                    chambers[0].inflate();
+                    break;
+                }
+                case 'S': {
+                    dispatchStop();
+                    pump.setSpeed(0);
+                    break;
+                }
+            }
       }
     } 
 
+    for (int i = 0; i < sizeof(chambers); i++) {
+        chambers[i].update();
+    }
 
     delay(30);
+}
+
+void dispatchStop() {
+    for (int i = 0; i < sizeof(chambers); i++) {
+        chambers[i].stop();
+    }
 }

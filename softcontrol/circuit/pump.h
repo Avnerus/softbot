@@ -14,5 +14,7 @@ class Pump {
 
     void init();
     void setSpeed(int speed);
+    void inflate();
+    void stop();
 };
 #endif
