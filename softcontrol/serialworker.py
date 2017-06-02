@@ -1,9 +1,10 @@
 import serial
+import serial.tools.list_ports
 import time
 import multiprocessing
 
 ## Change this to match your local settings
-SERIAL_PORT = '/dev/cu.usbmodem24'
+SERIAL_PORT_REGEX = 'usbmodem'
 SERIAL_BAUDRATE = 9600
 
 class SerialProcess(multiprocessing.Process):
@@ -12,7 +13,14 @@ class SerialProcess(multiprocessing.Process):
         multiprocessing.Process.__init__(self)
         self.input_queue = input_queue
         self.output_queue = output_queue
-        self.sp = serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=1)
+
+        ports = list(serial.tools.list_ports.grep(SERIAL_PORT_REGEX))
+        if (len(ports) > 0):
+            self.sp = serial.Serial(ports[0].device, SERIAL_BAUDRATE, timeout=1)
+        else:
+            raise Exception('Could not find a serial port matching /' + SERIAL_PORT_REGEX + '/')
+
+
  
     def close(self):
         self.sp.close()

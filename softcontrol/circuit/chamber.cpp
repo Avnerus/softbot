@@ -17,8 +17,9 @@ void Chamber::init() {
     pinMode(_releaseValve, OUTPUT);
 
     Serial.println("Init chamber, closing both valves");
+    /*
     digitalWrite(_entryValve, LOW);
-    digitalWrite(_releaseValve, LOW);
+    digitalWrite(_releaseValve, LOW); */
 }
 
 void Chamber::update() {
@@ -29,16 +30,17 @@ void Chamber::update() {
        digitalWrite(_releaseValve, HIGH);
     } */
     //Serial.println(pressure); 
+    //digitalWrite(_entryValve, HIGH);
 }
 
 void Chamber::inflate() {
-    digitalWrite(_entryValve, HIGH);
     digitalWrite(_releaseValve, LOW);
+    digitalWrite(_entryValve, HIGH);
     _pump->inflate();
 }
 
 void Chamber::stop() {
     digitalWrite(_entryValve, LOW);
     digitalWrite(_releaseValve, LOW);
-    _pump->inflate();
+    _pump->stop();
 }

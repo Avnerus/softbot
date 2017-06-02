@@ -1,10 +1,10 @@
 #include "chamber.h"
 #include "pump.h"
 
-Pump pump(6,7);
+Pump pump(3,4);
 
 Chamber chambers[1] = {
-    Chamber(&pump,10,9,A0,300)
+    Chamber(&pump,10,11,A0,300)
 };
 
 void setup() {
@@ -43,10 +43,11 @@ void loop() {
                 }
                 case 'S': {
                     dispatchStop();
-                    pump.setSpeed(0);
+                   // pump.setSpeed(0);
                     break;
                 }
             }
+            Serial.println("K");
       }
     } 
 
