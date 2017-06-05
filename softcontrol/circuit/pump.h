@@ -4,17 +4,20 @@
 #include <Arduino.h>
 
 class Pump {
-    int _enablePin;
-    int _motorPin;
-    int _motorSpeed;
 
     public:
-    Pump(int enablePin, int motorPin);
-    ~Pump();
+        Pump(int enablePin, int motorPin);
+        ~Pump();
 
-    void init();
-    void setSpeed(int speed);
-    void inflate();
-    void stop();
+        void init();
+        void setSpeed(int speed);
+        void inflate();
+        void stop();
+
+    private:
+        int _enablePin;
+        int _motorPin;
+        int _motorSpeed;
+
 };
 #endif

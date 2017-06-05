@@ -2,25 +2,37 @@
 #define CHAMBER_H
 
 #include <Arduino.h>
-#include "pump.h"
+
+enum CHAMBER_STATE {
+  IDLE,
+  INFLATING,
+  DEFLATING
+};
 
 class Chamber {
 
-    Pump* _pump;
-    int _entryValve;
-    int _releaseValve;
-    int _pressureSensor;
-    int _maxPressure;
-
     public:
-    Chamber(Pump* pump, int entryValve, int releaseValve, int pressureSensor, int maxPressure);
-    ~Chamber();
+        Chamber(int entryValve, int releaseValve, int pressureSensor, int maxPressure);
+        ~Chamber();
 
-    void init();
-    void update();
+        void init();
+        void update();
 
-    void inflate();
-    void stop();
+        void inflate();
+        void deflate();
+        void stop();
+
+        int getPressure();
+        bool isInflated();
+
+    private:
+        int _entryValve;
+        int _releaseValve;
+        int _pressureSensor;
+        int _maxPressure;
+        int _pressure;
+        CHAMBER_STATE _state;
+
 };
 
 #endif
