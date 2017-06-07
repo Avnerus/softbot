@@ -77,18 +77,19 @@ void processCommand() {
         }
         case 'D': {
             chambers[1].stop();
-            chambers[0].inflate();
+            chambers[0].stop();
+            chambers[2].inflate();
             pump.inflate();
             break;
         }
         case 'U': {
-            chambers[0].deflate();
+            chambers[2].deflate();
             break;
         }
         case 'L': {
             chambers[0].stop();
-            if (chambers[2].isInflated()) {
-                chambers[2].deflate();
+            if (chambers[0].isInflated()) {
+                chambers[0].deflate();
             } else {
                 chambers[1].inflate();
                 pump.inflate();
@@ -96,11 +97,11 @@ void processCommand() {
             break;
         }
         case 'R': {
-            chambers[0].stop();
+            chambers[1].stop();
             if (chambers[1].isInflated()) {
                 chambers[1].deflate();
             } else {
-                chambers[2].inflate();
+                chambers[0].inflate();
                 pump.inflate();
             }
             break;
