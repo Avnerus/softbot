@@ -1,0 +1,1 @@
+gst-launch-1.0 pulsesrc ! queue ! opusenc ! rtpopuspay ! udpsink host=127.0.0.1 port=8003 rpicamsrc preview=false ! x264enc tune=zerolatency speed-preset=ultrafast qp-min=18 pass=5 quantizer=21 ! video/x-h264,width=640,height=480,framerate=30/1 ! rtph264pay ! udpsink host=127.0.0.1 port=8004 sync=false
