@@ -7,8 +7,11 @@ export default class Speech {
     init() {
         console.log("Init speech", this.speechForm);
         this.speechForm.submit((event) => {
-            console.log("Say! ", event.currentTarget[0].value);
-            this.socketMessenger.emit('speech', event.currentTarget[0].value);
+            console.log("Say! ", event.currentTarget[0].value,event.currentTarget[1].value);
+            this.socketMessenger.emit('speech', {
+                text: event.currentTarget[0].value,
+                voice: event.currentTarget[1].value
+            } );
             event.currentTarget[0].value = "";
             event.preventDefault();
         })

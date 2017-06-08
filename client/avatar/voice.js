@@ -8,9 +8,9 @@ export default class Voice {
         console.log("Init voice", this.textOutput);
         this.socketMessenger.on('speech',(data) => {
             console.log("Speech!", data)
-            this.textOutput.html(data);
+            this.textOutput.html(data.text);
             this.textOutput.fadeIn();
-            responsiveVoice.speak(data, "Japanese Female", {pitch: 1});
+            responsiveVoice.speak(data.text, data.voice, {pitch: 1});
             setTimeout(() => {
                 this.textOutput.fadeOut();
             },3000);
