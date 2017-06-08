@@ -23,9 +23,8 @@ export default class Main {
         this.socketMessenger = new SocketMessenger('registerControl');
         this.socketMessenger.init();
 
-        /*
         this.streamer = new Streamer();
-        this.streamer.init();*/
+        this.streamer.init();
 
         this.body = new Body();
         this.body.init();
@@ -36,8 +35,8 @@ export default class Main {
         this.speech = new Speech(this.socketMessenger, $("#speech-form"));
         this.speech.init();
 
-        this.janusConnection = new JanusConnection('http://10.0.1.26:8088/janus');
-        //this.janusConnection.init();
+        this.janusConnection = new JanusConnection('http://10.0.1.56:8088/janus');
+        this.janusConnection.init();
 
     }
 }
