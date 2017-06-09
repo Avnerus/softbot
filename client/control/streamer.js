@@ -1,8 +1,9 @@
 import _ from 'lodash'
 
 export default class Streamer {
-    constructor() {
+    constructor(recorder) {
         console.log("Streamer constructed!");
+        this.recorder = recorder;
     }
     init() {
         console.log("Streamer init");
@@ -54,6 +55,10 @@ export default class Streamer {
                     onremotestream: (stream) => {
                         console.log("Got remote stream!", stream);
                         Janus.attachMediaStream($('#waitingvideo').get(0), stream);
+
+                        if (this.recorder) {
+                            this.recorder.initWithStream(stream);
+                        }
                     },
                     error: (error) => {
                         //Janus.error(error);

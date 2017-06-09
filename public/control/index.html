@@ -25,9 +25,11 @@
                         <div class="row">
                             <form id="speech-form">
                                 <div class="form-group">
-                                    <label for="speech">Say:</label>
+                                    <label for="speech-text">Say:</label>
                                     <input type="text" class="form-control" id="speech-text">
-                                    <label for="voice">Voice:</label>
+                                    <!--label for="speech-pitch">Pitch:</label>
+                                    <input type="number" value=1 class="form-control" id="speech-pitch"-->
+                                    <label for="speech-voice">Voice:</label>
                                     <select class="form-control" id="speech-voice">
                                         <option>UK English Female</option>
                                         <option>UK English Male</option>
@@ -43,16 +45,26 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div id="stream">
+                                <img id="hud" src="assets/hud.png"></img>
                                 <video class="rounded centered" id="waitingvideo" autoplay>
                                 </video>
-                                <img id="hud" src="assets/hud.png"></img>
                                 <img id="loading" src="assets/loading.gif"></img>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" id="controls-row">
                             <div id="joystick" style="display:none;">
                             </div>
                             <div id="slider" style="width: 50%; margin:auto;"></div>
+                        </div>
+                        <div class="row">
+                            <div id="recorder-container">
+                                <a id="record-button" href="#" role="button">
+                                    <img src="assets/record.png" class="record-button"></img>
+                                </a>
+                                <a id="stop-button" href="#" role="button">
+                                    <img src="assets/stop.png" class="record-button"></img>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

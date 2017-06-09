@@ -11,6 +11,7 @@ export default class Speech {
             this.socketMessenger.emit('speech', {
                 text: event.currentTarget[0].value,
                 voice: event.currentTarget[1].value
+                //  pitch: event.currentTarget[2].value
             } );
             event.currentTarget[0].value = "";
             event.preventDefault();

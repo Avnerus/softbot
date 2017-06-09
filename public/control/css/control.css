@@ -38,8 +38,9 @@ body {
 
 #nipple_0_0 {
     left: 50%;
-    bottom: -60px;
+    margin-top: 80px;
 }
+
 
 #loading {
     display: block;
@@ -53,3 +54,17 @@ body {
     margin: 30px;
 }
 
+#controls-row {
+    height: 135px;
+}
+
+#recorder-container {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.record-button {
+    margin: 10px;
+    height: 64px;
+}

@@ -6,6 +6,7 @@ import JanusConnection from './janus-connection'
 import SocketController from '../common/socket-controller'
 import SocketMessenger from '../common/socket-messenger'
 import Events from 'events'
+import Recorder from './recorder'
 
 export default class Main {
     constructor() {
@@ -23,7 +24,9 @@ export default class Main {
         this.socketMessenger = new SocketMessenger('registerControl');
         this.socketMessenger.init();
 
-        this.streamer = new Streamer();
+        this.recorder = new Recorder($('#recorder-container'));
+
+        this.streamer = new Streamer(this.recorder);
         this.streamer.init();
 
         this.body = new Body();

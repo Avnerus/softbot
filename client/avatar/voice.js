@@ -10,7 +10,7 @@ export default class Voice {
             console.log("Speech!", data)
             this.textOutput.html(data.text);
             this.textOutput.fadeIn();
-            responsiveVoice.speak(data.text, data.voice, {pitch: 1});
+            responsiveVoice.speak(data.text, data.voice, {pitch: data.pitch});
             setTimeout(() => {
                 this.textOutput.fadeOut();
             },3000);
