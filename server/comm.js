@@ -1,4 +1,5 @@
 import config from './config'
+import fs from 'fs'
 
 export default class Comm {
     constructor(io) {
@@ -10,6 +11,14 @@ export default class Comm {
     }
     init() {
         console.log("Comm server initalized");
+        fs.open('./server/logs/comm.txt','a', (err,fd) => {
+            if (err) {
+                console.log("Error opening log file",err);
+            } else {
+                this.log = fd;
+            }
+        });;
+
         this.io.sockets.on('connection', (client) => {
             client.on('registerAvatar', () => {
                 // TODO: Token
@@ -45,6 +54,7 @@ export default class Comm {
             client.on('speech', (data) => {
                 if (client == this.control && this.avatar) {
                     this.avatar.emit('speech', data);
+                    fs.write(this.log, new Date() + " : " + data.text);
                 }
             })
         });
