@@ -68,3 +68,8 @@ body {
     margin: 10px;
     height: 64px;
 }
+
+#youtube-form {
+    width: 50%;
+    margin-left: 50px;
+}

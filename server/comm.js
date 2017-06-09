@@ -57,6 +57,11 @@ export default class Comm {
                     fs.write(this.log, new Date() + " : " + data.text);
                 }
             })
+            client.on('youtube', (data) => {
+                if (client == this.control && this.avatar) {
+                    this.avatar.emit('youtube', data);
+                }
+            })
         });
     }
 

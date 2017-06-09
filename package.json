@@ -53,7 +53,8 @@
     "simplewebrtc": "^2.2.3",
     "socket.io": "^1.4.8",
     "socket.io-client": "^1.7.3",
-    "stats.js": "^0.16.0"
+    "stats.js": "^0.16.0",
+    "youtube-iframe": "^1.0.3"
   },
   "browserify": {
     "transform": [

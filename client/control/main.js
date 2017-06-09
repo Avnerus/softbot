@@ -7,6 +7,7 @@ import SocketController from '../common/socket-controller'
 import SocketMessenger from '../common/socket-messenger'
 import Events from 'events'
 import Recorder from './recorder'
+import YoutubeRemote from './youtube-remote'
 
 export default class Main {
     constructor() {
@@ -37,6 +38,9 @@ export default class Main {
 
         this.speech = new Speech(this.socketMessenger, $("#speech-form"));
         this.speech.init();
+
+        this.youtubeRemote = new YoutubeRemote(this.socketMessenger, $('#youtube-form'));
+        this.youtubeRemote.init();
 
         this.janusConnection = new JanusConnection('http://10.0.1.56:8088/janus');
         this.janusConnection.init();
