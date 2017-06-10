@@ -19,7 +19,7 @@ export default class Main {
         this.emitter = new CustomEmitter();
         global.events = this.emitter;
 
-        this.socketController = new SocketController("ws://10.0.1.56:9540/ws");
+        this.socketController = new SocketController("ws://192.168.179.5:9540/ws");
         this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
@@ -42,7 +42,7 @@ export default class Main {
         this.youtubeRemote = new YoutubeRemote(this.socketMessenger, $('#youtube-form'));
         this.youtubeRemote.init();
 
-        this.janusConnection = new JanusConnection('http://10.0.1.56:8088/janus');
+        this.janusConnection = new JanusConnection('http://192.168.179.5:8088/janus');
         this.janusConnection.init();
 
     }

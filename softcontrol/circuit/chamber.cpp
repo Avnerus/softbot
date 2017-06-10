@@ -17,9 +17,8 @@ Chamber::~Chamber() {
 void Chamber::init() {
     pinMode(_entryValve, OUTPUT);
     pinMode(_releaseValve, OUTPUT);
-    /*
     digitalWrite(_entryValve, LOW);
-    digitalWrite(_releaseValve, LOW); */
+    digitalWrite(_releaseValve, LOW); 
 }
 
 void Chamber::update() {

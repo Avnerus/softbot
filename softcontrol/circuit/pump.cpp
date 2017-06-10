@@ -11,7 +11,6 @@ Pump::~Pump() {
 
 }
 void Pump::init() {
-    /*
     pinMode(_enablePin, OUTPUT);
     pinMode(_motorPin, OUTPUT);
 
@@ -19,7 +18,7 @@ void Pump::init() {
 
 
     digitalWrite(_motorPin,HIGH);
-    analogWrite(_enablePin, _motorSpeed);*/
+    analogWrite(_enablePin, _motorSpeed);
 }
 void Pump::setSpeed(int speed) {
     if (speed >= 0 && speed <= 255) {
