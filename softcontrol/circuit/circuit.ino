@@ -22,6 +22,7 @@ Pump pump(3,4);
 
 void setup() {
   Serial.begin(9600); 
+  Serial.println("Softbot starting");
   pump.init();
 
   currentCommand = ' ';
@@ -99,8 +100,9 @@ void processCommand() {
         case 'R': {
             chambers[1].stop();
             if (chambers[1].isInflated()) {
-                chambers[1].deflate();
-            } else {
+              chambers[1].deflate();
+
+           } else {
                 chambers[0].inflate();
                 pump.inflate();
             }

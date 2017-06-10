@@ -35,6 +35,7 @@ void Chamber::inflate() {
     if (_pressure <= _maxPressure) {
         digitalWrite(_releaseValve, LOW);
         digitalWrite(_entryValve, HIGH);
+       // Serial.println("inflate");
         //_pump->inflate();
 
         _state = INFLATING;
@@ -44,7 +45,7 @@ void Chamber::inflate() {
 void Chamber::deflate() {
     digitalWrite(_releaseValve, HIGH);
    // _pump->stop();
-    
+    //Serial.println("deflate");
     _state = DEFLATING;
 }
 
@@ -52,7 +53,6 @@ void Chamber::stop() {
     digitalWrite(_entryValve, LOW);
     digitalWrite(_releaseValve, LOW);
   //  _pump->stop();
-
     _state = IDLE;
 }
 
