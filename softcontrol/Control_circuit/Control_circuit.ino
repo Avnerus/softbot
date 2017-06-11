@@ -10,7 +10,7 @@ int deflateTime = 2000; //This is the number of miliseconds the robot will defla
 int valvePin1 = 12;
 int valvePin2 = 8;
 int valvePin3 = 9;
-int valvePin4 = 13;
+int valvePin4 = 6;
 int valvePin5 = 10;
 int valvePin6 = 11;
 
@@ -40,10 +40,12 @@ void loop() {
   digitalWrite(valvePin1,LOW);
   digitalWrite(valvePin2,LOW);
   digitalWrite(valvePin3,LOW);
+  
   digitalWrite(valvePin4,LOW);
-  /*
+  
   digitalWrite(valvePin5,LOW);
-  digitalWrite(valvePin6,LOW);*/
+  
+  digitalWrite(valvePin6,LOW);
 
   delay(inflateTime);
 
@@ -53,10 +55,11 @@ void loop() {
   digitalWrite(valvePin1,HIGH);
   digitalWrite(valvePin2,HIGH);
   digitalWrite(valvePin3,HIGH);
+  
   digitalWrite(valvePin4,HIGH);
   digitalWrite(valvePin5,HIGH);
-  /*
-  digitalWrite(valvePin6,HIGH);*/
+  
+  digitalWrite(valvePin6,HIGH);
   delay(deflateTime);
   
 }

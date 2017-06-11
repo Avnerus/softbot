@@ -6,12 +6,14 @@ export default class YoutubeRemote {
     }
     init() {
         console.log("Init remote youtube", this.youtubeForm);
-        /*
-        this.youtubeForm.keydown((e) => {
-            if (e.keyCode == 13) {
-                this.youtubeForm.submit();
-            }
-        });*/
+        this.youtubeForm.find( "#volume-slider" ).slider( {
+            min:0,
+            max:100,
+            value: 100,
+            slide: (event,ui) => {
+                this.onVolumeChange(ui.value);
+            },
+        });
         this.youtubeForm.submit((event) => {
             console.log("Play youtube!! ", event.currentTarget[0].value);
             this.socketMessenger.emit('youtube', {
@@ -24,6 +26,13 @@ export default class YoutubeRemote {
             this.socketMessenger.emit('youtube', {
                 stop: true
             } );
+        });
+    }
+
+
+    onVolumeChange(value) {
+        this.socketMessenger.emit('youtube', {
+            volume: value
         });
     }
 }

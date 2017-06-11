@@ -21,7 +21,7 @@ void Pump::init() {
 }
 void Pump::setSpeed(int speed) {
     if (speed >= 0 && speed <= 255) {
-         Serial.println("Set speed");
+         //Serial.println("Set speed");
          Serial.println(speed);
         _motorSpeed = speed;
         analogWrite(_enablePin,_motorSpeed);
