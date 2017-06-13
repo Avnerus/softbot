@@ -15,8 +15,8 @@ String validCommands;
 
 Chamber chambers[3] = {
     Chamber(9,8,A0,700),
-    Chamber(12,13,A1,700),
-    Chamber(10,11,A2,700)
+    Chamber(12,11,A1,700),
+    Chamber(6,10,A2,700)
 };
 Pump pump(3,4);
 
@@ -57,6 +57,7 @@ void processByte() {
       char input = Serial.read();
       Serial.println(input);
       if (currentState == START_INPUT && input == '>') {
+        Serial.print("Start!");
         currentState = COMMAND_INPUT;
       }
       else if (currentState == COMMAND_INPUT && validCommands.indexOf(input) != -1) {
@@ -116,7 +117,7 @@ void processCommand() {
         default: {
             break;
         }
-    }
+     }
 }
 
 

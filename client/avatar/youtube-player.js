@@ -10,7 +10,12 @@ export default class YoutubePlayer {
         this.socketMessenger.on('youtube',(data) => {
             if (data.stop && this.player) {
                 this.stopVideo();
-            } else {
+
+            } else if (typeof(data.volume) != 'undefined' && this.player) {
+                this.player.setVolume(data.volume);
+                console.log("Volume!", data.volume);
+            }
+            else if (data.id){
                 this.playYoutube(data.id);
             }
         });

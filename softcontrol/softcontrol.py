@@ -20,6 +20,7 @@ PORT = 9540
 
 input_queue = multiprocessing.Queue()
 output_queue = multiprocessing.Queue()
+event = multiprocessing.Event()
 
 class MainHandler(tornado.web.RequestHandler):
   def get(self):
@@ -64,6 +65,7 @@ class WSHandler(tornado.websocket.WebSocketHandler):
     #self.ser.write(str(num).encode('ascii'))
     #byte = struct.pack('>B', num)
     input_queue.put(message)
+    event.set()
 
   def on_close(self):
     print ('[WS] Connection was closed.')
@@ -77,7 +79,7 @@ application = tornado.web.Application([
 if __name__ == "__main__":
     try:
         ## start the serial worker in background (as a deamon)
-        sp = serialworker.SerialProcess(input_queue, output_queue)
+        sp = serialworker.SerialProcess(input_queue, output_queue,event)
         sp.daemon = True
         sp.start()
 
