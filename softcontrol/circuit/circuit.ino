@@ -16,7 +16,7 @@ String validCommands;
 Chamber chambers[3] = {
     Chamber(9,8,A0,700),
     Chamber(12,11,A1,700),
-    Chamber(6,10,A2,700)
+    Chamber(6,7,A2,700)
 };
 Pump pump(3,4);
 
@@ -30,8 +30,11 @@ void setup() {
   currentState = START_INPUT;
   validCommands = "PDULRS";
 
-  for (int i = 0; i < sizeof(chambers); i++) {
-      chambers[i].init();
+  int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
+  Serial.println(numOfChambers);
+  for (int i = 0; i < numOfChambers; i++) {
+     chambers[i].init();
+     delay(100);
   }
 }
 
@@ -57,7 +60,6 @@ void processByte() {
       char input = Serial.read();
       Serial.println(input);
       if (currentState == START_INPUT && input == '>') {
-        Serial.print("Start!");
         currentState = COMMAND_INPUT;
       }
       else if (currentState == COMMAND_INPUT && validCommands.indexOf(input) != -1) {
@@ -68,10 +70,6 @@ void processByte() {
 }
 
 void processCommand() {
-    Serial.println("Process!");
-    Serial.println(currentCommand);
-    Serial.println(currentValue);
-
     switch(currentCommand)  {
         case 'P': {
             pump.setSpeed(currentValue);
@@ -85,7 +83,14 @@ void processCommand() {
             break;
         }
         case 'U': {
-            chambers[2].deflate();
+            chambers[2].stop();
+            if (chambers[2].isInflated()) {
+                chambers[2].deflate();
+            } else {
+                chambers[1].inflate();
+                chambers[0].inflate();
+                pump.inflate();
+            }
             break;
         }
         case 'L': {

@@ -19,6 +19,8 @@ void Chamber::init() {
     pinMode(_releaseValve, OUTPUT);
     digitalWrite(_entryValve, LOW);
     digitalWrite(_releaseValve, LOW); 
+
+    Serial.println("Chamber initialzied");
 }
 
 void Chamber::update() {
@@ -35,8 +37,8 @@ void Chamber::inflate() {
     if (_pressure <= _maxPressure) {
         digitalWrite(_releaseValve, LOW);
         digitalWrite(_entryValve, HIGH);
-       // Serial.println("inflate");
         //_pump->inflate();
+        //
 
         _state = INFLATING;
     }

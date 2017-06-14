@@ -35,7 +35,7 @@ void setup() {
 void loop() {
 
   digitalWrite(pumpMotor, HIGH);
-  analogWrite(pumpEnable, 100);
+  analogWrite(pumpEnable, 200);
 
   digitalWrite(valvePin1,LOW);
   digitalWrite(valvePin2,LOW);
