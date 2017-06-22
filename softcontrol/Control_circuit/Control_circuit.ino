@@ -1,4 +1,4 @@
-//*********************************************************//
+
 // This sample code is used with the control circuit to 
 // inflate and deflate the robot in a loop, i.e. it creates 
 // a kind of breathing pattern.
@@ -11,7 +11,7 @@ int valvePin1 = 12;
 int valvePin2 = 8;
 int valvePin3 = 9;
 int valvePin4 = 6;
-int valvePin5 = 10;
+int valvePin5 = 7;
 int valvePin6 = 11;
 
 int pumpEnable = 3;
