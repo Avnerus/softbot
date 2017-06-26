@@ -38,18 +38,16 @@ class SerialProcess(multiprocessing.Process):
         self.sp.flushInput()
  
         while True:
-             self.writeSerial("hi".encode('latin1'))
-
 
             # look for incoming tornado request
-#            self.event.wait()
+            self.event.wait()
 
-            #while not self.input_queue.empty():
- #           data = self.input_queue.get()
+            while not self.input_queue.empty():
+                data = self.input_queue.get()
 
                 # send it to the serial device
-             #print ("writing to serial: " , data)
-  #          self.writeSerial(data)
+                print ("writing to serial: " , data)
+                self.writeSerial(data)
      
                 # look for incoming serial data
             #    if (self.sp.inWaiting() > 0):

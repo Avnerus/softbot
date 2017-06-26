@@ -9,7 +9,7 @@ enum INPUT_STATE {
 };
 
 char currentCommand;
-int  currentValue;
+byte  currentValue;
 INPUT_STATE currentState;
 String validCommands;
 
@@ -39,16 +39,9 @@ void setup() {
 }
 
 void loop() {
-    int bytesAvailable = Serial.available();
-    for (int i = 0; i < bytesAvailable; i++) {
-        processByte();
-    }
-
     for (int i = 0; i < sizeof(chambers); i++) {
         chambers[i].update();
     }
-
-    delay(30);
 }
 
 void processByte() {
@@ -67,6 +60,11 @@ void processByte() {
           currentState = VALUE_INPUT;
       }  
    }
+}
+void serialEvent() {
+  while (Serial.available()) {
+    processByte();
+  }
 }
 
 void processCommand() {

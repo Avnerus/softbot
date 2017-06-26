@@ -34,7 +34,10 @@ void Chamber::update() {
 }
 
 void Chamber::inflate() {
+    Serial.println(_pressure);
     if (_pressure <= _maxPressure) {
+        Serial.println("Inflating");
+        Serial.println(_entryValve);
         digitalWrite(_releaseValve, LOW);
         digitalWrite(_entryValve, HIGH);
         //_pump->inflate();
@@ -45,9 +48,12 @@ void Chamber::inflate() {
 }
 
 void Chamber::deflate() {
-    digitalWrite(_releaseValve, HIGH);
    // _pump->stop();
-    //Serial.println("deflate");
+   //
+   /*
+     Serial.println("deflating");
+    Serial.println(_releaseValve); */
+    digitalWrite(_releaseValve, HIGH);
     _state = DEFLATING;
 }
 
@@ -63,5 +69,6 @@ int Chamber::getPressure() {
 }
 
 bool Chamber::isInflated() {
+    Serial.println(_pressure);
     return (_pressure >= MIN_CHAMBER_PRESSURE);
 }
