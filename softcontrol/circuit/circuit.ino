@@ -3,15 +3,15 @@
 
 
 enum INPUT_STATE {
-  START_INPUT,
-  COMMAND_INPUT,
-  VALUE_INPUT
+  START_INPUT = 0,
+  COMMAND_INPUT = 1,
+  VALUE_INPUT = 2
 };
 
 char currentCommand;
 byte  currentValue;
 INPUT_STATE currentState;
-String validCommands;
+const char* VALID_COMMANDS = "PDUSRL";
 
 Chamber chambers[3] = {
     Chamber(9,8,A0,700),
@@ -28,10 +28,8 @@ void setup() {
   currentCommand = ' ';
   currentValue = 0;
   currentState = START_INPUT;
-  validCommands = "PDULRS";
 
   int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
-  Serial.println(numOfChambers);
   for (int i = 0; i < numOfChambers; i++) {
      chambers[i].init();
      delay(100);
@@ -39,31 +37,32 @@ void setup() {
 }
 
 void loop() {
-    for (int i = 0; i < sizeof(chambers); i++) {
+    for (int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update();
     }
 }
 
 void processByte() {
     if (currentState == VALUE_INPUT) {
+       currentState = START_INPUT;
        currentValue = Serial.read();
        processCommand();
-       currentState = START_INPUT;
     } else {
       char input = Serial.read();
-      Serial.println(input);
-      if (currentState == START_INPUT && input == '>') {
+      if (input == '>') {
         currentState = COMMAND_INPUT;
       }
-      else if (currentState == COMMAND_INPUT && validCommands.indexOf(input) != -1) {
+      else if (currentState == COMMAND_INPUT && strchr(VALID_COMMANDS,input) != -1) {
           currentCommand = input;
           currentState = VALUE_INPUT;
-      }  
-   }
+      } 
+
+    }
 }
 void serialEvent() {
-  while (Serial.available()) {
-    processByte();
+  int bytesAvailable = Serial.available();
+  for (int i = 0; i < bytesAvailable; i++) {
+        processByte();
   }
 }
 
@@ -105,7 +104,6 @@ void processCommand() {
             chambers[1].stop();
             if (chambers[1].isInflated()) {
               chambers[1].deflate();
-
            } else {
                 chambers[0].inflate();
                 pump.inflate();

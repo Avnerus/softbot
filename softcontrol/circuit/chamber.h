@@ -31,6 +31,10 @@ class Chamber {
         int _pressureSensor;
         int _maxPressure;
         int _pressure;
+
+        unsigned long _lastDeflateToggle;
+        bool _deflateToggle;
+
         CHAMBER_STATE _state;
 
 };
