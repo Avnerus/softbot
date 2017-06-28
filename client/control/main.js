@@ -48,4 +48,12 @@ export default class Main {
         this.janusConnection.init();
 
     }
+    
+    animate(dt) {
+        this.update(dt);
+    }
+
+    update(dt) {
+        this.camera.update(dt);
+    }
 }

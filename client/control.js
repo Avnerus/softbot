@@ -1,8 +1,20 @@
 //import SimpleWebRTC from 'simplewebrtc'
-var Main = require('./control/main').default;
 console.log("Loading Control...");
+var Main = require('./control/main').default;
+var main = new Main();
+
+var startTime = null;
 
 window.onload = function() {
-    var main = new Main();
     main.init();
+    requestAnimationFrame(animate);
 }
+
+function animate(t) {
+    if (!startTime) startTime = t;
+    var dt = t - startTime;
+    startTime = t;
+    main.animate(dt);
+    requestAnimationFrame(animate);
+}
+

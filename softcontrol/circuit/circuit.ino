@@ -1,3 +1,4 @@
+#include "common.h"
 #include "chamber.h"
 #include "pump.h"
 
@@ -5,7 +6,8 @@
 enum INPUT_STATE {
   START_INPUT = 0,
   COMMAND_INPUT = 1,
-  VALUE_INPUT = 2
+  VALUE_INPUT = 2,
+  POSITION_INPUT = 3
 };
 
 char currentCommand;
@@ -13,12 +15,19 @@ byte  currentValue;
 INPUT_STATE currentState;
 const char* VALID_COMMANDS = "PDUSRL";
 
-Chamber chambers[3] = {
-    Chamber(9,8,A0,700),
-    Chamber(12,11,A1,700),
-    Chamber(6,7,A2,700)
-};
+Orientation currentOrientation;
+
 Pump pump(3,4);
+
+int positionCounter = 0;
+int currentPosition[2] = {0,0};
+
+Chamber chambers[3] = {
+    Chamber(&pump, 9,8,A0,700),
+    Chamber(&pump, 12,11,A1,700),
+    Chamber(&pump, 6,7,A2,700)
+};
+
 
 void setup() {
   Serial.begin(9600); 
@@ -28,6 +37,9 @@ void setup() {
   currentCommand = ' ';
   currentValue = 0;
   currentState = START_INPUT;
+
+  currentOrientation.x = 0;
+  currentOrientation.y = 0;
 
   int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
   for (int i = 0; i < numOfChambers; i++) {
@@ -43,7 +55,11 @@ void loop() {
 }
 
 void processByte() {
-    if (currentState == VALUE_INPUT) {
+    if (currentState == POSITION_INPUT) {
+        currentValue = Serial.read();
+        processPosition();
+    }
+    else if (currentState == VALUE_INPUT) {
        currentState = START_INPUT;
        currentValue = Serial.read();
        processCommand();
@@ -51,6 +67,9 @@ void processByte() {
       char input = Serial.read();
       if (input == '>') {
         currentState = COMMAND_INPUT;
+      }
+      else if (currentState == COMMAND_INPUT && input == 'X') {
+            currentState = POSITION_INPUT;
       }
       else if (currentState == COMMAND_INPUT && strchr(VALID_COMMANDS,input) != -1) {
           currentCommand = input;
@@ -66,6 +85,17 @@ void serialEvent() {
   }
 }
 
+void processPosition() {
+    //Serial.println(currentValue);
+    currentPosition[positionCounter] = currentValue;
+    if (positionCounter == 1) {
+        currentState = START_INPUT;
+        positionCounter = 0;
+    } else {
+        positionCounter++;
+    }
+}
+
 void processCommand() {
     switch(currentCommand)  {
         case 'P': {
@@ -73,13 +103,20 @@ void processCommand() {
             break;
         }
         case 'D': {
+        /*
             chambers[1].stop();
             chambers[0].stop();
             chambers[2].inflate();
-            pump.inflate();
+            pump.inflate(); 
+            */
+
+            currentOrientation.y = max(-100, currentOrientation.y -1);
+            updateChambers();
+
             break;
         }
         case 'U': {
+        /*
             chambers[2].stop();
             if (chambers[2].isInflated()) {
                 chambers[2].deflate();
@@ -87,7 +124,7 @@ void processCommand() {
                 chambers[1].inflate();
                 chambers[0].inflate();
                 pump.inflate();
-            }
+            } */
             break;
         }
         case 'L': {
@@ -126,4 +163,8 @@ void dispatchStop() {
     for (int i = 0; i < sizeof(chambers); i++) {
         chambers[i].stop();
     }
+}
+
+void updateChambers() {
+
 }

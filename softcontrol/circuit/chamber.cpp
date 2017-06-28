@@ -1,14 +1,15 @@
 #include "chamber.h"
 
 const int MIN_CHAMBER_PRESSURE = 60;
-const int DEFLATE_INTERVAL_MS = 10;
+const int DEFLATE_INTERVAL_MS = 5;
 
-Chamber::Chamber(int entryValve, int releaseValve, int pressureSensor, int maxPressure) {
+Chamber::Chamber(Pump* pump, int entryValve, int releaseValve, int pressureSensor, int maxPressure) {
     _entryValve = entryValve;
     _releaseValve = releaseValve;
     _pressureSensor = pressureSensor;
     _maxPressure = maxPressure;
 
+    _pump = pump;
 }
 Chamber::~Chamber() {
 
@@ -35,7 +36,6 @@ void Chamber::update() {
     if (_state == DEFLATING) {
         unsigned long time = millis();
         if (time - _lastDeflateToggle >= DEFLATE_INTERVAL_MS) {
-            Serial.println("Toggle!");
             _deflateToggle = !_deflateToggle;
             digitalWrite(_releaseValve, _deflateToggle);
             _lastDeflateToggle = time;
