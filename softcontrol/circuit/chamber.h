@@ -31,14 +31,15 @@ class Chamber {
 
         void setInflation(float desiredInflation);
 
+        CHAMBER_STATE getState();
+
     private:
         int _entryValve;
         int _releaseValve;
         int _pressureSensor;
         int _maxPressure;
         int _pressure;
-
-        float _desiredInflation;
+        int _minPressure;
 
         Pump* _pump;
 

@@ -23,8 +23,6 @@ void Pump::init() {
 void Pump::setSpeed(float speed) {
     if (speed >= 0.0 && speed <= 1.0) {
         _motorSpeed = (int)(255 * speed);
-        Serial.print("P");
-        Serial.println(_motorSpeed);
         analogWrite(_enablePin,_motorSpeed);
     }
 }

@@ -10,17 +10,12 @@ enum INPUT_STATE {
   POSITION_INPUT = 3
 };
 
-const int MAX_ORIENTATION = 1000;
-const int MIN_ORIENTATION = -1000;
-
 const int MAX_POSITION = 50;
 
 char currentCommand;
 byte  currentValue;
 INPUT_STATE currentState;
 const char* VALID_COMMANDS = "PDUSRL";
-
-Orientation currentOrientation;
 
 Pump pump(3,4);
 
@@ -46,8 +41,6 @@ void setup() {
   currentValue = 0;
   currentState = START_INPUT;
 
-  currentOrientation.x = 0;
-  currentOrientation.y = 0;
 
   int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
   for (int i = 0; i < numOfChambers; i++) {
@@ -113,7 +106,7 @@ void processCommand() {
             break;
         }
         case 'S': {
-           // dispatchStop();
+            dispatchStop();
             pump.setSpeed(0);
             break;
         }
@@ -131,23 +124,73 @@ void dispatchStop() {
 }
 
 void updateChambers() {
-    // Add the current change to the orientation
-    currentOrientation.x = constrain(currentOrientation.x + currentPosition[0], MIN_ORIENTATION, MAX_ORIENTATION);
-    currentOrientation.y = constrain(currentOrientation.y + currentPosition[1], MIN_ORIENTATION, MAX_ORIENTATION);
 
-    // Left
-    chambers[RIGHT_CHAMBER].setInflation(currentOrientation.x > 0 ? currentOrientation.x / MAX_ORIENTATION : 0);
-
-    /*
-
-    Serial.print("X");
-    Serial.print(currentOrientation.x);
-    Serial.print("Y");
-    Serial.println(currentOrientation.y);
-    */
+    if (currentPosition[0] > 0 && currentPosition[0] > abs(currentPosition[1])) {
+        left();
+    } else if (currentPosition[0] < 0 && abs(currentPosition[0]) > abs(currentPosition[1])) {
+        right();
+    }
+    else if (currentPosition[1] > 0 && currentPosition[1] > abs(currentPosition[0])) {
+        down();
+    }
+    else {
+        up();
+    }
 }
 
+void left() {
+    if (chambers[RIGHT_CHAMBER].isInflated()) {
+        chambers[RIGHT_CHAMBER].deflate();
+    } else {
+        chambers[RIGHT_CHAMBER].stop();
+        chambers[LEFT_CHAMBER].inflate();
+    }
+}
+void right() {
+    if (chambers[LEFT_CHAMBER].isInflated()) {
+        chambers[LEFT_CHAMBER].deflate();
+    } else {
+        chambers[LEFT_CHAMBER].stop();
+        chambers[RIGHT_CHAMBER].inflate();
+    }
+
+}
+void up() {
+    if (chambers[DOWN_CHAMBER].isInflated()) {
+        chambers[DOWN_CHAMBER].deflate();
+    } else {
+        chambers[DOWN_CHAMBER].stop();
+        chambers[LEFT_CHAMBER].inflate();
+        chambers[RIGHT_CHAMBER].inflate();
+    }
+}
+void down() {
+    if (chambers[RIGHT_CHAMBER].isInflated()) {
+        chambers[RIGHT_CHAMBER].deflate();
+    } else {
+        chambers[RIGHT_CHAMBER].stop();
+    }
+    if (chambers[LEFT_CHAMBER].isInflated()) {
+        chambers[LEFT_CHAMBER].deflate();
+    } else {
+        chambers[LEFT_CHAMBER].stop();
+    }
+
+    if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
+        chambers[DOWN_CHAMBER].inflate();
+    }
+}
 void updatePump() {
-    int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
-    pump.setSpeed((float)maxPower / MAX_POSITION);
+    // Don't pump while one is deflating
+    if (chambers[0].getState() == DEFLATING || 
+        chambers[1].getState() == DEFLATING || 
+        chambers[2].getState() == DEFLATING 
+       ) {
+       pump.setSpeed(0);
+    }
+    else {
+        int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
+        pump.setSpeed((float)maxPower / MAX_POSITION);
+    }
+
 }
