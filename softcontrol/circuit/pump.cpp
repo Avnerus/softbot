@@ -1,6 +1,7 @@
 #include "pump.h"
 
 const int INFLATION_SPEED = 200;
+const int MAX_SPEED = 255;
 
 Pump::Pump(int enablePin, int motorPin) {
     _enablePin = enablePin;
@@ -19,11 +20,11 @@ void Pump::init() {
     digitalWrite(_motorPin,HIGH);
     analogWrite(_enablePin, 0);
 }
-void Pump::setSpeed(int speed) {
-    if (speed >= 0 && speed <= 255) {
-         //Serial.println("Set speed");
-         Serial.println(speed);
-        _motorSpeed = speed;
+void Pump::setSpeed(float speed) {
+    if (speed >= 0.0 && speed <= 1.0) {
+        _motorSpeed = (int)(255 * speed);
+        Serial.print("P");
+        Serial.println(_motorSpeed);
         analogWrite(_enablePin,_motorSpeed);
     }
 }

@@ -10,6 +10,11 @@ enum INPUT_STATE {
   POSITION_INPUT = 3
 };
 
+const int MAX_ORIENTATION = 1000;
+const int MIN_ORIENTATION = -1000;
+
+const int MAX_POSITION = 50;
+
 char currentCommand;
 byte  currentValue;
 INPUT_STATE currentState;
@@ -28,6 +33,9 @@ Chamber chambers[3] = {
     Chamber(&pump, 6,7,A2,700)
 };
 
+const int RIGHT_CHAMBER = 0;
+const int LEFT_CHAMBER = 1;
+const int DOWN_CHAMBER = 2;
 
 void setup() {
   Serial.begin(9600); 
@@ -87,10 +95,12 @@ void serialEvent() {
 
 void processPosition() {
     //Serial.println(currentValue);
-    currentPosition[positionCounter] = currentValue;
+    currentPosition[positionCounter] = currentValue - 50;
     if (positionCounter == 1) {
         currentState = START_INPUT;
         positionCounter = 0;
+        updateChambers();
+        updatePump();
     } else {
         positionCounter++;
     }
@@ -102,53 +112,8 @@ void processCommand() {
             pump.setSpeed(currentValue);
             break;
         }
-        case 'D': {
-        /*
-            chambers[1].stop();
-            chambers[0].stop();
-            chambers[2].inflate();
-            pump.inflate(); 
-            */
-
-            currentOrientation.y = max(-100, currentOrientation.y -1);
-            updateChambers();
-
-            break;
-        }
-        case 'U': {
-        /*
-            chambers[2].stop();
-            if (chambers[2].isInflated()) {
-                chambers[2].deflate();
-            } else {
-                chambers[1].inflate();
-                chambers[0].inflate();
-                pump.inflate();
-            } */
-            break;
-        }
-        case 'L': {
-            chambers[0].stop();
-            if (chambers[0].isInflated()) {
-                chambers[0].deflate();
-            } else {
-                chambers[1].inflate();
-                pump.inflate();
-            }
-            break;
-        }
-        case 'R': {
-            chambers[1].stop();
-            if (chambers[1].isInflated()) {
-              chambers[1].deflate();
-           } else {
-                chambers[0].inflate();
-                pump.inflate();
-            }
-            break;
-        }
         case 'S': {
-            dispatchStop();
+           // dispatchStop();
             pump.setSpeed(0);
             break;
         }
@@ -166,5 +131,23 @@ void dispatchStop() {
 }
 
 void updateChambers() {
+    // Add the current change to the orientation
+    currentOrientation.x = constrain(currentOrientation.x + currentPosition[0], MIN_ORIENTATION, MAX_ORIENTATION);
+    currentOrientation.y = constrain(currentOrientation.y + currentPosition[1], MIN_ORIENTATION, MAX_ORIENTATION);
 
+    // Left
+    chambers[RIGHT_CHAMBER].setInflation(currentOrientation.x > 0 ? currentOrientation.x / MAX_ORIENTATION : 0);
+
+    /*
+
+    Serial.print("X");
+    Serial.print(currentOrientation.x);
+    Serial.print("Y");
+    Serial.println(currentOrientation.y);
+    */
+}
+
+void updatePump() {
+    int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
+    pump.setSpeed((float)maxPower / MAX_POSITION);
 }

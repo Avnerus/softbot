@@ -85,3 +85,8 @@ bool Chamber::isInflated() {
     Serial.println(_pressure);
     return (_pressure >= MIN_CHAMBER_PRESSURE);
 }
+
+void Chamber::setInflation(float desiredInflation) {
+
+}
+
