@@ -48,6 +48,7 @@
     "fullscreen": "^1.1.0",
     "lodash": "^4.15.0",
     "nipplejs": "^0.6.7",
+    "node-google-translate-skidz": "^1.1.1",
     "reconnecting-websocket": "^3.0.3",
     "recordrtc": "^5.4.1",
     "simplewebrtc": "^2.2.3",
