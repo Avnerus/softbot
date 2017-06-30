@@ -130,10 +130,10 @@ void updateChambers() {
     } else if (currentPosition[0] < 0 && abs(currentPosition[0]) > abs(currentPosition[1])) {
         right();
     }
-    else if (currentPosition[1] > 0 && currentPosition[1] > abs(currentPosition[0])) {
+    else if (currentPosition[1] > 0  && currentPosition[1] > abs(currentPosition[0])) {
         down();
     }
-    else {
+    else if (currentPosition[1] < 0) {
         up();
     }
 }
