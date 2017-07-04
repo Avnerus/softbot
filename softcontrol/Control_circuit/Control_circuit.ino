@@ -43,9 +43,9 @@ void loop() {
 
   digitalWrite(valvePin1,LOW);
   digitalWrite(valvePin2,LOW);
-  digitalWrite(valvePin3,HIGH);
+  digitalWrite(valvePin3,LOW);
   
-  digitalWrite(valvePin4,LOW);
+  digitalWrite(valvePin4,HIGH);
   
   digitalWrite(valvePin5,LOW);
   

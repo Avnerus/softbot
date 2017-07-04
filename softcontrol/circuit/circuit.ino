@@ -28,9 +28,9 @@ Chamber chambers[3] = {
     Chamber(&pump, 6,7,A2,700)
 };
 
-const int RIGHT_CHAMBER = 0;
-const int LEFT_CHAMBER = 1;
-const int DOWN_CHAMBER = 2;
+const int RIGHT_CHAMBER = 1;
+const int LEFT_CHAMBER = 2;
+const int DOWN_CHAMBER = 0;
 
 void setup() {
   Serial.begin(9600); 
@@ -139,6 +139,7 @@ void updateChambers() {
 }
 
 void left() {
+    Serial.println("Left");
     if (chambers[RIGHT_CHAMBER].isInflated()) {
         chambers[RIGHT_CHAMBER].deflate();
     } else {
@@ -147,6 +148,7 @@ void left() {
     }
 }
 void right() {
+    Serial.println("Right");
     if (chambers[LEFT_CHAMBER].isInflated()) {
         chambers[LEFT_CHAMBER].deflate();
     } else {
@@ -165,6 +167,8 @@ void up() {
     }
 }
 void down() {
+    Serial.println("Down");
+    /*
     if (chambers[RIGHT_CHAMBER].isInflated()) {
         chambers[RIGHT_CHAMBER].deflate();
     } else {
@@ -174,7 +178,7 @@ void down() {
         chambers[LEFT_CHAMBER].deflate();
     } else {
         chambers[LEFT_CHAMBER].stop();
-    }
+    }*/
 
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
         chambers[DOWN_CHAMBER].inflate();

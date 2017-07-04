@@ -1,7 +1,7 @@
 #include "chamber.h"
 
 const int DEFLATE_INTERVAL_MS = 10;
-const int INFLATED_THRESHOLD = 200;
+const int INFLATED_THRESHOLD = 100;
 
 Chamber::Chamber(Pump* pump, int entryValve, int releaseValve, int pressureSensor, int maxPressure) {
     _entryValve = entryValve;
@@ -22,7 +22,13 @@ void Chamber::init() {
     digitalWrite(_releaseValve, LOW); 
 
     _state = IDLE;
-    Serial.println("Chamber initialzied");
+    _pressure = analogRead(_pressureSensor);
+    Serial.print("Chamber initialzied - Initial Pressure: ");
+    Serial.println(_pressure);
+
+    deflate();
+    delay(2000);
+    stop();
 }
 
 void Chamber::update() {
@@ -31,6 +37,8 @@ void Chamber::update() {
     if (_pressure > _maxPressure) {
         stop();
     }
+    /*
+
     if (_state == DEFLATING) {
         unsigned long time = millis();
         if (time - _lastDeflateToggle >= DEFLATE_INTERVAL_MS) {
@@ -39,12 +47,14 @@ void Chamber::update() {
             _lastDeflateToggle = time;
         }
     } 
+    */
     //digitalWrite(_entryValve, HIGH);*/
 }
 
 void Chamber::inflate() {
     if (_state != INFLATING && _pressure < _maxPressure) {
         _state = INFLATING;
+        Serial.println(_entryValve);
         digitalWrite(_releaseValve, LOW);
         digitalWrite(_entryValve, HIGH);
     }
@@ -52,10 +62,12 @@ void Chamber::inflate() {
 
 void Chamber::deflate() {
     if (_state != DEFLATING) {
+        Serial.println("Deflating");
         _state = DEFLATING;
         _lastDeflateToggle = millis();
         _deflateToggle = LOW;
         digitalWrite(_entryValve, LOW);
+        digitalWrite(_releaseValve, HIGH);
     }
 }
 
@@ -73,6 +85,7 @@ int Chamber::getPressure() {
 }
 
 bool Chamber::isInflated() {
+    Serial.println(_pressure);
     return (_pressure >= INFLATED_THRESHOLD);
 }
 
