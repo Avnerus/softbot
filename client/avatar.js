@@ -27,7 +27,7 @@ function start() {
     game.start();
     game.resize();
     stats.begin();
-    requestAnimationFrame(animate);
+    //requestAnimationFrame(animate);
 }
 
 
