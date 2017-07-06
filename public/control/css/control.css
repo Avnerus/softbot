@@ -1,18 +1,14 @@
+html {
+    height: 100%;
+}
 body {
     margin: 0px;
     background-color: #591E5D;
-}
-
-#game {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    height: 100%;
 }
 
 #stream {
-    flex: 50%;
+    flex: 1 1 50%;
 }
 
 #stream video {
@@ -30,13 +26,34 @@ body {
 
 #main {
     color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 #nipple_0_0 {
     left: 50%;
-    margin-top: 80px;
+    top: 50%;
 }
 
+.recognize-button {
+    white-space: normal;
+}
+
+#listen-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.listen-form {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+}
 
 #loading {
     display: block;
@@ -63,10 +80,36 @@ body {
     display: flex;
 }
 
+#console {
+    display:flex;
+    border: 1px solid;
+    background: rgba(0,100,100,0.5);
+}
+
+#console-form {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#console-form .form-group {
+    display: flex;
+}
+
+#console-form .form-control { 
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 25px;
+}
+#console-form label {
+    margin-top: 3px;
+    white-space: nowrap;
+}
+
 #recorder-container {
     display:flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    bottom: -60%;
 }
 
 .record-button {
@@ -75,27 +118,25 @@ body {
 }
 
 #youtube-form {
-    width: 50%;
-    margin-left: 50px;
-    color: red;
+    margin: 10px;
 }
+#volume-slider {
+    margin-right: 10px;
+}
+
 #transcript {
-    flex: 50%;
 }
 #transcript-container {
+    flex: 0 0 50%;
     color: white;
     font-size: 16px;
     margin-left: 10px;
     background-color: rgba(0.2,0.2,0.2,0.4);
     position: relative;
-    height: 99%;
     border: 1px solid;
+    overflow: scroll;
 }
 
-.control-section {
-    border-style: solid;
-    padding-bottom: 10px;
-}
 #input-titles {
     display: flex;
     justify-content: center;
@@ -114,8 +155,59 @@ body {
 
 #input-content {
     display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
 }
 
+#input-section {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-style: solid;
+    padding-bottom: 10px;
+}
+#transcript {
+    position: absolute; /* This is so the size of the flex box will only be determind by the smallest element */
+}
 .transcript-line.system {
     color: #26ff00;
+}
+.transcript-line.speaker {
+    color: #f9f100;
+}
+.console-slider-control {
+    display:flex;
+}
+
+.console-slider-control label {
+    width: 50px;
+}
+
+.console-slider-value {
+    margin-left: 20px;
+}
+
+#console-sliders {
+    margin-left: 26px;
+
+}
+.console-slider {
+    width: 400px;
+    margin-left: 20px;
+    position: relative;
+    top: 5px;
+}
+
+#console-expressions {
+    display: flex;
+}
+#console-poses {
+    margin-left: 20px;
+}
+#console-poses label {
+    margin-right: 10px;
+}
+#console-poses select {
+    margin-right: 10px;
+    color: black;
 }

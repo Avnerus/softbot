@@ -12,6 +12,15 @@ export default class Recognizer {
         this.container.find('#recognize-button').click(() => {
             this.start();
         });
+
+        this.socketMessenger.on("recognize", (data) => {
+            if (data.start) {
+                this.start();
+            }
+            else if (data.stop) {
+                this.stop();
+            }
+        })
     }
 
     start() {
@@ -26,16 +35,22 @@ export default class Recognizer {
         .then( (token) => {
             console.log("Access token:", token);
             this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "ja-JP_BroadbandModel"}));
+            //this.handleStream(recognizeMicrophone({"token": token, objectMode: true}));
         });
     }
 
-    handleStream(stream) {
-        console.log("Stream!", stream);
+    stop() {
+        console.log("Stopping recognizing!");
         if (this.stream) {
               this.stream.stop();
               this.stream.removeAllListeners();
               this.stream.recognizeStream.removeAllListeners();
         }
+    }
+
+    handleStream(stream) {
+        console.log("Stream!", stream);
+        this.stop();
         this.stream = stream;
         stream.on('data', (msg) => {this.handleFormattedMessage(msg)}).on('end', this.handleTranscriptEnd).on('error', this.handleError);
 
@@ -45,8 +60,8 @@ export default class Recognizer {
     }
 
     handleFormattedMessage(msg) {
-        if (msg.results[0].final) {
-            console.log("Final Message!", msg.results[0].alternatives[0].transcript);
+        console.log("Message!", msg, msg.results[0].alternatives[0]);
+        if (msg.results[0].final && msg.results[0].alternatives[0].confidence >= 0.3) {
             // Send to socket
             this.socketMessenger.emit('recognized-speech', {
                 text: msg.results[0].alternatives[0].transcript

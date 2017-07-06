@@ -24,7 +24,7 @@
       }
       return $(this.options.emojiable_selector).emojiarea($.extend({
         emojiPopup: this,
-        norealTime: true
+        norealTime: false
       }, this.options));
     };
 

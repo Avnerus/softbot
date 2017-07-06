@@ -65,9 +65,15 @@ export default class Comm {
                 }
             })
 
+            client.on('recognize', (data) => {
+                if (client == this.control && this.avatar) {
+                    this.avatar.emit('recognize', data);
+                }
+            })
+
             client.on('recognized-speech', (data) => {
                 if (client == this.avatar && this.control) {
-                    this.translate('auto','en', data.text)
+                    this.translate('auto','pt', data.text)
                     .then((translation) => {
                         data.text = translation;
                         this.control.emit('recognized-speech', data);

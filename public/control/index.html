@@ -22,91 +22,131 @@
         <script src="lib/responsivevoice.js"></script>
 
         <script src="bundle.js"></script>
-        <div id="game">
-            <div id="main" class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <section class="row control-section">
-                            <section id="input-section" class="col-md-12">
-                                <span class="section-title">Input</span>
-                                <div id="input-titles">
-                                    <div class="interface-title">Vision</div>
-                                    <div class="interface-title">Transcript</div>
-                                </div>
-                                <div id="input-content">
-                                    <div id="stream">
-                                        <video class="rounded centered" id="waitingvideo" autoplay>
-                                        </video>
-                                        <img id="loading" src="assets/loading.gif"></img>
-                                    </div>
-                                    <div id="transcript">
-                                        <div id="transcript-container">
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </section>
-                        <section class="control-boxes row" >
-                            <section class="control-interface">
-                                <div class="interface-title">Speech</div>
-                                <form id="speech-form">
-                                    <div class="form-group">
-                                        <label for="speech-text">Say:</label>
-                                        <input type="text" class="form-control" id="speech-text" data-emojiable="true">
-                                        <label for="speech-voice">Voice:</label>
-                                        <select class="form-control" id="speech-voice">
-                                            <option>UK English Female</option>
-                                            <option>UK English Male</option>
-                                            <option>Japanese Female</option>
-                                            <option>Finnish Male</option>
-                                            <option>Arabic Male</option>
-                                            <option>Arabic Female</option>
-                                            <option>Russian Female</option>
-                                        </select>
-                                        <label for="speech-pitch">Pitch:</label>
-                                        <input type="number" value=1 class="form-control" id="speech-pitch">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox" value="">Translate to English</label>
-                                        </div>
-                                    </div>
-                                </form>
-                            </section>
-                            <section class="control-interface">
-                                <div class="interface-title">Music</div>
-                                <form id="youtube-form">
-                                    <div class="form-group">
-                                        <label for="youtube-id">Play Youtube ID:</label>
-                                        <input type="text" class="form-control" id="youtube-id">
-                                        <a id="stop-button" href="#" role="button">
-                                            <img src="assets/stop.png" class="record-button"></img>
-                                        </a>
-                                    </div>
-                                    <div id="volume-slider" style="width: 50%; margin:auto;"></div>
-                                </form>
-                            </section>
-                            <section class="control-interface">
-                                <div class="interface-title">Look</div>
-                                <div class="row" id="controls-row">
-                                    <div id="joystick" style="display:none;">
-                                    </div>
-                                    <div id="slider" style="width: 50%; margin:auto;"></div>
-                                </div>
-                                <div class="row">
-                                    <div id="recorder-container">
-                                        <a id="record-button" href="#" role="button">
-                                            <img src="assets/record.png" class="record-button"></img>
-                                        </a>
-                                        <a id="stop-button" href="#" role="button">
-                                            <img src="assets/stop.png" class="record-button"></img>
-                                        </a>
-                                    </div>
-                                </div>
-                            </section>
-                        </section>
+        <div id="main">
+            <section id="input-section">
+                <span class="section-title">Input</span>
+                <div id="input-titles">
+                    <div class="interface-title">Vision</div>
+                    <div class="interface-title">Transcript</div>
+                </div>
+                <div id="input-content">
+                    <div id="stream">
+                        <video class="rounded centered" id="waitingvideo" autoplay>
+                        </video>
+                        <img id="loading" src="assets/loading.gif"></img>
+                    </div>
+                    <div id="transcript-container">
+                        <div id="transcript">
+                        </div>
                     </div>
                 </div>
-             </div>
-        </div>
+            </section>
+            <section class="control-boxes" >
+                <section class="control-interface" style="flex:1;position:relative;">
+                    <div class="interface-title">Look</div>
+                    <div id="joystick" style="display:none;">
+                    </div>
+                    <!--div id="slider" style="width: 50%; margin:auto;"></div>
+                    <div id="recorder-container">
+                        <a id="record-button" href="#" role="button">
+                            <img src="assets/record.png" class="record-button"></img>
+                        </a>
+                        <a id="stop-button" href="#" role="button">
+                            <img src="assets/stop.png" class="record-button"></img>
+                        </a>
+                    </div-->
+                </section>
+                <section class="control-interface" style="flex:2;">
+                    <div class="interface-title">Speech</div>
+                    <form id="speech-form">
+                        <div class="form-group" style="position:relative;">
+                            <label for="speech-text">Say:</label>
+                            <input type="text" class="form-control" id="speech-text" data-emojiable="true">
+                            <label for="speech-voice">Voice:</label>
+                            <select class="form-control" id="speech-voice">
+                                <option>UK English Female</option>
+                                <option>UK English Male</option>
+                                <option>Japanese Female</option>
+                                <option>Finnish Male</option>
+                                <option>Arabic Male</option>
+                                <option>Arabic Female</option>
+                                <option>Russian Female</option>
+                                <option>Brazilian Portuguese Female</option>
+                            </select>
+                            <label for="speech-pitch">Pitch:</label>
+                            <input type="number" value=1 class="form-control" id="speech-pitch">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="">Translate to English</label>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+                <section class="control-interface" style="flex:1;">
+                    <div class="interface-title">Listen</div>
+                    <div id="listen-container">
+                        <form id="listen-form">
+                            <div class="form-group listen-form">
+                                <button id="start-recognize-button" type="button" class="recognize-button btn-primary">START RECOGNIZING SPEECH</button>
+                                <button id="stop-recognize-button" type="button" class="recognize-button btn-danger" style="display:none;">STOP RECOGNIZING SPEECH</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <section class="control-interface" style="flex:1;">
+                    <div class="interface-title">Music</div>
+                    <form id="youtube-form">
+                        <div class="form-group">
+                            <label for="youtube-id">Play Youtube ID:</label>
+                            <input type="text" class="form-control" id="youtube-id">
+                            <a id="stop-button" href="#" role="button">
+                                <img src="assets/stop.png" class="record-button"></img>
+                            </a>
+                        </div>
+                        <div id="volume-slider"></div>
+                    </form>
+                </section>
+            </section>
+            <section id="console">
+                <section>
+                    <div class="console-title">Console</div>
+                    <form id="console-form">
+                        <div class="form-group">
+                            <label for="console-command">Command: </label>
+                            <input type="text" class="form-control" id="console-command">
+                            <label for="console-value1">Value 1: </label>
+                            <input type="number" class="form-control" id="console-value1">
+                            <label for="console-value2">Value 2: </label>
+                            <input type="number" class="form-control" id="console-value2">
+                        </div>
+                    </form>
+                    <div id="console-expressions">
+                        <div id="console-sliders">
+                            <div data-command="E" class="console-slider-control">
+                                <label for="eye-slider">Eye: </label>
+                                <div id="eye-slider" class="console-slider"></div>
+                                <div id="eye-slider-value" class="console-slider-value">0</div>
+                            </div>
+                            <div data-command="C" class="console-slider-control">
+                                <label for="cheek-slider">Cheeks: </label>
+                                <div id="cheek-slider" class="console-slider"></div>
+                                <div id="cheek-slider-value" class="console-slider-value">0</div>
+                            </div>
+                            <div data-command="M" class="console-slider-control">
+                                <label for="mouth-slider">Mouth: </label>
+                                <div id="mouth-slider" class="console-slider"></div>
+                                <div id="mouth-slider-value" class="console-slider-value">0</div>
+                            </div>
+                        </div>
+
+                        <div id="console-poses">
+                            <label for="pose-select">Apply Pose: </label>
+                            <select id="pose-select">
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </section>
+         </div>
 
         <!-- Emoji Picker -->
         <script src="lib/emoji-picker/js/config.js"></script>
