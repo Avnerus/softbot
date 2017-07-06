@@ -3,6 +3,7 @@ import socketio from 'socket.io'
 import _ from 'lodash';
 import fs from 'fs';
 import Comm from './comm';
+import watson from 'watson-developer-cloud';
 //import Signaling from './signaling'
 
 const options = {
@@ -23,6 +24,23 @@ comm.init();
 
 
 app.use(express.static('public'));
+
+// Watson token
+
+app.get('/api/token',(req, res) => {
+    let authorization = new watson.AuthorizationV1({
+      username: 'f928b9d6-7bd0-4ad7-8c7e-67de63d94f9b',
+      password: 'IgSspCBI5Yjx',
+      url: watson.SpeechToTextV1.URL
+    });
+    authorization.getToken((err, token) => {
+        if (!token) {
+            res.send(err);
+        } else {
+            res.send(token);
+        }
+    })
+});
 
 server.listen(3000, () => {
     console.log('listening on port 3000!');
