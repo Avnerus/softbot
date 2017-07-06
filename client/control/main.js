@@ -20,8 +20,8 @@ export default class Main {
         global.events = this.emitter;
 
         // this.socketController = new SocketController("ws://192.168.179.3:9540/ws");
-        this.socketController = new SocketController("ws://192.168.179.3:9002");
-        //this.socketController = new SocketController("ws://127.0.0.1:9540/ws");
+        //this.socketController = new SocketController("ws://10.0.1.56:9002");
+        this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
@@ -44,8 +44,16 @@ export default class Main {
         this.youtubeRemote = new YoutubeRemote(this.socketMessenger, $('#youtube-form'));
         this.youtubeRemote.init();
 
-        this.janusConnection = new JanusConnection('http://192.168.179.3:8088/janus');
+        this.janusConnection = new JanusConnection('http://10.0.1.56:8088/janus');
         this.janusConnection.init();
 
+    }
+    
+    animate(dt) {
+        this.update(dt);
+    }
+
+    update(dt) {
+        this.camera.update(dt);
     }
 }

@@ -1,5 +1,6 @@
 import config from './config'
 import fs from 'fs'
+import googleTranslate from 'node-google-translate-skidz'
 
 export default class Comm {
     constructor(io) {
@@ -53,8 +54,9 @@ export default class Comm {
 
             client.on('speech', (data) => {
                 if (client == this.control && this.avatar) {
-                    this.avatar.emit('speech', data);
-                    fs.write(this.log, new Date() + " : " + data.text);
+                    this.speech(data).then((result) => {
+                        console.log("Speech result");
+                    });
                 }
             })
             client.on('youtube', (data) => {
@@ -65,5 +67,30 @@ export default class Comm {
         });
     }
 
+    speech(data) {
+        return new Promise((resolve, reject) => {
+            // Should we translate to english?
+            if (data.translate) {
+                resolve(new Promise((resolve, reject) => {
+                    googleTranslate({
+                        text: data.text,
+                        source: 'auto',
+                        target: 'en'
+                    }, (result) => {
+                        console.log("Translate result: ", result)
+                        resolve(result.translation);
+                    });
+                }));
+            } else {
+                resolve(data.text);
+            }
+        }).then((processedText) => {
+            console.log("Processed text", processedText);
+            data.text = processedText;
+            this.avatar.emit('speech', data);
+            fs.write(this.log, new Date() + " : " + data.text);
+            return processedText;
+        });
+    }
 };
 

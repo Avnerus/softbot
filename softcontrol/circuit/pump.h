@@ -10,7 +10,7 @@ class Pump {
         ~Pump();
 
         void init();
-        void setSpeed(int speed);
+        void setSpeed(float speed);
         void inflate();
         void stop();
 

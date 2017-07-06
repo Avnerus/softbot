@@ -1,4 +1,4 @@
-//*********************************************************//
+
 // This sample code is used with the control circuit to 
 // inflate and deflate the robot in a loop, i.e. it creates 
 // a kind of breathing pattern.
@@ -11,11 +11,15 @@ int valvePin1 = 12;
 int valvePin2 = 8;
 int valvePin3 = 9;
 int valvePin4 = 6;
-int valvePin5 = 10;
+int valvePin5 = 7;
 int valvePin6 = 11;
 
 int pumpEnable = 3;
 int pumpMotor = 4;
+
+int pressureSensor1 = A0;
+int pressureSensor2 = A1;
+int pressureSensor3 = A2;
 
 void setup() {
   Serial.begin(9600); 
@@ -35,19 +39,29 @@ void setup() {
 void loop() {
 
   digitalWrite(pumpMotor, HIGH);
-  analogWrite(pumpEnable, 100);
+  analogWrite(pumpEnable, 200);
 
   digitalWrite(valvePin1,LOW);
   digitalWrite(valvePin2,LOW);
   digitalWrite(valvePin3,LOW);
   
-  digitalWrite(valvePin4,LOW);
+  digitalWrite(valvePin4,HIGH);
   
   digitalWrite(valvePin5,LOW);
   
   digitalWrite(valvePin6,LOW);
 
   delay(inflateTime);
+
+  int pressure;
+  pressure = analogRead(pressureSensor1);
+  Serial.println(pressure);
+  pressure = analogRead(pressureSensor2);
+  Serial.println(pressure);
+  pressure = analogRead(pressureSensor3);
+  Serial.println(pressure);
+
+
 
   digitalWrite(pumpMotor, LOW);
   analogWrite(pumpEnable, 0);
