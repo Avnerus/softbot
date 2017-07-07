@@ -8,6 +8,7 @@ import SocketMessenger from '../common/socket-messenger'
 import Events from 'events'
 import Recorder from './recorder'
 import YoutubeRemote from './youtube-remote'
+import Transcript from './transcript'
 
 export default class Main {
     constructor() {
@@ -47,6 +48,8 @@ export default class Main {
         this.janusConnection = new JanusConnection('http://10.0.1.56:8088/janus');
         this.janusConnection.init();
 
+        this.transcript = new Transcript(this.socketMessenger, $('#transcript-container'));
+        this.transcript.init();
     }
     
     animate(dt) {

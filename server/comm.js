@@ -64,6 +64,16 @@ export default class Comm {
                     this.avatar.emit('youtube', data);
                 }
             })
+
+            client.on('recognized-speech', (data) => {
+                if (client == this.avatar && this.control) {
+                    this.translate('auto','en', data.text)
+                    .then((translation) => {
+                        data.text = translation;
+                        this.control.emit('recognized-speech', data);
+                    })
+                }
+            });
         });
     }
 
@@ -71,16 +81,7 @@ export default class Comm {
         return new Promise((resolve, reject) => {
             // Should we translate to english?
             if (data.translate) {
-                resolve(new Promise((resolve, reject) => {
-                    googleTranslate({
-                        text: data.text,
-                        source: 'auto',
-                        target: 'en'
-                    }, (result) => {
-                        console.log("Translate result: ", result)
-                        resolve(result.translation);
-                    });
-                }));
+                resolve(this.translate('auto','en',data.text));
             } else {
                 resolve(data.text);
             }
@@ -92,5 +93,18 @@ export default class Comm {
             return processedText;
         });
     }
-};
+
+    translate(source, target, text) {
+        return new Promise((resolve, reject) => {
+            googleTranslate({
+                text: text,
+                source: source,
+                target: target
+            }, (result) => {
+                console.log("Translate result: ", result)
+                resolve(result.translation);
+            });
+        });
+    }
+}
 

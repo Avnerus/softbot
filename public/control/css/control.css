@@ -74,3 +74,14 @@ body {
     margin-left: 50px;
     color: red;
 }
+
+#transcript-container {
+    color: white;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-top: 20px;
+    min-height: 400px;
+    max-height: 400px;
+    background-color: rgba(0.2,0.2,0.2,0.5);
+    overflow: scroll;
+}

@@ -25,7 +25,7 @@ export default class Recognizer {
         })
         .then( (token) => {
             console.log("Access token:", token);
-            this.handleStream(recognizeMicrophone({"token": token, objectMode: true}));
+            this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "ja-JP_BroadbandModel"}));
         });
     }
 
@@ -37,7 +37,7 @@ export default class Recognizer {
               this.stream.recognizeStream.removeAllListeners();
         }
         this.stream = stream;
-        stream.on('data', this.handleFormattedMessage).on('end', this.handleTranscriptEnd).on('error', this.handleError);
+        stream.on('data', (msg) => {this.handleFormattedMessage(msg)}).on('end', this.handleTranscriptEnd).on('error', this.handleError);
 
         stream.recognizeStream.on('end', () => {
             console.log("Stream ended");
@@ -47,6 +47,10 @@ export default class Recognizer {
     handleFormattedMessage(msg) {
         if (msg.results[0].final) {
             console.log("Final Message!", msg.results[0].alternatives[0].transcript);
+            // Send to socket
+            this.socketMessenger.emit('recognized-speech', {
+                text: msg.results[0].alternatives[0].transcript
+            });
         }
     }
 
