@@ -32,6 +32,7 @@ int pressureSensor3 = A2;
 int pressureSensor4 = A3;
 int pressureSensor5 = A4;
 int pressureSensor6 = A5;
+//int pressureSensor7 = A6;
 
 void setup() {
   Serial.begin(9600); 
@@ -94,6 +95,9 @@ void loop() {
   Serial.println(pressure);
   pressure = analogRead(pressureSensor6);
   Serial.println(pressure);
+  /*
+  pressure = analogRead(pressureSensor7);
+  Serial.println(pressure); */
 
   digitalWrite(pumpMotor, LOW);
   analogWrite(pumpEnable, 0);

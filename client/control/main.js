@@ -10,6 +10,7 @@ import Recorder from './recorder'
 import YoutubeRemote from './youtube-remote'
 import Transcript from './transcript'
 import Listener from './listener'
+import Expression from '../common/expression'
 import Console from './console'
 
 export default class Main {
@@ -56,7 +57,10 @@ export default class Main {
         this.listener = new Listener(this.socketMessenger, $('#listen-container'));
         this.listener.init();
 
-        this.console = new Console(this.socketController, $('#console'));
+        this.expression = new Expression(this.socketController);
+        this.expression.init();
+
+        this.console = new Console(this.socketController, this.expression, $('#console'));
         this.console.init();
 
     }

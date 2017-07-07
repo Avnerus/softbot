@@ -33,6 +33,7 @@ class Chamber {
         void inflateMax(float speed);
         void inflateTo(float max, float speed);
         void deflate();
+        void deflateMax();
         void stop();
 
         int getPressure();

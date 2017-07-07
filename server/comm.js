@@ -73,7 +73,7 @@ export default class Comm {
 
             client.on('recognized-speech', (data) => {
                 if (client == this.avatar && this.control) {
-                    this.translate('auto','pt', data.text)
+                    this.translate('auto','zh', data.text)
                     .then((translation) => {
                         data.text = translation;
                         this.control.emit('recognized-speech', data);

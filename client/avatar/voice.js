@@ -23,11 +23,13 @@ export default class Voice {
                 onend: () => this.voiceEnd()
             });*/
 
+            this.expressText = data.text;
+
             // Speech Synthesis API
             let utterThis = new SpeechSynthesisUtterance(data.text);
             utterThis.pitch = data.pitch;
             //            utterThis.voice = this.voices[5];
-            utterThis.rate = 0.8;
+            utterThis.rate = 0.7;
             utterThis.onend = () => this.voiceEnd();
             utterThis.onstart = () => this.voiceStart();
             utterThis.onboundary = (event) => this.voiceBoundary(event);
@@ -42,7 +44,7 @@ export default class Voice {
 
     voiceStart() {
         // Speaking movement
-        //        this.socketController.sendValueCommand('M', 80, 240);
+        this.socketController.sendValueCommand('M', 80, 240);
         this.textOutput.fadeIn();
     }
 
@@ -51,8 +53,8 @@ export default class Voice {
     }
 
     voiceEnd() {
-        // this.socketController.sendValueCommand('M', 0);
+        this.socketController.sendValueCommand('M', 0);
         this.textOutput.fadeOut();
-        //this.expression.express(data.text);
+        this.expression.express(this.expressText);
     }
 }
