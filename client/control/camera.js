@@ -26,8 +26,6 @@ export default class Camera {
         this.joystick.on('end', (evt,data) => {
             this.onEnd(data);
         });
-        $("#loading").hide();
-        $("#joystick").show();
         // For some reason this is needed for the joystick to start functioning
         window.dispatchEvent(new Event('resize'));
 

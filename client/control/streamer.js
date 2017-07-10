@@ -24,7 +24,6 @@ export default class Streamer {
                         if(result) {
                             if(result["status"]) {
                                 let status = result["status"];
-                                console.log("Status", status);
                                 if(status === 'starting')
                                     console.log("Stream starting!"); 
                                 else if(status === 'started')
@@ -54,6 +53,7 @@ export default class Streamer {
                     },
                     onremotestream: (stream) => {
                         console.log("Got remote stream!", stream);
+                        this.stream = stream;
                         Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
                         if (this.recorder) {
@@ -65,11 +65,14 @@ export default class Streamer {
                         throw new "Janus attach Error" + error;
                     }
             });
-            $("#waitingvideo").bind("playing", function () {
-                $("#loading").hide();
-                $("#joystick").show();
-                // For some reason this is needed for the joystick to start functioning
-                window.dispatchEvent(new Event('resize'));
+            $("#waitingvideo").bind("playing",  () => {
+                console.log("Video playing", this.stream);
+                if (this.stream.currentTime > 1) {
+                    $("#loading").hide();
+                    $("#joystick").show();
+                    // For some reason this is needed for the joystick to start functioning
+                    window.dispatchEvent(new Event('resize'));
+                }
             });
         });
     }

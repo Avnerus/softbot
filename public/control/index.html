@@ -22,73 +22,81 @@
         <div id="game">
             <div id="main" class="container-fluid">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <form id="speech-form">
-                                <div class="form-group">
-                                    <label for="speech-text">Say:</label>
-                                    <input type="text" class="form-control" id="speech-text">
-                                    <label for="speech-voice">Voice:</label>
-                                    <select class="form-control" id="speech-voice">
-                                        <option>UK English Female</option>
-                                        <option>UK English Male</option>
-                                        <option>Japanese Female</option>
-                                        <option>Finnish Male</option>
-                                        <option>Arabic Male</option>
-                                        <option>Arabic Female</option>
-                                        <option>Russian Female</option>
-                                    </select>
-                                    <label for="speech-pitch">Pitch:</label>
-                                    <input type="number" value=1 class="form-control" id="speech-pitch">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" value="">Translate to English</label>
+                    <div class="col-md-12">
+                        <section class="row control-section">
+                            <div id="input-section" class="col-md-12">
+                                <span class="section-title">Input</span>
+                                <div id="input-titles">
+                                    <div class="interface-title">Vision</div>
+                                    <div class="interface-title">Transcript</div>
+                                </div>
+                                <div id="input-content">
+                                    <div id="stream">
+                                        <video class="rounded centered" id="waitingvideo" autoplay>
+                                        </video>
+                                        <img id="loading" src="assets/loading.gif"></img>
+                                    </div>
+                                    <div id="transcript">
+                                        <div id="transcript-container">
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="row">
-                            <form id="youtube-form">
-                                <div class="form-group">
-                                    <label for="youtube-id">Play Youtube ID:</label>
-                                    <input type="text" class="form-control" id="youtube-id">
-                                    <a id="stop-button" href="#" role="button">
-                                        <img src="assets/stop.png" class="record-button"></img>
-                                    </a>
+                            </div>
+                            </div>
+                        </section>
+                        <section class="control-section row">
+                            <div class="col-md-4">
+                                <span class="section-title">Control</span>
+                                <form id="speech-form">
+                                    <div class="form-group">
+                                        <label for="speech-text">Say:</label>
+                                        <input type="text" class="form-control" id="speech-text">
+                                        <label for="speech-voice">Voice:</label>
+                                        <select class="form-control" id="speech-voice">
+                                            <option>UK English Female</option>
+                                            <option>UK English Male</option>
+                                            <option>Japanese Female</option>
+                                            <option>Finnish Male</option>
+                                            <option>Arabic Male</option>
+                                            <option>Arabic Female</option>
+                                            <option>Russian Female</option>
+                                        </select>
+                                        <label for="speech-pitch">Pitch:</label>
+                                        <input type="number" value=1 class="form-control" id="speech-pitch">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" value="">Translate to English</label>
+                                        </div>
+                                    </div>
+                                </form>
+                                <form id="youtube-form">
+                                    <div class="form-group">
+                                        <label for="youtube-id">Play Youtube ID:</label>
+                                        <input type="text" class="form-control" id="youtube-id">
+                                        <a id="stop-button" href="#" role="button">
+                                            <img src="assets/stop.png" class="record-button"></img>
+                                        </a>
+                                    </div>
+                                    <div id="volume-slider" style="width: 50%; margin:auto;"></div>
+                                </form>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row" id="controls-row">
+                                    <div id="joystick" style="display:none;">
+                                    </div>
+                                    <div id="slider" style="width: 50%; margin:auto;"></div>
                                 </div>
-                                <div id="volume-slider" style="width: 50%; margin:auto;"></div>
-                            </form>
-                        </div>
-                        <div class ="row">
-                            <div id="transcript-container">
-                                <b><u>Transcript</u></b>
-                                <div class="transcript-line">Start</div>
+                                <div class="row">
+                                    <div id="recorder-container">
+                                        <a id="record-button" href="#" role="button">
+                                            <img src="assets/record.png" class="record-button"></img>
+                                        </a>
+                                        <a id="stop-button" href="#" role="button">
+                                            <img src="assets/stop.png" class="record-button"></img>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div id="stream">
-                                <img id="hud" src="assets/hud.png"></img>
-                                <video class="rounded centered" id="waitingvideo" autoplay>
-                                </video>
-                                <img id="loading" src="assets/loading.gif"></img>
-                            </div>
-                        </div>
-                        <div class="row" id="controls-row">
-                            <div id="joystick" style="display:none;">
-                            </div>
-                            <div id="slider" style="width: 50%; margin:auto;"></div>
-                        </div>
-                        <div class="row">
-                            <div id="recorder-container">
-                                <a id="record-button" href="#" role="button">
-                                    <img src="assets/record.png" class="record-button"></img>
-                                </a>
-                                <a id="stop-button" href="#" role="button">
-                                    <img src="assets/stop.png" class="record-button"></img>
-                                </a>
-                            </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
              </div>
