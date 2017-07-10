@@ -10,6 +10,7 @@ export default class Streamer {
         events.on("janus_connected", (janus) => {
             this.janus = janus;
             let opaqueId = "softbotstream-"+Janus.randomString(12);
+            events.emit("transcript", {from: "System", text: "Acquiring vision..."});
             this.janus.attach({
                     plugin: "janus.plugin.streaming",
                     opaqueId: opaqueId,
@@ -68,6 +69,7 @@ export default class Streamer {
             $("#waitingvideo").bind("playing",  () => {
                 console.log("Video playing", this.stream);
                 if (this.stream.currentTime > 1) {
+                    events.emit("transcript", {from: "System", text: "Vision acquired!"});
                     $("#loading").hide();
                     $("#joystick").show();
                     // For some reason this is needed for the joystick to start functioning

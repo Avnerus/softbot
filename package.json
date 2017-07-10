@@ -47,6 +47,7 @@
     "express": "^4.14.0",
     "fullscreen": "^1.1.0",
     "lodash": "^4.15.0",
+    "moment": "^2.18.1",
     "nipplejs": "^0.6.7",
     "node-google-translate-skidz": "^1.1.1",
     "reconnecting-websocket": "^3.0.3",
@@ -55,6 +56,7 @@
     "socket.io": "^1.4.8",
     "socket.io-client": "^1.7.3",
     "stats.js": "^0.16.0",
+    "typed.js": "^2.0.2",
     "watson-developer-cloud": "^2.33.0",
     "watson-speech": "^0.33.1",
     "youtube-iframe": "^1.0.3"

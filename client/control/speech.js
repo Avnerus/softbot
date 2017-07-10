@@ -6,6 +6,16 @@ export default class Speech {
     }
     init() {
         console.log("Init speech", this.speechForm);
+        // Initializes and creates emoji set from sprite sheet
+        
+        this.emojiPicker = new EmojiPicker({
+          emojiable_selector: '[data-emojiable=true]',
+          assetsPath: 'lib/emoji-picker/img/',
+          popupButtonClasses: 'fa fa-smile-o'
+        });
+       
+        this.emojiPicker.discover();
+
         this.speechForm.keydown((e) => {
             if (e.keyCode == 13) {
                 this.speechForm.submit();
@@ -19,6 +29,8 @@ export default class Speech {
                 pitch: event.currentTarget[2].value,
                 translate: event.currentTarget[3].checked
             } );
+
+            events.emit("transcript", {from: "You", text: event.currentTarget[0].value})
             event.currentTarget[0].value = "";
             event.preventDefault();
         })

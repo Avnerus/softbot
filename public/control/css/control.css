@@ -81,7 +81,6 @@ body {
     background-color: rgba(0.2,0.2,0.2,0.4);
     position: relative;
     height: 99%;
-    bottom: 1px;
     border: 1px solid;
 }
 
@@ -107,4 +106,8 @@ body {
 
 #input-content {
     display: flex;
+}
+
+.transcript-line.system {
+    color: #26ff00;
 }
