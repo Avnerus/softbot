@@ -38,5 +38,10 @@ export default class Speech {
             }
             event.preventDefault();
         })
+
+        //this.speechForm.find('#speech-text').on('input', () => this.replaceEmoji());
+    }
+
+    replaceEmoji() {
     }
 }
