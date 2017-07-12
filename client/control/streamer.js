@@ -58,7 +58,7 @@ export default class Streamer {
                         Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
                         if (this.recorder) {
-                            this.recorder.initWithStream(stream);
+                            //    this.recorder.initWithStream(stream);
                         }
                     },
                     error: (error) => {
@@ -67,8 +67,8 @@ export default class Streamer {
                     }
             });
             $("#waitingvideo").bind("playing",  () => {
-                console.log("Video playing", this.stream);
-                if (this.stream.currentTime > 1) {
+                console.log("Video playing!", this.stream, this.stream.currentTime);
+                if (typeof(this.stream.currentTime) == 'undefined' || this.stream.currentTime > 1) {
                     events.emit("transcript", {from: "System", text: "Vision acquired!"});
                     $("#loading").hide();
                     $("#joystick").show();

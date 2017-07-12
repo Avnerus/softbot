@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <section class="row control-section">
-                            <div id="input-section" class="col-md-12">
+                            <section id="input-section" class="col-md-12">
                                 <span class="section-title">Input</span>
                                 <div id="input-titles">
                                     <div class="interface-title">Vision</div>
@@ -44,11 +44,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </section>
-                        <section class="control-section row">
-                            <div class="col-md-4">
-                                <!--span class="section-title">Control</span-->
+                        <section class="control-boxes row" >
+                            <section class="control-interface">
+                                <div class="interface-title">Speech</div>
                                 <form id="speech-form">
                                     <div class="form-group">
                                         <label for="speech-text">Say:</label>
@@ -70,6 +70,9 @@
                                         </div>
                                     </div>
                                 </form>
+                            </section>
+                            <section class="control-interface">
+                                <div class="interface-title">Music</div>
                                 <form id="youtube-form">
                                     <div class="form-group">
                                         <label for="youtube-id">Play Youtube ID:</label>
@@ -80,8 +83,9 @@
                                     </div>
                                     <div id="volume-slider" style="width: 50%; margin:auto;"></div>
                                 </form>
-                            </div>
-                            <div class="col-md-4">
+                            </section>
+                            <section class="control-interface">
+                                <div class="interface-title">Look</div>
                                 <div class="row" id="controls-row">
                                     <div id="joystick" style="display:none;">
                                     </div>
@@ -97,7 +101,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </section>
                     </div>
                 </div>

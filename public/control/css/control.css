@@ -1,7 +1,6 @@
 body {
     margin: 0px;
     background-color: #591E5D;
-    overflow: hidden;
 }
 
 #game {
@@ -53,6 +52,15 @@ body {
 
 #controls-row {
     height: 135px;
+}
+
+.control-interface {
+    border: 1px solid;
+}
+
+.control-boxes {
+    border: 1px solid;
+    display: flex;
 }
 
 #recorder-container {
