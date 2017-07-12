@@ -19,11 +19,15 @@ export default class SocketController {
     }
     emit(message, args) {
         console.log("Sending message ", message);
-        this.socket.emit(message, args);
+        if (this.socket) {
+            this.socket.emit(message, args);
+        }
     }
 
     send(message) {
-        this.socket.send(message);
+        if (this.socket) {
+            this.socket.send(message);
+        }
     }
 
     sendValueCommand(command, value) {

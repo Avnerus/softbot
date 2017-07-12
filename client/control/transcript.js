@@ -21,6 +21,8 @@ export default class Transcript {
         let fullDate = moment().format('MMMM Do YYYY, HH:mm:ss');
         let text = "Transcript started on " + fullDate;
         this.container.append('<div class="transcript-line"><u>' + text + '</u></div>');
+        this.currentScrollHeight = this.container.get(0).scrollHeight;
+        console.log("Current scroll height", this.currentScrollHeight);
     }
 
     addLine(data) {
@@ -32,9 +34,20 @@ export default class Transcript {
                     data.from + ': </b>'  + data.text
                 ],
                 showCursor: false,
-                typeSpeed:0 
+                typeSpeed:0,
+                onStringTyped: () => {this.scroll();}
             }
 
         )
+    }
+    scroll() {
+        let scrollHeight = this.container.get(0).scrollHeight;
+        if (scrollHeight != this.currentScrollHeight) {
+          console.log("Scroll!");
+          this.container.animate({
+            scrollTop: scrollHeight
+          }, 500)
+          this.currentScrollHeight = scrollHeight;
+        }
     }
 }

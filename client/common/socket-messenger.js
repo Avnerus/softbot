@@ -20,11 +20,15 @@ export default class SocketMessenger {
     }
     emit(event, args) {
         console.log("Sending event " +  event);
-        this.socket.emit(event, args, (data) => {
-            console.log("Reply", data);
-        });
+        if (this.socket) {
+            this.socket.emit(event, args, (data) => {
+                console.log("Reply", data);
+            });
+        }
     }
     on(event, callback) {
-        this.socket.on(event, callback);
+        if (this.socket) {
+            this.socket.on(event, callback);
+        }
     }
 }

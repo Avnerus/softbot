@@ -94,6 +94,7 @@ img.emoji {
     margin-bottom: 0px;
     min-height: 35px; /* 35 */
     height: 30px !important;
+    max-height: 30px !important;
     max-height: 284px;
     overflow: auto;
     line-height: 17px;
