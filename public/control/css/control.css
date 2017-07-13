@@ -29,6 +29,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 #nipple_0_0 {
@@ -36,6 +37,23 @@ body {
     top: 50%;
 }
 
+.recognize-button {
+    white-space: normal;
+}
+
+#listen-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.listen-form {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+}
 
 #loading {
     display: block;
@@ -76,10 +94,12 @@ body {
 }
 
 #youtube-form {
-    width: 50%;
-    margin-left: 50px;
-    color: red;
+    margin: 10px;
 }
+#volume-slider {
+    margin-right: 10px;
+}
+
 #transcript {
 }
 #transcript-container {
@@ -125,4 +145,7 @@ body {
 
 .transcript-line.system {
     color: #26ff00;
+}
+.transcript-line.speaker {
+    color: #f9f100;
 }

@@ -9,6 +9,7 @@ import Events from 'events'
 import Recorder from './recorder'
 import YoutubeRemote from './youtube-remote'
 import Transcript from './transcript'
+import Listener from './listener'
 
 export default class Main {
     constructor() {
@@ -50,6 +51,9 @@ export default class Main {
 
         this.transcript = new Transcript(this.socketMessenger, $('#transcript-container'));
         this.transcript.init();
+
+        this.listener = new Listener(this.socketMessenger, $('#listen-container'));
+        this.listener.init();
     }
     
     animate(dt) {

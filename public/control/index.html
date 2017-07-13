@@ -80,6 +80,17 @@
                     </div>
                 </section>
                 <section class="control-interface" style="flex:1;">
+                    <div class="interface-title">Listen</div>
+                    <div id="listen-container">
+                        <form id="listen-form">
+                            <div class="form-group listen-form">
+                                <button id="start-recognize-button" type="button" class="recognize-button btn-primary">START RECOGNIZING SPEECH</button>
+                                <button id="stop-recognize-button" type="button" class="recognize-button btn-danger" style="display:none;">STOP RECOGNIZING SPEECH</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <section class="control-interface" style="flex:1;">
                     <div class="interface-title">Music</div>
                     <form id="youtube-form">
                         <div class="form-group">
@@ -89,7 +100,7 @@
                                 <img src="assets/stop.png" class="record-button"></img>
                             </a>
                         </div>
-                        <div id="volume-slider" style="width: 50%; margin:auto;"></div>
+                        <div id="volume-slider"></div>
                     </form>
                 </section>
             </section>

@@ -11,7 +11,8 @@ export default class Transcript {
     init() {
         this.socketMessenger.on('recognized-speech',(data) => {
             console.log("Recognized speech!", data)
-            responsiveVoice.speak(data.text, "UK English Female");
+            data.from = "Speaker";
+            this.addLine(data);
         });
 
         events.on("transcript", (data) => {
