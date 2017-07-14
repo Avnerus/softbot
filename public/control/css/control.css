@@ -142,7 +142,9 @@ body {
     border-style: solid;
     padding-bottom: 10px;
 }
-
+#transcript {
+    position: absolute; /* This is so the size of the flex box will only be determind by the smallest element */
+}
 .transcript-line.system {
     color: #26ff00;
 }

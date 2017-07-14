@@ -49,7 +49,7 @@ export default class Main {
         this.janusConnection = new JanusConnection('http://10.0.1.56:8088/janus');
         this.janusConnection.init();
 
-        this.transcript = new Transcript(this.socketMessenger, $('#transcript-container'));
+        this.transcript = new Transcript(this.socketMessenger, $('#transcript'));
         this.transcript.init();
 
         this.listener = new Listener(this.socketMessenger, $('#listen-container'));
