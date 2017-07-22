@@ -10,6 +10,7 @@ import Recorder from './recorder'
 import YoutubeRemote from './youtube-remote'
 import Transcript from './transcript'
 import Listener from './listener'
+import Expression from './expression'
 
 export default class Main {
     constructor() {
@@ -24,7 +25,7 @@ export default class Main {
         // this.socketController = new SocketController("ws://192.168.179.3:9540/ws");
         //this.socketController = new SocketController("ws://10.0.1.56:9002");
         this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
-        //this.socketController.init();
+        this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
         this.socketMessenger.init();
@@ -40,7 +41,10 @@ export default class Main {
         this.camera = new Camera(this.socketController);
         this.camera.init();
 
-        this.speech = new Speech(this.socketMessenger, $("#speech-form"));
+        this.expression = new Expression(this.socketController);
+        this.expression.init();
+
+        this.speech = new Speech(this.socketMessenger, this.expression, $("#speech-form"));
         this.speech.init();
 
         this.youtubeRemote = new YoutubeRemote(this.socketMessenger, $('#youtube-form'));
@@ -54,13 +58,6 @@ export default class Main {
 
         this.listener = new Listener(this.socketMessenger, $('#listen-container'));
         this.listener.init();
-    }
-    
-    animate(dt) {
-        this.update(dt);
-    }
 
-    update(dt) {
-        this.camera.update(dt);
     }
 }

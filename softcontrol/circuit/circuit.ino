@@ -17,25 +17,28 @@ byte  currentValue;
 INPUT_STATE currentState;
 const char* VALID_COMMANDS = "PDUSRL";
 
-Pump pump(3,4);
+Pump neckPump(7,40);
+Pump facePump(6,41);
 
 int positionCounter = 0;
 int currentPosition[2] = {0,0};
 
 Chamber chambers[3] = {
-    Chamber(&pump, 9,8,A0,700),
-    Chamber(&pump, 12,11,A1,700),
-    Chamber(&pump, 6,7,A2,700)
+    Chamber(&neckPump, 26,28,A1,700),
+    Chamber(&neckPump, 32,24,A0,700),
+    Chamber(&neckPump, 30,22,A2,700)
+    Chamber(&facePump, 25,23,A3,150)
 };
 
 const int RIGHT_CHAMBER = 1;
 const int LEFT_CHAMBER = 2;
 const int DOWN_CHAMBER = 0;
+const int EYE_CHAMBERS = 3;
 
 void setup() {
   Serial.begin(9600); 
   Serial.println("Softbot starting");
-  pump.init();
+  neckPump.init();
 
   currentCommand = ' ';
   currentValue = 0;
@@ -102,12 +105,12 @@ void processPosition() {
 void processCommand() {
     switch(currentCommand)  {
         case 'P': {
-            pump.setSpeed(currentValue);
+            neckPump.setSpeed(currentValue);
             break;
         }
         case 'S': {
             dispatchStop();
-            pump.setSpeed(0);
+            neckPump.stop();
             break;
         }
         default: {
@@ -190,11 +193,11 @@ void updatePump() {
         chambers[1].getState() == DEFLATING || 
         chambers[2].getState() == DEFLATING 
        ) {
-       pump.setSpeed(0);
+       neckPump.setSpeed(0);
     }
     else {
         int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
-        pump.setSpeed((float)maxPower / MAX_POSITION);
+        neckPump.setSpeed((float)maxPower / MAX_POSITION);
     }
 
 }

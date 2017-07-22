@@ -75,7 +75,6 @@ void Chamber::stop() {
     if (!_state == IDLE) {
         digitalWrite(_entryValve, LOW);
         digitalWrite(_releaseValve, LOW);
-      //  _pump->stop();
         _state = IDLE;
     }
 }

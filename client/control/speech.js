@@ -1,8 +1,9 @@
 export default class Speech {
-    constructor(socketMessenger, speechForm) {
+    constructor(socketMessenger, expression, speechForm) {
         console.log("Speech constructed!")
         this.socketMessenger = socketMessenger;
         this.speechForm = speechForm;
+        this.expression = expression;
     }
     init() {
         console.log("Init speech", this.speechForm);
@@ -31,6 +32,7 @@ export default class Speech {
                     pitch: event.currentTarget[2].value,
                     translate: event.currentTarget[3].checked
                 } );
+                this.expression.express(event.currentTarget[0].value);
 
                 events.emit("transcript", {from: "You", text: event.currentTarget[0].value})
                 event.currentTarget[0].value = "";
