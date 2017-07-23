@@ -37,7 +37,19 @@ void Chamber::update() {
     if (_pressure > _maxPressure) {
         stop();
     }
+
+    
+
     /*
+
+    // If I'm deflating I have the right to stop the pump
+    if (_state == DEFLATING && _pump->getMotorSpeed() > 0) {
+        _pump->stop();
+    }*/
+
+    /*
+
+    Interval deflation
 
     if (_state == DEFLATING) {
         unsigned long time = millis();
@@ -51,10 +63,13 @@ void Chamber::update() {
     //digitalWrite(_entryValve, HIGH);*/
 }
 
-void Chamber::inflate() {
-    if (_state != INFLATING && _pressure < _maxPressure) {
+void Chamber::inflate(float speed) {
+    if (_pressure < _maxPressure) {
         _state = INFLATING;
-        Serial.println(_entryValve);
+
+        if (_pump->getSpeed() < speed) {
+            _pump->setSpeed(speed);
+        }
         digitalWrite(_releaseValve, LOW);
         digitalWrite(_entryValve, HIGH);
     }
@@ -62,7 +77,6 @@ void Chamber::inflate() {
 
 void Chamber::deflate() {
     if (_state != DEFLATING) {
-        Serial.println("Deflating");
         _state = DEFLATING;
         _lastDeflateToggle = millis();
         _deflateToggle = LOW;
@@ -84,7 +98,6 @@ int Chamber::getPressure() {
 }
 
 bool Chamber::isInflated() {
-    Serial.println(_pressure);
     return (_pressure >= INFLATED_THRESHOLD);
 }
 

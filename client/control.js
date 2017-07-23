@@ -7,7 +7,7 @@ var startTime = null;
 
 window.onload = function() {
     main.init();
-    //requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 }
 
 function animate(t) {

@@ -23,10 +23,10 @@ Pump facePump(6,41);
 int positionCounter = 0;
 int currentPosition[2] = {0,0};
 
-Chamber chambers[3] = {
+Chamber chambers[4] = {
     Chamber(&neckPump, 26,28,A1,700),
     Chamber(&neckPump, 32,24,A0,700),
-    Chamber(&neckPump, 30,22,A2,700)
+    Chamber(&neckPump, 30,22,A2,700),
     Chamber(&facePump, 25,23,A3,150)
 };
 
@@ -48,7 +48,7 @@ void setup() {
   int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
   for (int i = 0; i < numOfChambers; i++) {
      chambers[i].init();
-     delay(100);
+     delay(10);
   }
 }
 
@@ -96,7 +96,6 @@ void processPosition() {
         currentState = START_INPUT;
         positionCounter = 0;
         updateChambers();
-        updatePump();
     } else {
         positionCounter++;
     }
@@ -128,49 +127,50 @@ void dispatchStop() {
 
 void updateChambers() {
 
+    int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
+    float speed = (float)maxPower / MAX_POSITION;
+    //Serial.println("Update chambers");
+
     if (currentPosition[0] > 0 && currentPosition[0] > abs(currentPosition[1])) {
-        left();
+        left(speed);
     } else if (currentPosition[0] < 0 && abs(currentPosition[0]) > abs(currentPosition[1])) {
-        right();
+        right(speed);
     }
     else if (currentPosition[1] > 0  && currentPosition[1] > abs(currentPosition[0])) {
-        down();
+        down(speed);
     }
     else if (currentPosition[1] < 0) {
-        up();
+        up(speed);
     }
 }
 
-void left() {
-    Serial.println("Left");
+void left(float speed) {
     if (chambers[RIGHT_CHAMBER].isInflated()) {
         chambers[RIGHT_CHAMBER].deflate();
     } else {
         chambers[RIGHT_CHAMBER].stop();
-        chambers[LEFT_CHAMBER].inflate();
+        chambers[LEFT_CHAMBER].inflate(speed);
     }
 }
-void right() {
-    Serial.println("Right");
+void right(float speed) {
     if (chambers[LEFT_CHAMBER].isInflated()) {
         chambers[LEFT_CHAMBER].deflate();
     } else {
         chambers[LEFT_CHAMBER].stop();
-        chambers[RIGHT_CHAMBER].inflate();
+        chambers[RIGHT_CHAMBER].inflate(speed);
     }
 
 }
-void up() {
+void up(float speed) {
     if (chambers[DOWN_CHAMBER].isInflated()) {
         chambers[DOWN_CHAMBER].deflate();
     } else {
         chambers[DOWN_CHAMBER].stop();
-        chambers[LEFT_CHAMBER].inflate();
-        chambers[RIGHT_CHAMBER].inflate();
+        chambers[LEFT_CHAMBER].inflate(speed);
+        chambers[RIGHT_CHAMBER].inflate(speed);
     }
 }
-void down() {
-    Serial.println("Down");
+void down(float speed) {
     /*
     if (chambers[RIGHT_CHAMBER].isInflated()) {
         chambers[RIGHT_CHAMBER].deflate();
@@ -184,20 +184,6 @@ void down() {
     }*/
 
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
-        chambers[DOWN_CHAMBER].inflate();
+        chambers[DOWN_CHAMBER].inflate(speed);
     }
-}
-void updatePump() {
-    // Don't pump while one is deflating
-    if (chambers[0].getState() == DEFLATING || 
-        chambers[1].getState() == DEFLATING || 
-        chambers[2].getState() == DEFLATING 
-       ) {
-       neckPump.setSpeed(0);
-    }
-    else {
-        int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
-        neckPump.setSpeed((float)maxPower / MAX_POSITION);
-    }
-
 }

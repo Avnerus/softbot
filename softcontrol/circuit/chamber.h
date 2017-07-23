@@ -22,7 +22,7 @@ class Chamber {
         void init();
         void update();
 
-        void inflate();
+        void inflate(float speed);
         void deflate();
         void stop();
 

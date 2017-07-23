@@ -60,4 +60,11 @@ export default class Main {
         this.listener.init();
 
     }
+    animate(dt) {
+        this.update(dt);
+    }
+
+    update(dt) {
+        this.camera.update(dt);
+    }
 }
