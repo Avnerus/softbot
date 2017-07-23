@@ -32,10 +32,11 @@ export default class Expression {
         if (this.containsNegativeEmoji(text)) {
             console.log("Negative!!");
             this.socketController.sendValueCommand("E",255);
+            this.socketController.sendValueCommand("M",255);
         } else {
             // Neutral
             this.socketController.sendValueCommand("E",0);
-
+            this.socketController.sendValueCommand("M",0);
        }
     }
 }

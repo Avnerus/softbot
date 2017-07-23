@@ -85,13 +85,14 @@ void Chamber::inflateTo(float max, float speed) {
 void Chamber::inflate(float speed) {
     if (_pressure < _destinationPressure) {
 
-        if (_pump->getSpeed() < speed) {
-            _pump->setSpeed(speed);
-        }
         if (_state != INFLATING) {
             _state = INFLATING;
             digitalWrite(_releaseValve, LOW);
             digitalWrite(_entryValve, HIGH);
+            _pump->grab();
+        }
+        if (_pump->getSpeed() < speed) {
+            _pump->setSpeed(speed);
         }
     } 
 }
@@ -112,7 +113,7 @@ void Chamber::stop() {
         Serial.println("Stop");
         digitalWrite(_entryValve, LOW);
         digitalWrite(_releaseValve, LOW);
-        _pump->stop();
+        _pump->release();
         _state = IDLE;
     }
 }

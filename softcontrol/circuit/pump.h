@@ -15,12 +15,15 @@ class Pump {
         float getSpeed();
         void inflate();
         void stop();
+        void grab();
+        void release();
 
     private:
         float _speed;
         int _enablePin;
         int _motorPin;
         int _motorSpeed;
+        int _useCount;
 
 };
 #endif

@@ -23,17 +23,21 @@ Pump facePump(6,41);
 int positionCounter = 0;
 int currentPosition[2] = {0,0};
 
-Chamber chambers[4] = {
+Chamber chambers[5] = {
     Chamber(&neckPump, 26,28,A1,700),
     Chamber(&neckPump, 32,24,A0,700),
     Chamber(&neckPump, 30,22,A2,700),
-    Chamber(&facePump, 25,23,A3,180)
+    Chamber(&facePump, 25,23,A3,180),
+    Chamber(&facePump, 29,27,A4,300)
 };
 
-const int RIGHT_CHAMBER = 1;
-const int LEFT_CHAMBER = 2;
-const int DOWN_CHAMBER = 0;
-const int EYE_CHAMBERS = 3;
+enum CHAMBER_INDEX {
+    DOWN_CHAMBER   = 0,
+    RIGHT_CHAMBER  = 1,
+    LEFT_CHAMBER   = 2,
+    EYE_CHAMBERS   = 3,
+    MOUTH_CHAMBER  = 4
+};
 
 const int killPin = 39;
 
@@ -129,6 +133,13 @@ void processCommand() {
             Serial.print("Eyes ");
             Serial.println(inflation);
             chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
+            break;
+        }
+        case 'M': {
+            float inflation = (float)currentValue / 255.0;
+            Serial.print("Mouth ");
+            Serial.println(inflation);
+            chambers[MOUTH_CHAMBER].inflateTo(inflation, 0.8);
             break;
         }
         default: {
