@@ -27,13 +27,16 @@ Chamber chambers[4] = {
     Chamber(&neckPump, 26,28,A1,700),
     Chamber(&neckPump, 32,24,A0,700),
     Chamber(&neckPump, 30,22,A2,700),
-    Chamber(&facePump, 25,23,A3,150)
+    Chamber(&facePump, 25,23,A3,200)
 };
 
 const int RIGHT_CHAMBER = 1;
 const int LEFT_CHAMBER = 2;
 const int DOWN_CHAMBER = 0;
 const int EYE_CHAMBERS = 3;
+
+const int killPin = 39;
+
 
 void setup() {
   Serial.begin(9600); 
@@ -51,12 +54,20 @@ void setup() {
      chambers[i].init();
      delay(10);
   }
+
+  pinMode(killPin, INPUT);
 }
 
 void loop() {
     for (int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update();
     }
+    // Kill switch
+    if (digitalRead(killPin) == HIGH) {
+        neckPump.stop();
+        facePump.stop();
+    }
+
 }
 
 void processByte() {
@@ -114,7 +125,8 @@ void processCommand() {
             break;
         }
         case 'E': {
-
+            float inflation = (float)currentValue / 255.0;
+            chambers[EYE_CHAMBERS].inflateTo(inflation, 0.8);
             break;
         }
         default: {
