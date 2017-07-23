@@ -27,7 +27,7 @@ Chamber chambers[4] = {
     Chamber(&neckPump, 26,28,A1,700),
     Chamber(&neckPump, 32,24,A0,700),
     Chamber(&neckPump, 30,22,A2,700),
-    Chamber(&facePump, 25,23,A3,200)
+    Chamber(&facePump, 25,23,A3,180)
 };
 
 const int RIGHT_CHAMBER = 1;
@@ -126,7 +126,9 @@ void processCommand() {
         }
         case 'E': {
             float inflation = (float)currentValue / 255.0;
-            chambers[EYE_CHAMBERS].inflateTo(inflation, 0.8);
+            Serial.print("Eyes ");
+            Serial.println(inflation);
+            chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
             break;
         }
         default: {
