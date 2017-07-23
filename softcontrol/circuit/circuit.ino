@@ -15,7 +15,7 @@ const int MAX_POSITION = 50;
 char currentCommand;
 byte  currentValue;
 INPUT_STATE currentState;
-const char* VALID_COMMANDS = "PDUSRL";
+const char* VALID_COMMANDS = "PDUSRLEM";
 
 Pump neckPump(7,40);
 Pump facePump(6,41);
@@ -39,6 +39,7 @@ void setup() {
   Serial.begin(9600); 
   Serial.println("Softbot starting");
   neckPump.init();
+  facePump.init();
 
   currentCommand = ' ';
   currentValue = 0;
@@ -112,6 +113,10 @@ void processCommand() {
             neckPump.stop();
             break;
         }
+        case 'E': {
+
+            break;
+        }
         default: {
             break;
         }
@@ -149,7 +154,7 @@ void left(float speed) {
         chambers[RIGHT_CHAMBER].deflate();
     } else {
         chambers[RIGHT_CHAMBER].stop();
-        chambers[LEFT_CHAMBER].inflate(speed);
+        chambers[LEFT_CHAMBER].inflateMax(speed);
     }
 }
 void right(float speed) {
@@ -157,7 +162,7 @@ void right(float speed) {
         chambers[LEFT_CHAMBER].deflate();
     } else {
         chambers[LEFT_CHAMBER].stop();
-        chambers[RIGHT_CHAMBER].inflate(speed);
+        chambers[RIGHT_CHAMBER].inflateMax(speed);
     }
 
 }
@@ -166,8 +171,8 @@ void up(float speed) {
         chambers[DOWN_CHAMBER].deflate();
     } else {
         chambers[DOWN_CHAMBER].stop();
-        chambers[LEFT_CHAMBER].inflate(speed);
-        chambers[RIGHT_CHAMBER].inflate(speed);
+        chambers[LEFT_CHAMBER].inflateMax(speed);
+        chambers[RIGHT_CHAMBER].inflateMax(speed);
     }
 }
 void down(float speed) {
@@ -184,6 +189,6 @@ void down(float speed) {
     }*/
 
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
-        chambers[DOWN_CHAMBER].inflate(speed);
+        chambers[DOWN_CHAMBER].inflateMax(speed);
     }
 }

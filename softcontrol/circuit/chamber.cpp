@@ -8,6 +8,7 @@ Chamber::Chamber(Pump* pump, int entryValve, int releaseValve, int pressureSenso
     _releaseValve = releaseValve;
     _pressureSensor = pressureSensor;
     _maxPressure = maxPressure;
+    _destinationPressure = maxPressure;
 
     _pump = pump;
 }
@@ -34,11 +35,9 @@ void Chamber::init() {
 void Chamber::update() {
     // Blast Protection
     _pressure = analogRead(_pressureSensor);
-    if (_pressure > _maxPressure) {
+    if (_pressure > _destinationPressure) {
         stop();
     }
-
-    
 
     /*
 
@@ -63,16 +62,28 @@ void Chamber::update() {
     //digitalWrite(_entryValve, HIGH);*/
 }
 
+void Chamber::inflateMax(float speed) {
+    _destinationPressure = _maxPressure;
+    inflate(speed);
+}
+
+void Chamber::inflateTo(float max, float speed) {
+    _destinationPressure = (float)_maxPressure * max;
+    inflate(speed);
+}
+
 void Chamber::inflate(float speed) {
-    if (_pressure < _maxPressure) {
-        _state = INFLATING;
+    if (_pressure < _destinationPressure) {
 
         if (_pump->getSpeed() < speed) {
             _pump->setSpeed(speed);
         }
-        digitalWrite(_releaseValve, LOW);
-        digitalWrite(_entryValve, HIGH);
-    }
+        if (_state != INFLATING) {
+            _state = INFLATING;
+            digitalWrite(_releaseValve, LOW);
+            digitalWrite(_entryValve, HIGH);
+        }
+    } 
 }
 
 void Chamber::deflate() {
@@ -89,6 +100,7 @@ void Chamber::stop() {
     if (!_state == IDLE) {
         digitalWrite(_entryValve, LOW);
         digitalWrite(_releaseValve, LOW);
+        _pump->stop();
         _state = IDLE;
     }
 }

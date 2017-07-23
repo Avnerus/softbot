@@ -22,7 +22,8 @@ class Chamber {
         void init();
         void update();
 
-        void inflate(float speed);
+        void inflateMax(float speed);
+        void inflateTo(float max, float speed);
         void deflate();
         void stop();
 
@@ -34,12 +35,15 @@ class Chamber {
         CHAMBER_STATE getState();
 
     private:
+        void inflate(float speed);
+
         int _entryValve;
         int _releaseValve;
         int _pressureSensor;
         int _maxPressure;
         int _pressure;
         int _minPressure;
+        int _destinationPressure;
 
         Pump* _pump;
 
