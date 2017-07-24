@@ -99,8 +99,9 @@ body {
     margin-right: 10px;
     height: 25px;
 }
-#console-form .label {
+#console-form label {
     margin-top: 3px;
+    white-space: nowrap;
 }
 
 #recorder-container {

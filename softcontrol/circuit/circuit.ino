@@ -29,7 +29,7 @@ Chamber chambers[5] = {
     Chamber("Down", &neckPump, 26,28,A1, 0, 700),
     Chamber("Right", &neckPump, 32,24,A0, 0, 700),
     Chamber("Left", &neckPump, 30,22,A2, 0, 700),
-    Chamber("Eye", &facePump, 25,23,A3, 0, 180),
+    Chamber("Eye", &facePump, 25,23,A3, 0, 150),
     Chamber("Mouth", &facePump, 29,27,A4, 0, 290) // 190, 290)
 };
 
@@ -150,10 +150,17 @@ void processCommand() {
             break;
         }
         case 'E': {
-            float inflation = (float)currentValue[0] / 255.0;
-            Serial.print("Eyes ");
-            Serial.println(inflation);
-            chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
+            if (currentLength == 2) {
+                float inflationMin = (float)currentValue[0] / 255.0;
+                float inflationMax = (float)currentValue[1] / 255.0;
+                chambers[EYE_CHAMBERS].oscillate(inflationMin,inflationMax);
+            } else {
+                float inflation = (float)currentValue[0] / 255.0;
+                Serial.print("Eyes Inflate ");
+                Serial.println(inflation);
+
+                chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
+            }
             break;
         }
         case 'M': {

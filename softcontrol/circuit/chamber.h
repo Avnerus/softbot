@@ -39,6 +39,8 @@ class Chamber {
         bool isInflated();
 
         void setInflation(float desiredInflation);
+        void oscillate(float min, float max);
+        void endOscillation();
 
         CHAMBER_STATE getState();
 
@@ -58,6 +60,9 @@ class Chamber {
 
         unsigned long _lastDeflateToggle;
         bool _deflateToggle;
+        bool _oscillating;
+        int _oscillateMin;
+        int _oscillateMax;
 
         CHAMBER_STATE _state;
 

@@ -33,6 +33,7 @@ void Chamber::init() {
 
     _state = IDLE;
     _pressure = analogRead(_pressureSensor);
+    _oscillating = false;
     Serial.print(_name);
     Serial.print(" Chamber initialzied - Initial Pressure: ");
     Serial.println(_pressure);
@@ -45,13 +46,22 @@ void Chamber::init() {
 void Chamber::update() {
     // Blast Protection
     _pressure = analogRead(_pressureSensor);
-    if ((_state == INFLATING && _pressure > _destinationPressure) || 
-        (_state == DEFLATING && _pressure < _minPressure)) {
-        Serial.print(_name);
-        Serial.print(" Stop!!! ");
-        Serial.println(_pressure);
-
-        stop();
+    if (_state == INFLATING && _pressure > _destinationPressure) {
+        if (_oscillating) {
+            _destinationPressure = _oscillateMin;
+            _pump->release(); // TODO: This is not intuitive, should manage pointers of chabmbers.
+            deflate();
+        } else {
+            stop();
+        }
+    }
+    else if (_state == DEFLATING && _pressure < _minPressure) {
+        if (_oscillating) {
+            _destinationPressure = _oscillateMax;
+            inflate(1.0);
+        } else {
+            stop();
+        }
     } else if (_state == IDLE && _minPressure > INFLATED_THRESHOLD &&  _pressure < _minPressure) {
         Serial.print("Inflating to min pressure ");
         Serial.println(_minPressure);
@@ -89,6 +99,7 @@ void Chamber::inflateMax(float speed) {
 
 void Chamber::inflateTo(float max, float speed) {
     _destinationPressure = _minPressure + (float)(_maxPressure - _minPressure) * max;
+    _oscillating = false;
     Serial.print("Destination pressure: ");
     Serial.println(_destinationPressure);
     if (_destinationPressure > _pressure) {
@@ -128,12 +139,31 @@ void Chamber::deflate() {
 void Chamber::stop() {
     if (!_state == IDLE) {
         Serial.print(_name);
-        Serial.println(" Stop");
+        Serial.print(" Stop ");
+        Serial.println(_pressure);
         digitalWrite(_entryValve, LOW);
         digitalWrite(_releaseValve, LOW);
         _pump->release();
         _state = IDLE;
     }
+}
+
+void Chamber::oscillate(float min, float max) {
+    _oscillateMin = _minPressure + (float)(_maxPressure - _minPressure) * min;
+    _oscillateMax = _minPressure + (float)(_maxPressure - _minPressure) * max;
+    _oscillating = true;
+
+    Serial.print("Eyes Oscillate ");
+    Serial.print(_oscillateMin);
+    Serial.print("/");
+    Serial.println(_oscillateMax);
+
+    _destinationPressure = _oscillateMax;
+    inflate(1.0);
+}
+
+void Chamber::endOscillation() {
+    _oscillating = false;
 }
 
 int Chamber::getPressure() {

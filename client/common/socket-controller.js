@@ -30,7 +30,8 @@ export default class SocketController {
         }
     }
 
-    sendValueCommand(command, ...values) {
+    sendValueCommand(command, values) {
+        console.log("Values", values);
         let buffer = new ArrayBuffer(3 + values.length);
         let z = new Uint8Array(buffer);
         z[0] = ">".charCodeAt(0);
@@ -39,7 +40,6 @@ export default class SocketController {
         for (let i = 0; i < values.length; i++) {
             z[i + 3] = values[i];
         }
-        console.log(z);
         this.send(buffer);
     }
 }
