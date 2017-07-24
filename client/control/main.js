@@ -11,6 +11,7 @@ import YoutubeRemote from './youtube-remote'
 import Transcript from './transcript'
 import Listener from './listener'
 import Expression from './expression'
+import Console from './console'
 
 export default class Main {
     constructor() {
@@ -58,6 +59,9 @@ export default class Main {
 
         this.listener = new Listener(this.socketMessenger, $('#listen-container'));
         this.listener.init();
+
+        this.console = new Console(this.socketController, $('#console-form'));
+        this.console.init();
 
     }
     animate(dt) {

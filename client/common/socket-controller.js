@@ -30,23 +30,16 @@ export default class SocketController {
         }
     }
 
-    sendValueCommand(command, value) {
-        var buffer = new ArrayBuffer(3);
-        var z = new Uint8Array(buffer);
+    sendValueCommand(command, ...values) {
+        let buffer = new ArrayBuffer(3 + values.length);
+        let z = new Uint8Array(buffer);
         z[0] = ">".charCodeAt(0);
-        z[1] = command.charCodeAt(0); // PUMP
-        z[2] = value;
-        this.send(buffer);
-    }
-
-    sendPosition(pos) {
-        console.log(pos);
-        var buffer = new ArrayBuffer(4);
-        var z = new Uint8Array(buffer);
-        z[0] = ">".charCodeAt(0);
-        z[1] = "X".charCodeAt(0);
-        z[2] = pos.x + 50;
-        z[3] = pos.y + 50;
+        z[1] = command.charCodeAt(0); 
+        z[2] = values.length;
+        for (let i = 0; i < values.length; i++) {
+            z[i + 3] = values[i];
+        }
+        console.log(z);
         this.send(buffer);
     }
 }

@@ -16,7 +16,15 @@ enum CHAMBER_STATE {
 class Chamber {
 
     public:
-        Chamber(Pump* pump, int entryValve, int releaseValve, int pressureSensor, int maxPressure);
+        Chamber(
+            char* name,
+            Pump* pump,
+            int entryValve,
+            int releaseValve,
+            int pressureSensor,
+            int minPressure,
+            int maxPressure
+        );
         ~Chamber();
 
         void init();
@@ -41,9 +49,10 @@ class Chamber {
         int _releaseValve;
         int _pressureSensor;
         int _maxPressure;
-        int _pressure;
         int _minPressure;
+        int _pressure;
         int _destinationPressure;
+        char* _name;
 
         Pump* _pump;
 

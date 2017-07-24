@@ -9,6 +9,9 @@ export default class Camera {
             x: 0,
             y: 0
         }
+
+        this.timer = 0;
+        this.UPDATE_INTERVAL = 250;
     }
     init() {
         let joystickOptions = {
@@ -52,7 +55,7 @@ export default class Camera {
     }
     onEnd(data) {
         console.log("End!");
-        this.socketController.sendValueCommand("S",1)
+        this.socketController.sendValueCommand("S")
         this.moveNow.x = this.moveNow.y = 0;
     }
     onSlide(value) {
@@ -61,8 +64,14 @@ export default class Camera {
     }
 
     update(dt) {
-        if (this.moveNow.x != 0 || this.moveNow.y != 0) {
-            this.socketController.sendPosition(this.moveNow);
+        this.timer += dt;
+        if (this.timer > this.UPDATE_INTERVAL && (this.moveNow.x != 0 || this.moveNow.y != 0)) {
+            this.socketController.sendValueCommand(
+                'X', 
+                this.moveNow.x + 50,
+                this.moveNow.y + 50
+            );
+            this.timer = 0;
         }
     }
 }

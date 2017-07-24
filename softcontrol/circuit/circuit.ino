@@ -7,28 +7,30 @@ enum INPUT_STATE {
   START_INPUT = 0,
   COMMAND_INPUT = 1,
   VALUE_INPUT = 2,
-  POSITION_INPUT = 3
+  LENGTH_INPUT = 3,
+  POSITION_INPUT = 4,
 };
 
 const int MAX_POSITION = 50;
+const int MAX_VALUES = 4;
 
 char currentCommand;
-byte  currentValue;
+byte  currentValue[MAX_VALUES];
+int   valueCounter = 0;
+byte   currentLength = 0;
+
 INPUT_STATE currentState;
-const char* VALID_COMMANDS = "PDUSRLEM";
+const char* VALID_COMMANDS = "XPDUSRLEM";
 
 Pump neckPump(7,40);
 Pump facePump(6,41);
 
-int positionCounter = 0;
-int currentPosition[2] = {0,0};
-
 Chamber chambers[5] = {
-    Chamber(&neckPump, 26,28,A1,700),
-    Chamber(&neckPump, 32,24,A0,700),
-    Chamber(&neckPump, 30,22,A2,700),
-    Chamber(&facePump, 25,23,A3,180),
-    Chamber(&facePump, 29,27,A4,300)
+    Chamber("Down", &neckPump, 26,28,A1, 0, 700),
+    Chamber("Right", &neckPump, 32,24,A0, 0, 700),
+    Chamber("Left", &neckPump, 30,22,A2, 0, 700),
+    Chamber("Eye", &facePump, 25,23,A3, 0, 180),
+    Chamber("Mouth", &facePump, 29,27,A4, 0, 290) // 190, 290)
 };
 
 enum CHAMBER_INDEX {
@@ -48,8 +50,11 @@ void setup() {
   neckPump.init();
   facePump.init();
 
+  for (int i = 0; i < MAX_VALUES;i++) {
+    currentValue[i] = 0;
+  }
+
   currentCommand = ' ';
-  currentValue = 0;
   currentState = START_INPUT;
 
 
@@ -72,71 +77,87 @@ void loop() {
         facePump.stop();
     }
 
+    while (Serial.available() > 0) {
+        processByte();
+    }
+
 }
 
 void processByte() {
-    if (currentState == POSITION_INPUT) {
-        currentValue = Serial.read();
-        processPosition();
+/*
+    Serial.print("Byte at state ");
+    Serial.println(currentState); */
+
+    if (currentState == START_INPUT) {
+        char input = Serial.read();
+        if (input == '>') {
+          currentState = COMMAND_INPUT;
+        }
+    }
+    else if (currentState == COMMAND_INPUT) {
+        char input = Serial.read();
+        if(strchr(VALID_COMMANDS,input) != -1) {
+              currentCommand = input;
+              currentState = LENGTH_INPUT;
+        } else {
+            Serial.println("WARNING INVALID COMMAND");
+            currentState = START_INPUT;
+        }
     }
     else if (currentState == VALUE_INPUT) {
-       currentState = START_INPUT;
-       currentValue = Serial.read();
-       processCommand();
-    } else {
-      char input = Serial.read();
-      if (input == '>') {
-        currentState = COMMAND_INPUT;
-      }
-      else if (currentState == COMMAND_INPUT && input == 'X') {
-            currentState = POSITION_INPUT;
-      }
-      else if (currentState == COMMAND_INPUT && strchr(VALID_COMMANDS,input) != -1) {
-          currentCommand = input;
-          currentState = VALUE_INPUT;
-      } 
-
+       if (valueCounter > MAX_VALUES) {
+         Serial.println("WARNING VALUE COUNTER EXCEEDED MAX");
+         currentState = START_INPUT;
+        } else {
+            currentValue[valueCounter] = Serial.read();
+            valueCounter++;
+            if (valueCounter == currentLength) {
+                 processCommand();
+                 currentState = START_INPUT;
+            }
+       }
     }
-}
-void serialEvent() {
-  int bytesAvailable = Serial.available();
-  for (int i = 0; i < bytesAvailable; i++) {
-        processByte();
-  }
-}
-
-void processPosition() {
-    //Serial.println(currentValue);
-    currentPosition[positionCounter] = currentValue - 50;
-    if (positionCounter == 1) {
-        currentState = START_INPUT;
-        positionCounter = 0;
-        updateChambers();
-    } else {
-        positionCounter++;
-    }
+    else if (currentState == LENGTH_INPUT) {
+        currentLength = Serial.read();
+        if (currentLength > MAX_VALUES) {
+            Serial.println("WARNING RECEIVED LENGTH LONGER THAN MAX");
+            currentState = START_INPUT;
+        }
+        else if (currentLength > 0) {
+            currentState = VALUE_INPUT;
+        } else {
+            processCommand();
+            currentState = START_INPUT;
+        }
+        valueCounter = 0;
+     } 
 }
 
 void processCommand() {
     switch(currentCommand)  {
+        case 'X': {
+            updateChambers(currentValue[0] - 50, currentValue[1] - 50);
+            break;
+        }
         case 'P': {
-            neckPump.setSpeed(currentValue);
+            neckPump.setSpeed(currentValue[0]);
             break;
         }
         case 'S': {
+            Serial.println("Stop Command");
             dispatchStop();
             neckPump.stop();
             break;
         }
         case 'E': {
-            float inflation = (float)currentValue / 255.0;
+            float inflation = (float)currentValue[0] / 255.0;
             Serial.print("Eyes ");
             Serial.println(inflation);
             chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
             break;
         }
         case 'M': {
-            float inflation = (float)currentValue / 255.0;
+            float inflation = (float)currentValue[0] / 255.0;
             Serial.print("Mouth ");
             Serial.println(inflation);
             chambers[MOUTH_CHAMBER].inflateTo(inflation, 0.8);
@@ -150,26 +171,32 @@ void processCommand() {
 
 
 void dispatchStop() {
-    for (int i = 0; i < sizeof(chambers); i++) {
+    for (int i = 0; i < 3; i++) { // Just neck
         chambers[i].stop();
     }
 }
 
-void updateChambers() {
+void updateChambers(int x, int y) {
 
-    int maxPower = max(abs(currentPosition[0]), abs(currentPosition[1]));
+/*
+    Serial.print("Movement ");
+    Serial.print(x);
+    Serial.print(",");
+    Serial.println(y); */
+
+    int maxPower = max(abs(x), abs(y));
     float speed = (float)maxPower / MAX_POSITION;
     //Serial.println("Update chambers");
 
-    if (currentPosition[0] > 0 && currentPosition[0] > abs(currentPosition[1])) {
+    if (x > 0 && x > abs(y)) {
         left(speed);
-    } else if (currentPosition[0] < 0 && abs(currentPosition[0]) > abs(currentPosition[1])) {
+    } else if (x < 0 && abs(x) > abs(y)) {
         right(speed);
     }
-    else if (currentPosition[1] > 0  && currentPosition[1] > abs(currentPosition[0])) {
+    else if (y > 0  && y > abs(x)) {
         down(speed);
     }
-    else if (currentPosition[1] < 0) {
+    else if (y < 0) {
         up(speed);
     }
 }

@@ -3,13 +3,22 @@
 const int DEFLATE_INTERVAL_MS = 10;
 const int INFLATED_THRESHOLD = 65;
 
-Chamber::Chamber(Pump* pump, int entryValve, int releaseValve, int pressureSensor, int maxPressure) {
+Chamber::Chamber(
+        char* name,
+        Pump* pump,
+        int entryValve,
+        int releaseValve,
+        int pressureSensor,
+        int minPressure,
+        int maxPressure
+    ) {
+    _name = name;
     _entryValve = entryValve;
     _releaseValve = releaseValve;
     _pressureSensor = pressureSensor;
+    _minPressure = minPressure < INFLATED_THRESHOLD ? INFLATED_THRESHOLD : minPressure;
     _maxPressure = maxPressure;
     _destinationPressure = maxPressure;
-
     _pump = pump;
 }
 Chamber::~Chamber() {
@@ -24,7 +33,8 @@ void Chamber::init() {
 
     _state = IDLE;
     _pressure = analogRead(_pressureSensor);
-    Serial.print("Chamber initialzied - Initial Pressure: ");
+    Serial.print(_name);
+    Serial.print(" Chamber initialzied - Initial Pressure: ");
     Serial.println(_pressure);
 
     deflate();
@@ -36,11 +46,17 @@ void Chamber::update() {
     // Blast Protection
     _pressure = analogRead(_pressureSensor);
     if ((_state == INFLATING && _pressure > _destinationPressure) || 
-        (_state == DEFLATING && _pressure < INFLATED_THRESHOLD)) {
-        Serial.print("Stop!!! ");
+        (_state == DEFLATING && _pressure < _minPressure)) {
+        Serial.print(_name);
+        Serial.print(" Stop!!! ");
         Serial.println(_pressure);
 
         stop();
+    } else if (_state == IDLE && _minPressure > INFLATED_THRESHOLD &&  _pressure < _minPressure) {
+        Serial.print("Inflating to min pressure ");
+        Serial.println(_minPressure);
+        _destinationPressure = _minPressure;
+        inflate(0.8);
     }
 
     /*
@@ -72,9 +88,9 @@ void Chamber::inflateMax(float speed) {
 }
 
 void Chamber::inflateTo(float max, float speed) {
-    _destinationPressure = (float)_maxPressure * max;
+    _destinationPressure = _minPressure + (float)(_maxPressure - _minPressure) * max;
+    Serial.print("Destination pressure: ");
     Serial.println(_destinationPressure);
-    Serial.println(_pressure);
     if (_destinationPressure > _pressure) {
         inflate(speed);
     } else if (_destinationPressure < _pressure && _pressure > INFLATED_THRESHOLD) {
@@ -83,8 +99,9 @@ void Chamber::inflateTo(float max, float speed) {
 }
 
 void Chamber::inflate(float speed) {
+    Serial.print(_name);
+    Serial.println("::Inflate()");
     if (_pressure < _destinationPressure) {
-
         if (_state != INFLATING) {
             _state = INFLATING;
             digitalWrite(_releaseValve, LOW);
@@ -110,7 +127,8 @@ void Chamber::deflate() {
 
 void Chamber::stop() {
     if (!_state == IDLE) {
-        Serial.println("Stop");
+        Serial.print(_name);
+        Serial.println(" Stop");
         digitalWrite(_entryValve, LOW);
         digitalWrite(_releaseValve, LOW);
         _pump->release();

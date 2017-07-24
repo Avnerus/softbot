@@ -80,6 +80,29 @@ body {
     display: flex;
 }
 
+#console {
+    display:flex;
+    border: 1px solid;
+    background: rgba(0,100,100,0.5);
+}
+
+#console-form {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#console-form .form-group {
+    display: flex;
+}
+
+#console-form .form-control { 
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 25px;
+}
+#console-form .label {
+    margin-top: 3px;
+}
+
 #recorder-container {
     display:flex;
     align-items: center;
