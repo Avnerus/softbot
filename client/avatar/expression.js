@@ -29,6 +29,7 @@ export default class Expression {
 
     express(text) {
         console.log("Expressing", text);
+        /*
         if (this.containsNegativeEmoji(text)) {
             console.log("Negative!!");
             this.socketController.sendValueCommand("E",255);
@@ -37,6 +38,6 @@ export default class Expression {
             // Neutral
             this.socketController.sendValueCommand("E",0);
             this.socketController.sendValueCommand("M",0);
-       }
+       }*/
     }
 }

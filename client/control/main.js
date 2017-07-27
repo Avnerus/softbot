@@ -10,7 +10,6 @@ import Recorder from './recorder'
 import YoutubeRemote from './youtube-remote'
 import Transcript from './transcript'
 import Listener from './listener'
-import Expression from './expression'
 import Console from './console'
 
 export default class Main {
@@ -42,10 +41,7 @@ export default class Main {
         this.camera = new Camera(this.socketController);
         this.camera.init();
 
-        this.expression = new Expression(this.socketController);
-        this.expression.init();
-
-        this.speech = new Speech(this.socketMessenger, this.expression, $("#speech-form"));
+        this.speech = new Speech(this.socketMessenger, $("#speech-form"));
         this.speech.init();
 
         this.youtubeRemote = new YoutubeRemote(this.socketMessenger, $('#youtube-form'));
@@ -60,7 +56,7 @@ export default class Main {
         this.listener = new Listener(this.socketMessenger, $('#listen-container'));
         this.listener.init();
 
-        this.console = new Console(this.socketController, $('#console-form'));
+        this.console = new Console(this.socketController, $('#console'));
         this.console.init();
 
     }

@@ -17,6 +17,8 @@ int valvePin7 = 23;
 int valvePin8 = 25;
 int valvePin9 = 27;
 int valvePin10 = 29;
+int valvePin11 = 31;
+int valvePin12 = 33;
 
 int pumpEnable = 7;
 int pumpMotor = 40;
@@ -29,6 +31,7 @@ int pressureSensor2 = A1;
 int pressureSensor3 = A2;
 int pressureSensor4 = A3;
 int pressureSensor5 = A4;
+int pressureSensor6 = A5;
 
 void setup() {
   Serial.begin(9600); 
@@ -43,6 +46,8 @@ void setup() {
   pinMode(valvePin8, OUTPUT);
   pinMode(valvePin9, OUTPUT);
   pinMode(valvePin10, OUTPUT);
+  pinMode(valvePin11, OUTPUT);
+  pinMode(valvePin12, OUTPUT);
 
   pinMode(pumpEnable, OUTPUT);
   pinMode(pumpMotor, OUTPUT);
@@ -71,6 +76,8 @@ void loop() {
   digitalWrite(valvePin8,LOW);
   digitalWrite(valvePin9,LOW);
   digitalWrite(valvePin10,LOW);
+  digitalWrite(valvePin11,LOW);
+  digitalWrite(valvePin12,LOW);
 
   delay(inflateTime);
 
@@ -84,6 +91,8 @@ void loop() {
   pressure = analogRead(pressureSensor4);
   Serial.println(pressure);
   pressure = analogRead(pressureSensor5);
+  Serial.println(pressure);
+  pressure = analogRead(pressureSensor6);
   Serial.println(pressure);
 
   digitalWrite(pumpMotor, LOW);
@@ -102,6 +111,8 @@ void loop() {
   digitalWrite(valvePin8,HIGH);
   digitalWrite(valvePin9,HIGH);
   digitalWrite(valvePin10,HIGH);
+  digitalWrite(valvePin11,HIGH);
+  digitalWrite(valvePin12,HIGH);
 
   Serial.println("Done");
 

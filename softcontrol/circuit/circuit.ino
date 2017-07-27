@@ -20,17 +20,18 @@ int   valueCounter = 0;
 byte   currentLength = 0;
 
 INPUT_STATE currentState;
-const char* VALID_COMMANDS = "XPDUSRLEM";
+const char* VALID_COMMANDS = "XPSEMC";
 
 Pump neckPump(7,40);
 Pump facePump(6,41);
 
-Chamber chambers[5] = {
+Chamber chambers[6] = {
     Chamber("Down", &neckPump, 26,28,A1, 0, 700),
     Chamber("Right", &neckPump, 32,24,A0, 0, 700),
     Chamber("Left", &neckPump, 30,22,A2, 0, 700),
-    Chamber("Eye", &facePump, 25,23,A3, 0, 150),
-    Chamber("Mouth", &facePump, 29,27,A4, 0, 290) // 190, 290)
+    Chamber("Eyes", &facePump, 25,23,A3, 0, 180),
+    Chamber("Mouth", &facePump, 29,27,A4, 0, 400), // 190, 290)
+    Chamber("Cheeks", &facePump, 31 ,33, A5, 0, 200) 
 };
 
 enum CHAMBER_INDEX {
@@ -38,7 +39,8 @@ enum CHAMBER_INDEX {
     RIGHT_CHAMBER  = 1,
     LEFT_CHAMBER   = 2,
     EYE_CHAMBERS   = 3,
-    MOUTH_CHAMBER  = 4
+    MOUTH_CHAMBER  = 4,
+    CHEEK_CHAMBERS = 5
 };
 
 const int killPin = 39;
@@ -156,18 +158,31 @@ void processCommand() {
                 chambers[EYE_CHAMBERS].oscillate(inflationMin,inflationMax);
             } else {
                 float inflation = (float)currentValue[0] / 255.0;
-                Serial.print("Eyes Inflate ");
-                Serial.println(inflation);
 
                 chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
             }
             break;
         }
         case 'M': {
-            float inflation = (float)currentValue[0] / 255.0;
-            Serial.print("Mouth ");
-            Serial.println(inflation);
-            chambers[MOUTH_CHAMBER].inflateTo(inflation, 0.8);
+            if (currentLength == 2) {
+                float inflationMin = (float)currentValue[0] / 255.0;
+                float inflationMax = (float)currentValue[1] / 255.0;
+                chambers[MOUTH_CHAMBER].oscillate(inflationMin,inflationMax);
+            } else {
+                float inflation = (float)currentValue[0] / 255.0;
+                chambers[MOUTH_CHAMBER].inflateTo(inflation, 0.95);
+            }
+            break;
+        }
+        case 'C': {
+            if (currentLength == 2) {
+                float inflationMin = (float)currentValue[0] / 255.0;
+                float inflationMax = (float)currentValue[1] / 255.0;
+                chambers[CHEEK_CHAMBERS].oscillate(inflationMin,inflationMax);
+            } else {
+                float inflation = (float)currentValue[0] / 255.0;
+                chambers[CHEEK_CHAMBERS].inflateTo(inflation, 0.95);
+            }
             break;
         }
         default: {

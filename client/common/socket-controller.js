@@ -30,7 +30,7 @@ export default class SocketController {
         }
     }
 
-    sendValueCommand(command, values) {
+    sendValueCommand(command, ...values) {
         console.log("Values", values);
         let buffer = new ArrayBuffer(3 + values.length);
         let z = new Uint8Array(buffer);

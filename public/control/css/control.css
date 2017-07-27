@@ -175,3 +175,39 @@ body {
 .transcript-line.speaker {
     color: #f9f100;
 }
+.console-slider-control {
+    display:flex;
+}
+
+.console-slider-control label {
+    width: 50px;
+}
+
+.console-slider-value {
+    margin-left: 20px;
+}
+
+#console-sliders {
+    margin-left: 26px;
+
+}
+.console-slider {
+    width: 400px;
+    margin-left: 20px;
+    position: relative;
+    top: 5px;
+}
+
+#console-expressions {
+    display: flex;
+}
+#console-poses {
+    margin-left: 20px;
+}
+#console-poses label {
+    margin-right: 10px;
+}
+#console-poses select {
+    margin-right: 10px;
+    color: black;
+}

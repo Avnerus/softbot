@@ -11,7 +11,7 @@ export default class Camera {
         }
 
         this.timer = 0;
-        this.UPDATE_INTERVAL = 250;
+        this.UPDATE_INTERVAL = 100;
     }
     init() {
         let joystickOptions = {
