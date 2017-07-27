@@ -2,9 +2,10 @@ import Expressions from '../common/expressions';
 import _ from 'lodash'
 
 export default class Console {
-    constructor(socketController, consoleContainer) {
+    constructor(socketController, expression, consoleContainer) {
         console.log("Console constructed");
         this.socketController = socketController;
+        this.expression = expression;
         this.consoleContainer = consoleContainer;
     }
     init() {
@@ -40,9 +41,12 @@ export default class Console {
             min:0,
             max:255,
             value: 0,
-            change: (event,ui) => {
+            slide: (event,ui) => {
                 this.onSlide(ui);
             },
+            change: (event, ui) => {
+                this.onChange(ui);
+            }
         });
         console.log("Expressions", Expressions);
         Expressions.expressions.forEach((item) => {
@@ -55,7 +59,6 @@ export default class Console {
 
     onSlide(ui) {
         let container = $(ui.handle).parent().parent();
-        container.find(".console-slider-value").html(ui.value);
         let command = container.data("command");
         this.socketController.sendValueCommand(command, ui.value);
 
@@ -63,6 +66,11 @@ export default class Console {
         let selectedPose = this.consoleContainer.find("select option:selected").val();
         let commands = _.find(Expressions.expressions,{name:selectedPose});
         commands[command] = ui.value;
+
+    }
+    onChange(ui) {
+        let container = $(ui.handle).parent().parent();
+        container.find(".console-slider-value").html(ui.value);
     }
 
     poseSelect() {
@@ -72,5 +80,6 @@ export default class Console {
         this.consoleContainer.find("#eye-slider").slider("value",commands["E"]);
         this.consoleContainer.find("#cheek-slider").slider("value",commands["C"]);
         this.consoleContainer.find("#mouth-slider").slider("value",commands["M"]);
+        this.expression.applyPose(commands);
     }
 }

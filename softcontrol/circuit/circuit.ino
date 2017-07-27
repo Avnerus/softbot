@@ -29,7 +29,7 @@ Chamber chambers[6] = {
     Chamber("Down", &neckPump, 26,28,A1, 0, 700),
     Chamber("Right", &neckPump, 32,24,A0, 0, 700),
     Chamber("Left", &neckPump, 30,22,A2, 0, 700),
-    Chamber("Eyes", &facePump, 25,23,A3, 0, 180),
+    Chamber("Eyes", &facePump, 25,23,A3, 0, 200),
     Chamber("Mouth", &facePump, 29,27,A4, 0, 400), // 190, 290)
     Chamber("Cheeks", &facePump, 31 ,33, A5, 0, 200) 
 };
@@ -225,7 +225,7 @@ void updateChambers(int x, int y) {
 
 void left(float speed) {
     if (chambers[RIGHT_CHAMBER].isInflated()) {
-        chambers[RIGHT_CHAMBER].deflate();
+        chambers[RIGHT_CHAMBER].deflateMax();
     } else {
         chambers[RIGHT_CHAMBER].stop();
         chambers[LEFT_CHAMBER].inflateMax(speed);
@@ -233,7 +233,7 @@ void left(float speed) {
 }
 void right(float speed) {
     if (chambers[LEFT_CHAMBER].isInflated()) {
-        chambers[LEFT_CHAMBER].deflate();
+        chambers[LEFT_CHAMBER].deflateMax();
     } else {
         chambers[LEFT_CHAMBER].stop();
         chambers[RIGHT_CHAMBER].inflateMax(speed);
@@ -242,7 +242,7 @@ void right(float speed) {
 }
 void up(float speed) {
     if (chambers[DOWN_CHAMBER].isInflated()) {
-        chambers[DOWN_CHAMBER].deflate();
+        chambers[DOWN_CHAMBER].deflateMax();
     } else {
         chambers[DOWN_CHAMBER].stop();
         chambers[LEFT_CHAMBER].inflateMax(speed);

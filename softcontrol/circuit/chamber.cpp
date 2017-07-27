@@ -146,6 +146,11 @@ void Chamber::deflate() {
     }
 }
 
+void Chamber::deflateMax() {
+    _destinationPressure = _minPressure;
+    deflate();
+}
+
 void Chamber::stop() {
     if (!_state == IDLE) {
         Serial.print(_name);

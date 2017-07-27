@@ -34,8 +34,10 @@ export default class Recognizer {
         })
         .then( (token) => {
             console.log("Access token:", token);
-            //this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "ja-JP_BroadbandModel"}));
+            // this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "ja-JP_BroadbandModel"}));
             this.handleStream(recognizeMicrophone({"token": token, objectMode: true}));
+            //this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "pt-BR_BroadbandModel"}));
+            //this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "zh-CN_BroadbandModel"}));
         });
     }
 

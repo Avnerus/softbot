@@ -4,7 +4,7 @@ import SocketController  from '../common/socket-controller'
 import Voice from './voice';
 import YoutubePlayer from './youtube-player'
 import Recognizer from './recognizer'
-import Expression from './expression'
+import Expression from '../common/expression'
 
 export default class  {
     constructor(config) {
