@@ -71,4 +71,11 @@ export default class Expression {
             }
         });
     }
+    applyPoseByName(poseName) {
+        let pose = _.find(Expressions.expressions, {name: poseName});
+        if (pose) {
+            console.log("Apply pose", pose);
+            this.applyPose(pose);
+        }
+    }
 }

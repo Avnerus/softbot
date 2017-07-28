@@ -5,6 +5,7 @@ import Voice from './voice';
 import YoutubePlayer from './youtube-player'
 import Recognizer from './recognizer'
 import Expression from '../common/expression'
+import Idle from './idle'
 
 export default class  {
     constructor(config) {
@@ -25,7 +26,6 @@ export default class  {
         this.socketController.init();
 
         this.recognizer = new Recognizer(this.socketMessenger, $('#recognizer-container'));
-        this.recognizer.init();
 
         this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');
         this.youtubePlayer.init();
@@ -42,6 +42,10 @@ export default class  {
         this.voice.init();
 
 
+        this.idle = new Idle(this.SocketController, this.expression);
+        this.idle.init();
+
+
         /*
         this.rtcController = new RTCController();
         this.rtcController.init();*/
@@ -49,14 +53,16 @@ export default class  {
 
     start() {
         this.resize();
+        this.recognizer.init();
     }
 
     animate(dt) {
         this.update(dt);
-        this.render();
+        //this.render();
     }
 
     update(dt) {
+        this.idle.update(dt);
     }
 
     render() {

@@ -44,7 +44,7 @@ export default class Voice {
 
     voiceStart() {
         // Speaking movement
-        this.socketController.sendValueCommand('M', 30, 120);
+        this.socketController.sendValueCommand('M', 80, 240);
         this.textOutput.fadeIn();
     }
 
