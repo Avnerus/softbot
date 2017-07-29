@@ -18,7 +18,8 @@ export default class Recognizer {
         this.socketMessenger.on("recognize", (data) => {
             if (data.start) {
                 this.wasStarted = true;
-                this.start();
+                this.currentData = data;
+                this.start(data);
             }
             else if (data.stop) {
                 this.wasStarted = false;
@@ -33,12 +34,12 @@ export default class Recognizer {
         })
         events.on("voice_end", () => {
             if (this.wasStarted) {
-                this.start();
+                this.start(this.currentData);
             }
         })
     }
 
-    start() {
+    start(data) {
         console.log("Start recognizing!");
         console.log("Fetching token");
         fetch('/api/token').then(res => {
@@ -50,9 +51,11 @@ export default class Recognizer {
         .then( (token) => {
             console.log("Access token:", token);
             // this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "ja-JP_BroadbandModel"}));
-            this.handleStream(recognizeMicrophone({"token": token, objectMode: true}));
             //this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "pt-BR_BroadbandModel"}));
             //this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: "zh-CN_BroadbandModel"}));
+
+            console.log("Recognize Model: ", data.model, "Translate: " + data.translate);
+            this.handleStream(recognizeMicrophone({"token": token, objectMode: true, model: data.model}));
         });
     }
 
@@ -80,7 +83,8 @@ export default class Recognizer {
         if (msg.results[0].final && msg.results[0].alternatives[0].confidence >= 0.3) {
             // Send to socket
             this.socketMessenger.emit('recognized-speech', {
-                text: msg.results[0].alternatives[0].transcript
+                text: msg.results[0].alternatives[0].transcript,
+                translate: this.currentData.translate
             });
 
             // Express

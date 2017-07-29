@@ -75,9 +75,12 @@
                             </select>
                             <label for="speech-pitch">Pitch:</label>
                             <input type="number" value=2.0 class="form-control" id="speech-pitch">
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="">Translate to English</label>
-                            </div>
+                            <label for="speech-translate">Translate:</label>
+                            <select class="form-control" id="speech-translate">
+                                <option>-</option>
+                                <option>en</option>
+                                <option>ja</option>
+                            </select>
                         </div>
                     </form>
                 </section>
@@ -88,6 +91,17 @@
                             <div class="form-group listen-form">
                                 <button id="start-recognize-button" type="button" class="recognize-button btn-primary">START RECOGNIZING SPEECH</button>
                                 <button id="stop-recognize-button" type="button" class="recognize-button btn-danger" style="display:none;">STOP RECOGNIZING SPEECH</button>
+                                <label for="recognize-model">Model:</label>
+                                <select class="form-control" id="recognize-model">
+                                    <option>en-US_BroadbandModel</option>
+                                    <option>ja-JP_BroadbandModel</option>
+                                </select>
+                                <label for="recognize-translate">Translate:</label>
+                                <select class="form-control" id="recognize-translate">
+                                    <option>-</option>
+                                    <option>en</option>
+                                    <option>ja</option>
+                                </select>
                             </div>
                         </form>
                     </div>

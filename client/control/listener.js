@@ -8,20 +8,25 @@ export default class Listener {
         console.log("Listener init");
 
 
-        this.container.find('#start-recognize-button').click(() => {
-            this.startRecognizing();
+        this.container.find('#start-recognize-button').click((event) => {
+            this.startRecognizing(event);
         });
         this.container.find('#stop-recognize-button').click(() => {
             this.stopRecognizing();
         });
     }
 
-    startRecognizing() {
-        console.log("Start recognizing!");
+    startRecognizing(event) {
+        console.log("Start recognizing!")
+        let form = $(event.currentTarget).parent();
         this.container.find('#start-recognize-button').hide();
         this.container.find('#stop-recognize-button').show();
         events.emit("transcript", {from: "System", text: "Started Listening..."});
-        this.socketMessenger.emit("recognize", {start: true});
+        this.socketMessenger.emit("recognize", {
+            start: true,
+            model: form.find('#recognize-model').val(),
+            translate: form.find('#recognize-translate').val()
+        });
     }
 
     stopRecognizing() {

@@ -41,14 +41,14 @@ export default {
         {
             "name": "Breathing",
             "E":0,
-            "C": [80,220],
+            "C": [40,220],
             "M": 0
         },
         {
             "name": "Speaking",
             "E":0,
             "C": 0,
-            "M": [80,240]
+            "M": [80,200]
         }
     ]
 }

@@ -22,7 +22,8 @@ export default class  {
         this.socketMessenger = new SocketMessenger('registerAvatar');
         this.socketMessenger.init();
 
-        this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
+        //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
+        this.socketController = new SocketController("ws://10.0.1.56:9002");
         this.socketController.init();
 
         this.expression = new Expression(this.socketController);

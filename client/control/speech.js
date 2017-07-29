@@ -24,12 +24,12 @@ export default class Speech {
         this.speechForm.submit((event) => {
             if (event.currentTarget[0].value.length > 0) {
 
-                console.log("Say! ", event.currentTarget[0].value,event.currentTarget[1].value, event.currentTarget[2].value, event.currentTarget[3].checked);
+                console.log("Say! ", event.currentTarget[0].value,event.currentTarget[1].value, event.currentTarget[2].value, event.currentTarget[3].value);
                 this.socketMessenger.emit('speech', {
                     text: event.currentTarget[0].value,
                     voice: event.currentTarget[1].value,
                     pitch: event.currentTarget[2].value,
-                    translate: event.currentTarget[3].checked
+                    translate: event.currentTarget[3].value
                 } );
 
                 events.emit("transcript", {from: "You", text: event.currentTarget[0].value})

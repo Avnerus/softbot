@@ -73,11 +73,7 @@ export default class Comm {
 
             client.on('recognized-speech', (data) => {
                 if (client == this.avatar && this.control) {
-                    this.translate('auto','en', data.text)
-                    .then((translation) => {
-                        data.text = translation;
-                        this.control.emit('recognized-speech', data);
-                    })
+                    this.recognizedSpeech(data);
                 }
             });
         });
@@ -86,8 +82,8 @@ export default class Comm {
     speech(data) {
         return new Promise((resolve, reject) => {
             // Should we translate to english?
-            if (data.translate) {
-                resolve(this.translate('auto','en',data.text));
+            if (data.translate != "-") {
+                resolve(this.translate('auto',data.translate,data.text));
             } else {
                 resolve(data.text);
             }
@@ -95,6 +91,21 @@ export default class Comm {
             console.log("Processed text", processedText);
             data.text = processedText;
             this.avatar.emit('speech', data);
+            fs.write(this.log, new Date() + " : " + data.text);
+            return processedText;
+        });
+    }
+    recognizedSpeech(data) {
+        return new Promise((resolve, reject) => {
+            if (data.translate != "-") {
+                resolve(this.translate('auto',data.translate,data.text));
+            } else {
+                resolve(data.text);
+            }
+        }).then((processedText) => {
+            console.log("Processed text", processedText);
+            data.text = processedText;
+            this.control.emit('recognized-speech', data);
             fs.write(this.log, new Date() + " : " + data.text);
             return processedText;
         });

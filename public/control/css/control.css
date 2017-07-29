@@ -39,6 +39,7 @@ body {
 
 .recognize-button {
     white-space: normal;
+    margin-bottom: 20px;
 }
 
 #listen-container {
@@ -65,6 +66,10 @@ body {
 #speech-form {
     color: white;
     margin: 30px;
+}
+
+#speech-translate {
+    width: 60px;
 }
 
 #controls-row {

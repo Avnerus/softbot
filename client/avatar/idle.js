@@ -44,7 +44,7 @@ export default class Idle {
             }
 
             if (!this.nowBreathing && this.intervalTimer >= this.BREATHING_INTERVAL) {
-                this.currentBreathingTime = Util.getRandomInt(1000, 5000);
+                this.currentBreathingTime = Util.getRandomInt(1000, 3000);
                 this.expression.applyPoseByName("Breathing");
                 this.intervalTimer = 0;
                 this.nowBreathing = true;

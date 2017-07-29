@@ -15,38 +15,38 @@ export default class Voice {
         this.socketMessenger.on('speech',(data) => {
             console.log("Speech!", data)
             this.textOutput.html(data.text);
-            /*
-            responsiveVoice.speak(data.text, data.voice, {
-                pitch: data.pitch,
-                rate: 1.0,
-                onstart: () => this.voiceStart(),
-                onend: () => this.voiceEnd()
-            });*/
-
-            this.expressText = data.text;
-
-            // Speech Synthesis API
-            let utterThis = new SpeechSynthesisUtterance(data.text);
-            utterThis.pitch = data.pitch;
-            //            utterThis.voice = this.voices[5];
-            utterThis.rate = 0.7;
-            utterThis.onend = () => this.voiceEnd();
-            utterThis.onstart = () => this.voiceStart();
-            utterThis.onboundary = (event) => this.voiceBoundary(event);
-            window.speechSynthesis.speak(utterThis);
-            /*
-            utterThis.onboundary = function(event) {
-                console.log(event.name + ' boundary reached after ' + event.elapsedTime + ' milliseconds.');
-              }*/
-
+            this.currentData = data;
+            // For now use responsiveVoice only for Japanese
+            if (data.translate == "ja") {
+                responsiveVoice.speak(data.text, data.voice, {
+                    pitch: data.pitch,
+                    rate: 0.8,
+                    onstart: () => this.voiceStart(),
+                    onend: () => this.voiceEnd()
+                });
+            }
+            else {
+                // Speech Synthesis API
+                let utterThis = new SpeechSynthesisUtterance(data.text);
+                utterThis.pitch = data.pitch;
+                //            utterThis.voice = this.voices[5];
+                utterThis.rate = 0.5;
+                utterThis.onend = () => this.voiceEnd();
+                utterThis.onstart = () => this.voiceStart();
+                utterThis.onboundary = (event) => this.voiceBoundary(event);
+                window.speechSynthesis.speak(utterThis);
+            }
         });
     }
 
     voiceStart() {
         // Speaking movement
         events.emit("voice_start");
-        this.expression.applyPoseByName("Speaking");
-        this.textOutput.fadeIn();
+        let timeout = this.currentData.translate == "ja" ? 1000 : 0;
+        setTimeout(() => {
+            this.expression.applyPoseByName("Speaking");
+            this.textOutput.fadeIn();
+        },timeout);
     }
 
     voiceBoundary(event) {
@@ -56,6 +56,6 @@ export default class Voice {
     voiceEnd() {
         events.emit("voice_end");
         this.textOutput.fadeOut();
-        this.expression.express(this.expressText);
+        this.expression.express(this.currentData.text);
     }
 }
