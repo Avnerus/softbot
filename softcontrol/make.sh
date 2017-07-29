@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # git clone https://github.com/zaphoyd/websocketpp
 # cd websocketapp
 # mkdir build
@@ -7,5 +8,6 @@
 # make
 # sudo make install
 # sudo apt-get install libboost-all-dev
+echo "Compiling"
 g++ softcontrol.cpp SerialPort.cpp -Wall -I /usr/local/include/websocketpp/ -lboost_system -lboost_chrono -lboost_thread -lpthread -o softcontrol
 
