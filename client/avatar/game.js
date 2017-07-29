@@ -25,13 +25,14 @@ export default class  {
         this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         this.socketController.init();
 
-        this.recognizer = new Recognizer(this.socketMessenger, $('#recognizer-container'));
+        this.expression = new Expression(this.socketController);
+        this.expression.init();
+
+        this.recognizer = new Recognizer(this.socketMessenger, this.expression, $('#recognizer-container'));
 
         this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');
         this.youtubePlayer.init();
 
-        this.expression = new Expression(this.socketController);
-        this.expression.init();
 
         this.voice = new Voice(
             this.socketMessenger,

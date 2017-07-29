@@ -44,13 +44,11 @@ export default class Expression {
         console.log("Expressing", text);
         if (this.containsNegativeEmoji(text)) {
             console.log("Negative!!");
-            this.socketController.sendValueCommand("E",252);
-            this.socketController.sendValueCommand("C",210);
+            this.applyPoseMilliseconds("Angry", 3000);
         }
         else if (this.containsPositiveEmoji(text)) {
             console.log("Positive!");
-            let happy = _.find(Expressions.expressions, {name: "Happy"});
-            this.applyPose(happy)
+            this.applyPoseMilliseconds("Happy", 3000);
         } else {
             // Neutral
             let reset = _.find(Expressions.expressions, {name: "Reset"});
@@ -77,5 +75,14 @@ export default class Expression {
             console.log("Apply pose", pose);
             this.applyPose(pose);
         }
+    }
+
+    applyPoseMilliseconds(poseName, time) {
+        events.emit("expression_start");
+        this.applyPoseByName(poseName);
+        setTimeout(() => {
+            this.applyPoseByName("Reset");
+            events.emit("expression_end");
+        },time);
     }
 }

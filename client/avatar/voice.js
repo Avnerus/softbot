@@ -44,7 +44,8 @@ export default class Voice {
 
     voiceStart() {
         // Speaking movement
-        this.socketController.sendValueCommand('M', 80, 240);
+        events.emit("voice_start");
+        this.expression.applyPoseByName("Speaking");
         this.textOutput.fadeIn();
     }
 
@@ -53,7 +54,7 @@ export default class Voice {
     }
 
     voiceEnd() {
-        this.socketController.sendValueCommand('M', 0);
+        events.emit("voice_end");
         this.textOutput.fadeOut();
         this.expression.express(this.expressText);
     }

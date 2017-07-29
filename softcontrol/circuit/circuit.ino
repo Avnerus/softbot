@@ -30,7 +30,7 @@ Chamber chambers[6] = {
     Chamber("Right", &neckPump, 32,24,A0, 0, 700),
     Chamber("Left", &neckPump, 30,22,A2, 0, 700),
     Chamber("Eyes", &facePump, 25,23,A3, 0, 200),
-    Chamber("Mouth", &facePump, 29,27,A4, 0, 400), // 190, 290)
+    Chamber("Mouth", &facePump, 29,27,A4, 0, 520), // 190, 290)
     Chamber("Cheeks", &facePump, 31 ,33, A5, 0, 200) 
 };
 

@@ -1,7 +1,7 @@
 #include "chamber.h"
 
 const int DEFLATE_INTERVAL_MS = 10;
-const int INFLATED_THRESHOLD = 65;
+const int INFLATED_THRESHOLD = 70;
 
 Chamber::Chamber(
         char* name,
@@ -135,9 +135,9 @@ void Chamber::inflate(float speed) {
 }
 
 void Chamber::deflate() {
-    Serial.print(_name);
-    Serial.println("::Deflate()");
     if (_state != DEFLATING) {
+        Serial.print(_name);
+        Serial.println("::Deflate()");
         _state = DEFLATING;
         _lastDeflateToggle = millis();
         _deflateToggle = LOW;

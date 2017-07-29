@@ -18,7 +18,7 @@ export default {
             "name": "Happy",
             "E": 180,
             "C": 0,
-            "M": 185
+            "M": 245,
         },
         {
             "name": "Surprised",
@@ -41,8 +41,14 @@ export default {
         {
             "name": "Breathing",
             "E":0,
-            "C": [100,200],
+            "C": [80,220],
             "M": 0
+        },
+        {
+            "name": "Speaking",
+            "E":0,
+            "C": 0,
+            "M": [80,240]
         }
     ]
 }
