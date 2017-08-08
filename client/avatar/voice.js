@@ -17,7 +17,7 @@ export default class Voice {
             this.textOutput.html(data.text);
             this.currentData = data;
             // For now use responsiveVoice only for Japanese
-            if (data.translate == "ja") {
+            if (data.translate != "en" && data.translate != "-") {
                 responsiveVoice.speak(data.text, data.voice, {
                     pitch: data.pitch,
                     rate: 0.8,
