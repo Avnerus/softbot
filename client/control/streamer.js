@@ -83,10 +83,10 @@ export default class Streamer {
         let body = { "request": "list"  };
         this.streaming.send({"message": body, success: (result) => {
             console.log("Stream list:", result.list);
-            let stream = _.find(result.list, {id: 10});
+            let stream = _.find(result.list, {id: 1});
             if (stream) {
                console.log("Stream:", stream);
-               let body = { "request": "watch", id: 10 }; 
+               let body = { "request": "watch", id: 1 }; 
                this.streaming.send({"message": body});
             }
         }});

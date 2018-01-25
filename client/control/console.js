@@ -1,4 +1,4 @@
-import Expressions from '../common/expressions';
+import Expressions from '../common/Expressions';
 import _ from 'lodash'
 
 export default class Console {
