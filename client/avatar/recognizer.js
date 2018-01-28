@@ -28,9 +28,15 @@ export default class Recognizer {
             }
         })
 
-        this.socketController.onMessage((data) => {
-            console.log("Received message!",data);
-            
+        this.socketController.onMessage((message) => {
+            var view = new DataView(message.data);
+            let ascii = view.getUint8(0);
+            if (ascii == 49) {
+                console.log("Add class");
+                this.container.addClass("on");
+            } else {
+                this.container.removeClass("on");
+            }
         });
 
         events.on("voice_start", () => {

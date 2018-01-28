@@ -33,7 +33,7 @@ export default class  {
             this.socketMessenger, 
             this.socketController,
             this.expression, 
-            $('#recognizer-container')
+            $('#interface')
         );
 
         this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');

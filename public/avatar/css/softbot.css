@@ -29,6 +29,10 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+#interface.on {
+    background-color: purple;
+}
 #text-output {
     color: white;
     font-size: 48px;

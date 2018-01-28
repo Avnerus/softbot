@@ -44,7 +44,7 @@ fn main() {
             println!("Receiving data on {} at {} baud:", &port_name, &baud_rate);
             loop {
                 if let Ok(t) = port.read(serial_buf.as_mut_slice()) {
-                    println!("{:?} ({})",serial_buf,t);
+                    //println!("{:?} ({})",serial_buf,t);
                     broadcast_in.send(serial_buf.clone()).unwrap();
                 }
                 thread::sleep(Duration::from_millis(10));
@@ -86,12 +86,8 @@ fn main() {
         println!("Spwaning server");
         listen("127.0.0.1:3012", |out| {
             println!("Connection");
-            //let mut soft_controller = sc_clone.lock().unwrap();
             Server {
                 ws: out,
-                // we need to clone the channel because
-                // in theory, there could be many active connections
-              //  serial: serial_in.clone(),
                 soft_controller: server_sc.clone()
             }
         }).unwrap();
@@ -104,7 +100,13 @@ fn main() {
         while let Ok(msg) = broadcast_out.recv() {
             let soft_controller = sc_check.lock().unwrap();
             match soft_controller.as_ref() {
-                Some(socket) => {socket.send(msg).unwrap();},
+                Some(socket) => {
+                    let res = socket.send(msg);
+                    match res {
+                        Ok(val) => {;} //println!("Sent! {:?}", val),
+                        Err(err) => println!("Error sending! {}", err),
+                    }
+                },
                 None => println!("No soft controller!"),
             }
         }
