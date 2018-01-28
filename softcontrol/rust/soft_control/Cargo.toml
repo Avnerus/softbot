@@ -5,3 +5,5 @@ authors = ["Avnerus <avnerus@gmail.com>"]
 
 [dependencies]
 ws = "*"
+serialport = "*"
+argparse = "*"

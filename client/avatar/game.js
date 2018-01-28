@@ -29,7 +29,12 @@ export default class  {
         this.expression = new Expression(this.socketController);
         this.expression.init();
 
-        this.recognizer = new Recognizer(this.socketMessenger, this.expression, $('#recognizer-container'));
+        this.recognizer = new Recognizer(
+            this.socketMessenger, 
+            this.socketController,
+            this.expression, 
+            $('#recognizer-container')
+        );
 
         this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');
         this.youtubePlayer.init();
@@ -45,7 +50,7 @@ export default class  {
 
 
         this.idle = new Idle(this.SocketController, this.expression);
-        this.idle.init();
+     //   this.idle.init();
 
 
         /*

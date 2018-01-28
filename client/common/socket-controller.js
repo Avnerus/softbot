@@ -30,6 +30,12 @@ export default class SocketController {
         }
     }
 
+    onMessage(callback) {
+        if (this.socket) {
+            this.socket.addEventListener('onmessage', (msg) => {callback(msg)});
+        }
+    }
+
     sendValueCommand(command, ...values) {
         console.log("Values", values);
         let buffer = new ArrayBuffer(3 + values.length);

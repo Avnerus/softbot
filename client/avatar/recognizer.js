@@ -1,9 +1,10 @@
 import recognizeMicrophone from 'watson-speech/speech-to-text/recognize-microphone';
 
 export default class Recognizer {
-    constructor(socketMessenger, expression,  container) {
+    constructor(socketMessenger, socketController,  expression,  container) {
         console.log("Recognizer constructed!")
         this.socketMessenger = socketMessenger;
+        this.socketController = socketController;
         this.expression = expression;
         this.container = container;
         this.wasStarted = false;
@@ -26,6 +27,11 @@ export default class Recognizer {
                 this.stop();
             }
         })
+
+        this.socketController.onMessage((data) => {
+            console.log("Received message!",data);
+            
+        });
 
         events.on("voice_start", () => {
             if (this.wasStarted) {
