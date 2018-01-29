@@ -84,7 +84,7 @@ fn main() {
     let server_sc = soft_controller.clone();
     let server = thread::Builder::new().name("server".to_owned()).spawn(move || {
         println!("Spwaning server");
-        listen("127.0.0.1:3012", |out| {
+        listen("0.0.0.0:3012", |out| {
             println!("Connection");
             Server {
                 ws: out,
