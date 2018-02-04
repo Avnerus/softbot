@@ -29,6 +29,10 @@ body {
     justify-content: center;
     align-items: center;
 }
+#breakout {
+    height: 50%;
+    background-color: black;
+}
 
 #interface.on {
     background-color: purple;

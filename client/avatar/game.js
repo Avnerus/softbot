@@ -6,6 +6,7 @@ import YoutubePlayer from './youtube-player'
 import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
+import Breakout from '../common/breakout'
 
 export default class  {
     constructor(config) {
@@ -20,11 +21,11 @@ export default class  {
 
 
         this.socketMessenger = new SocketMessenger('registerAvatar');
-        this.socketMessenger.init();
+  //      this.socketMessenger.init();
 
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         this.socketController = new SocketController("ws://84.248.66.46:3012");
-        this.socketController.init();
+//        this.socketController.init();
 
         this.expression = new Expression(this.socketController);
         this.expression.init();
@@ -56,25 +57,27 @@ export default class  {
         /*
         this.rtcController = new RTCController();
         this.rtcController.init();*/
+
+       this.breakout = new Breakout($('#breakout'));
+       this.breakout.init();
     }
 
     start() {
-        this.resize();
         this.recognizer.init();
     }
 
     animate(dt) {
         this.update(dt);
+        this.breakout.render();
         //this.render();
     }
 
     update(dt) {
-        this.idle.update(dt);
-    }
-
-    render() {
+        //this.idle.update(dt);
     }
 
     resize() {
+        this.breakout.resize();
     }
+
 }

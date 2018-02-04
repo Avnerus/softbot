@@ -34,7 +34,7 @@ export default class SocketController {
         if (this.socket) {
             this.socket.addEventListener('message', (msg) => {callback(msg)});
         } else {
-            throw new Error("no socket for onMessage");
+            console.warn("no socket for onMessage");
         }
     }
 

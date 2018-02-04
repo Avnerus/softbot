@@ -27,18 +27,6 @@ function start() {
     game.start();
     game.resize();
     stats.begin();
-    requestAnimationFrame(animate);
-}
-
-
-function animate(t) {
-    if (!startTime) startTime = t;
-    var dt = t - startTime;
-    startTime = t;
-    stats.begin();
-    game.animate(dt);
-    stats.end();
-    requestAnimationFrame(animate);
 }
 
 function resize() {
