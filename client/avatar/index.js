@@ -7,6 +7,7 @@ import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Breakout from '../common/breakout'
+import Keyboard from '../common/keyboard'
 
 export default class  {
     constructor(config) {
@@ -58,22 +59,15 @@ export default class  {
         this.rtcController = new RTCController();
         this.rtcController.init();*/
 
-       this.breakout = new Breakout($('#breakout'));
+       this.keyboard = new Keyboard();
+       this.keyboard.init();
+
+       this.breakout = new Breakout($('#breakout'), this.keyboard);
        this.breakout.init();
     }
 
     start() {
         this.recognizer.init();
-    }
-
-    animate(dt) {
-        this.update(dt);
-        this.breakout.render();
-        //this.render();
-    }
-
-    update(dt) {
-        //this.idle.update(dt);
     }
 
     resize() {

@@ -11,5 +11,13 @@ export default class Paddle extends PIXI.Container {
         this.shape.drawRect(0,0, 100, 20);
 
         this.addChild(this.shape);
+
+        this.velocity = 0;
     }
+
+    update() {
+        this.position.x += this.velocity;
+    }
+
+    
 }

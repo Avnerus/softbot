@@ -1,8 +1,8 @@
-var Game = require('./avatar/game').default;
+var Avatar = require('./avatar/index').default;
 var config = require('./avatar/config').default;
 var Stats = require('stats.js');
 
-var game = new Game(config);
+var avatar = new Avatar(config);
 var stats = new Stats();
 stats.showPanel(0);
 
@@ -14,7 +14,7 @@ var el = document.documentElement;
 var startTime = null;
 
 window.onload = function() {
-    game.init();
+    avatar.init();
     start();
 }
 
@@ -24,12 +24,12 @@ function start() {
     document.getElementById('game').appendChild(stats.dom);
     window.addEventListener('resize', resize, false);
     window.addEventListener('vrdisplaypresentchange', resize, true); */
-    game.start();
-    game.resize();
+    avatar.start();
+    avatar.resize();
     stats.begin();
 }
 
 function resize() {
-    game.resize();
+    avatar.resize();
 }
 
