@@ -45,7 +45,7 @@ fn read_config() -> Result<Config, Box<std::error::Error>> {
 fn main() {
     println!("Hello, Rusty WS server!");
 
-    let config = read_config().unwrap();
+    let config = Box::new(read_config().unwrap());
     println!("{:#?}", config);
 
     let (broadcast_in, broadcast_out) = channel();
@@ -66,7 +66,6 @@ fn main() {
 
         ap.parse_args_or_exit();
     }
-
 
 
     let serial = thread::Builder::new().name("serial".to_owned()).spawn(move || -> Result<usize,serialport::Error> {
@@ -144,6 +143,10 @@ fn main() {
         }
     });
 
+    // Breakout game
+
+
+    breakout::start();
 
     let _ = serial.join();
     let _ = server.join();
