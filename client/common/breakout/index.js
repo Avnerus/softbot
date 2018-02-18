@@ -29,18 +29,18 @@ export default class Breakout {
 
         this.app.ticker.add(this.update, this);
 
-        this.keyboard.onPress(37, () => {
+        this.keyboard.onPress(38, () => {
             this.paddle.velocity = -5;
         });
-        this.keyboard.onRelease(37, () => {
+        this.keyboard.onRelease(38, () => {
             if (this.paddle.velocity < 0) {
                 this.paddle.velocity = 0;
             }
         });
-        this.keyboard.onPress(39, () => {
+        this.keyboard.onPress(40, () => {
             this.paddle.velocity = 5;
         });
-        this.keyboard.onRelease(39, () => {
+        this.keyboard.onRelease(40, () => {
             if (this.paddle.velocity > 0) {
                 this.paddle.velocity = 0;
             }

@@ -1,12 +1,3 @@
-[root]
-name = "soft_control"
-version = "0.1.0"
-dependencies = [
- "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "serialport 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "ws 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
 [[package]]
 name = "CoreFoundation-sys"
 version = "0.1.4"
@@ -305,6 +296,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "slab"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "soft_control"
+version = "0.1.0"
+dependencies = [
+ "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serialport 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ws 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "thread_local"

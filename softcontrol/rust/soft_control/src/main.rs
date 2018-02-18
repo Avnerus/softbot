@@ -2,7 +2,7 @@ extern crate ws;
 extern crate serialport;
 extern crate argparse;
 
-use ws::{listen, CloseCode, Message, Sender, Handler, Handshake, Result};
+use ws::{listen, CloseCode, Message, Sender, Handler, Handshake};
 use serialport::prelude::*;
 
 use std::thread;
@@ -12,6 +12,8 @@ use std::sync::mpsc::channel;
 use std::sync::{Arc,Mutex};
 
 use argparse::{ArgumentParser, Store};
+
+mod breakout;
 
 fn main() {
     println!("Hello, Rusty WS server!");
@@ -35,24 +37,22 @@ fn main() {
         ap.parse_args_or_exit();
     }
 
-    let serial = thread::Builder::new().name("serial".to_owned()).spawn(move || {
+    let serial = thread::Builder::new().name("serial".to_owned()).spawn(move || -> Result<usize,serialport::Error> {
         let mut settings: SerialPortSettings = Default::default();
         settings.baud_rate = baud_rate.into();
 
-        if let Ok(mut port) = serialport::open_with_settings(&port_name, &settings) {
-            let mut serial_buf: Vec<u8> = vec![0; 1];
-            println!("Receiving data on {} at {} baud:", &port_name, &baud_rate);
-            loop {
-                if let Ok(t) = port.read(serial_buf.as_mut_slice()) {
-                    //println!("{:?} ({})",serial_buf,t);
-                    broadcast_in.send(serial_buf.clone()).unwrap();
-                }
-                thread::sleep(Duration::from_millis(10));
+        let mut port = serialport::open_with_settings(&port_name, &settings)?;
+        let mut serial_buf: Vec<u8> = vec![0; 1];
+        println!("Receiving data on {} at {} baud:", &port_name, &baud_rate);
+        
+        loop {
+            let t = port.read(serial_buf.as_mut_slice())?;
+                //println!("{:?} ({})",serial_buf,t);
+            if t > 0 {
+                broadcast_in.send(serial_buf.clone()).unwrap();
             }
-        } else {
-            println!("Error: Port '{}' not available", &port_name);
+            thread::sleep(Duration::from_millis(10));
         }
-
     }).unwrap();
 
     // WebSocket connection handler for the server connection
@@ -62,13 +62,13 @@ fn main() {
         soft_controller: Arc<Mutex<Option<Sender>>>,
     }
     impl Handler for Server {
-        fn on_open(&mut self, _: Handshake) -> Result<()> {
+        fn on_open(&mut self, _: Handshake) -> ws::Result<()> {
             println!("Client connected!");
             let mut sc = self.soft_controller.lock().unwrap();
             *sc = Some(self.ws.clone());
             Ok(())
         }
-        fn on_message(&mut self, msg: Message) -> Result<()> {
+        fn on_message(&mut self, msg: Message) -> ws::Result<()> {
             println!("Server got message '{}'. ", msg);
             Ok(())
         }
@@ -103,7 +103,7 @@ fn main() {
                 Some(socket) => {
                     let res = socket.send(msg);
                     match res {
-                        Ok(val) => {;} //println!("Sent! {:?}", val),
+                        Ok(val) => val, //println!("Sent! {:?}", val),
                         Err(err) => println!("Error sending! {}", err),
                     }
                 },
