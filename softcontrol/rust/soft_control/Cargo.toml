@@ -7,3 +7,6 @@ authors = ["Avnerus <avnerus@gmail.com>"]
 ws = "*"
 serialport = "*"
 argparse = "*"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"

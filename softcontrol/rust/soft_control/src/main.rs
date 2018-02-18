@@ -2,6 +2,12 @@ extern crate ws;
 extern crate serialport;
 extern crate argparse;
 
+extern crate serde;
+extern crate serde_json;
+
+#[macro_use]
+extern crate serde_derive;
+
 use ws::{listen, CloseCode, Message, Sender, Handler, Handshake};
 use serialport::prelude::*;
 
@@ -10,13 +16,37 @@ use std::time::Duration;
 use std::sync::mpsc::channel;
 //use std::sync::mpsc::Sender;
 use std::sync::{Arc,Mutex};
+use std::fs::File;
+use std::path::Path;
 
 use argparse::{ArgumentParser, Store};
 
 mod breakout;
 
+#[derive(Deserialize, Debug)]
+struct Breakout {
+    name: String
+}
+
+#[derive(Deserialize, Debug)]
+struct Config {
+    breakout: Breakout,
+    version: String
+}
+
+fn read_config() -> Result<Config, Box<std::error::Error>> {
+    let path = Path::new("./config.json");
+    let file = File::open(path)?;
+    let data = serde_json::from_reader(file)?;
+
+    Ok(data)
+}
+
 fn main() {
     println!("Hello, Rusty WS server!");
+
+    let config = read_config().unwrap();
+    println!("{:#?}", config);
 
     let (broadcast_in, broadcast_out) = channel();
    // let (serial_in, serial_out) = channel();
@@ -36,6 +66,8 @@ fn main() {
 
         ap.parse_args_or_exit();
     }
+
+
 
     let serial = thread::Builder::new().name("serial".to_owned()).spawn(move || -> Result<usize,serialport::Error> {
         let mut settings: SerialPortSettings = Default::default();
@@ -111,6 +143,7 @@ fn main() {
             }
         }
     });
+
 
     let _ = serial.join();
     let _ = server.join();
