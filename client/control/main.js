@@ -12,6 +12,8 @@ import Transcript from './transcript'
 import Listener from './listener'
 import Expression from '../common/expression'
 import Console from './console'
+import Display from './display'
+import Keyboard from '../common/keyboard'
 
 export default class Main {
     constructor() {
@@ -27,6 +29,9 @@ export default class Main {
         //this.socketController = new SocketController("ws://10.0.1.56:9002");
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController.init();
+        
+        this.socketController = new SocketController("ws://127.0.0.1:3012");
+        this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
         this.socketMessenger.init();
@@ -62,6 +67,11 @@ export default class Main {
 
         this.console = new Console(this.socketController, this.expression, $('#console'));
         this.console.init();
+
+        this.keyboard = new Keyboard();
+
+        this.display = new Display(this.socketController, $("#breakout-form"), this.keyboard);
+        this.display.init();
 
     }
     animate(dt) {

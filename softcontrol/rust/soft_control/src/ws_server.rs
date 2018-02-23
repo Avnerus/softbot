@@ -17,6 +17,10 @@ impl Handler for Server {
     }
     fn on_message(&mut self, msg: Message) -> Result<()> {
         println!("Server got message '{}'. ", msg);
+        if msg.into_text().unwrap() == "SBREAKOUT" {
+            println!("Start breakout!");
+            self.ws.send("PBREAKOUT")?;
+        }
         Ok(())
     }
 

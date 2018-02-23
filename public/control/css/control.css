@@ -85,6 +85,13 @@ body {
     display: flex;
 }
 
+.control-play {
+    border: 1px solid;
+    display: none;
+    height: 600px;
+    width: 100%;
+}
+
 #console {
     display:flex;
     border: 1px solid;

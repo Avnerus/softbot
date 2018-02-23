@@ -28,7 +28,7 @@ export default class Recognizer {
             }
         })
 
-        this.socketController.onMessage((message) => {
+        this.socketController.onMessage(prefix, (message) => {
             var view = new DataView(message.data);
             let ascii = view.getUint8(0);
             if (ascii == 49) {

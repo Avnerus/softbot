@@ -20,6 +20,7 @@
         <script src="lib/adapter.min.js"></script>
         <script src="lib/janus.js"></script>
         <script src="lib/responsivevoice.js"></script>
+        <script src="lib/pixi.min.js"></script>
 
         <script src="bundle.js"></script>
         <div id="main">
@@ -41,6 +42,9 @@
                     </div>
                 </div>
             </section>
+            <section class="control-play">
+            </section>
+
             <section class="control-boxes" >
                 <section class="control-interface" style="flex:1;position:relative;">
                     <div class="interface-title">Look</div>
@@ -122,6 +126,14 @@
                             </a>
                         </div>
                         <div id="volume-slider"></div>
+                    </form>
+                </section>
+                <section class="control-interface" style="flex:1;">
+                    <div class="interface-title">Play</div>
+                    <form id="breakout-form">
+                        <div class="form-group listen-form">
+                            <button id="start-breakout" type="button" class="btn-primary">PLAY BREAKOUT</button>
+                        </div>
                     </form>
                 </section>
             </section>

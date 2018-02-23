@@ -45,6 +45,7 @@ export default class Breakout {
                 this.paddle.velocity = 0;
             }
         });
+        this.resize();
     }
 
     update(dt) {

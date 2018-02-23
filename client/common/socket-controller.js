@@ -5,6 +5,7 @@ export default class SocketController {
     constructor(host) {
         console.log("Socket controller constructed!")
         this.host = host;
+        this.prefixes = {};
     }
     init() {
         //let host = document.location.host;
@@ -12,6 +13,7 @@ export default class SocketController {
         this.socket = new WebSocket(this.host);
         this.socket.binaryType = "arraybuffer";
         this.socket.addEventListener('open', () => {this.onConnect()});
+        this.socket.addEventListener('message', (msg) => {this.onMessage(msg)});
     }
     onConnect() {
         console.log("Socket connected!");
@@ -30,12 +32,16 @@ export default class SocketController {
         }
     }
 
-    onMessage(callback) {
-        if (this.socket) {
-            this.socket.addEventListener('message', (msg) => {callback(msg)});
-        } else {
-            console.warn("no socket for onMessage");
+    onMessage(msg) {
+        console.log("Socket controller message: ", msg);
+        console.log("Prefix: ", msg.data[0]);
+        if (this.prefixes[msg.data[0]]) {
+            this.prefixes[msg.data[0]](msg.data);
         }
+    }
+
+    subscribeToPrefix(prefix, callback) {
+        this.prefixes[prefix] = callback;        
     }
 
     sendValueCommand(command, ...values) {
