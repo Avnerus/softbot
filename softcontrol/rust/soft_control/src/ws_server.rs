@@ -1,12 +1,17 @@
 use std::sync::{Arc,Mutex};
 use ws::{listen, CloseCode, Message, Sender, Handler, Handshake, Result};
+use std::thread::{JoinHandle};
+
 use Config;
+use breakout;
 
 // WebSocket connection handler for the server connection
 struct Server {
-    ws: Sender,
+   ws: Sender,
   //  serial: ThreadOut<String>,
-    soft_controller: Arc<Mutex<Option<Sender>>>,
+   soft_controller: Arc<Mutex<Option<Sender>>>,
+   breakout: Option<JoinHandle<()>>
+
 }
 impl Handler for Server {
     fn on_open(&mut self, _: Handshake) -> Result<()> {
@@ -19,6 +24,7 @@ impl Handler for Server {
         println!("Server got message '{}'. ", msg);
         if msg.into_text().unwrap() == "SBREAKOUT" {
             println!("Start breakout!");
+
             self.ws.send("PBREAKOUT")?;
         }
         Ok(())
@@ -37,7 +43,8 @@ pub fn start(server_sc: Arc< Mutex < Option< Sender > > >, config: Box<Config>) 
         println!("Connection");
         Server {
             ws: out,
-            soft_controller: server_sc.clone()
+            soft_controller: server_sc.clone(),
+            breakout: None
         }
     }).unwrap();
 }

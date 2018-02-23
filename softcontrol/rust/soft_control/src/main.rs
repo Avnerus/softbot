@@ -120,11 +120,6 @@ fn main() {
         }
     });
 
-    // Breakout game
-
-
-    breakout::start();
-
     let _ = serial.join();
     let _ = server.join();
     let _ = serial_broadcast.join();
