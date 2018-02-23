@@ -1,14 +1,14 @@
-extern crate ws;
 extern crate serialport;
 extern crate argparse;
 
 extern crate serde;
 extern crate serde_json;
 
+extern crate ws;
+
 #[macro_use]
 extern crate serde_derive;
 
-use ws::{listen, CloseCode, Message, Sender, Handler, Handshake};
 use serialport::prelude::*;
 
 use std::thread;
@@ -19,9 +19,12 @@ use std::sync::{Arc,Mutex};
 use std::fs::File;
 use std::path::Path;
 
+use ws::{Sender};
+
 use argparse::{ArgumentParser, Store};
 
 mod breakout;
+mod ws_server;
 
 #[derive(Deserialize, Debug)]
 struct Breakout {
@@ -29,8 +32,14 @@ struct Breakout {
 }
 
 #[derive(Deserialize, Debug)]
-struct Config {
+struct ServerConfig {
+    port: u16
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Config {
     breakout: Breakout,
+    server: ServerConfig,
     version: String
 }
 
@@ -46,7 +55,6 @@ fn main() {
     println!("Hello, Rusty WS server!");
 
     let config = Box::new(read_config().unwrap());
-    println!("{:#?}", config);
 
     let (broadcast_in, broadcast_out) = channel();
    // let (serial_in, serial_out) = channel();
@@ -86,42 +94,11 @@ fn main() {
         }
     }).unwrap();
 
-    // WebSocket connection handler for the server connection
-    struct Server {
-        ws: Sender,
-      //  serial: ThreadOut<String>,
-        soft_controller: Arc<Mutex<Option<Sender>>>,
-    }
-    impl Handler for Server {
-        fn on_open(&mut self, _: Handshake) -> ws::Result<()> {
-            println!("Client connected!");
-            let mut sc = self.soft_controller.lock().unwrap();
-            *sc = Some(self.ws.clone());
-            Ok(())
-        }
-        fn on_message(&mut self, msg: Message) -> ws::Result<()> {
-            println!("Server got message '{}'. ", msg);
-            Ok(())
-        }
-
-        fn on_close(&mut self, code: CloseCode, reason: &str) {
-            println!("Client disconnected! ({:?}, {})",code,reason);
-            let mut sc = self.soft_controller.lock().unwrap();
-            *sc = None;
-        }
-    }
     
     // Server thread
     let server_sc = soft_controller.clone();
     let server = thread::Builder::new().name("server".to_owned()).spawn(move || {
-        println!("Spwaning server");
-        listen("0.0.0.0:3012", |out| {
-            println!("Connection");
-            Server {
-                ws: out,
-                soft_controller: server_sc.clone()
-            }
-        }).unwrap();
+        ws_server::start(server_sc, config);
     }).unwrap();
 
 
