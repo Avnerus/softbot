@@ -1,6 +1,7 @@
 use std::sync::{Arc,Mutex};
 use ws::{listen, CloseCode, Message, Sender, Handler, Handshake, Result};
 use std::thread::{JoinHandle};
+use std::thread;
 
 use Config;
 use breakout;
@@ -10,7 +11,8 @@ struct Server {
    ws: Sender,
   //  serial: ThreadOut<String>,
    soft_controller: Arc<Mutex<Option<Sender>>>,
-   breakout: Option<JoinHandle<()>>
+   breakout: Option<JoinHandle<()>>,
+   config: Box<Config>
 
 }
 impl Handler for Server {
@@ -24,6 +26,10 @@ impl Handler for Server {
         println!("Server got message '{}'. ", msg);
         if msg.into_text().unwrap() == "SBREAKOUT" {
             println!("Start breakout!");
+            self.breakout = Some(
+                thread::Builder::new().name("breakout".to_owned()).spawn(move || {
+                breakout::start(self.config);
+            }).unwrap());
 
             self.ws.send("PBREAKOUT")?;
         }
@@ -44,7 +50,8 @@ pub fn start(server_sc: Arc< Mutex < Option< Sender > > >, config: Box<Config>) 
         Server {
             ws: out,
             soft_controller: server_sc.clone(),
-            breakout: None
+            breakout: None,
+            config: config
         }
     }).unwrap();
 }
