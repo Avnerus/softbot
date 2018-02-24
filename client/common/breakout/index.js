@@ -1,9 +1,10 @@
 import Paddle from './paddle'
 
 export default class Breakout {
-    constructor(container, keyboard) {
+    constructor(container, keyboard, socketController) {
         this.container = container;
         this.keyboard = keyboard;
+        this.socketController = socketController;
     }
 
     init() {
@@ -38,6 +39,7 @@ export default class Breakout {
             }
         });
         this.keyboard.onPress(40, () => {
+            this.socketController.send("AVNER");
             this.paddle.velocity = 5;
         });
         this.keyboard.onRelease(40, () => {

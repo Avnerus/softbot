@@ -23,7 +23,7 @@ export default class Display {
             $('.control-boxes').hide();
             $('.control-play').show();
             this.keyboard.grab();
-            this.breakout = new Breakout($('.control-play'), this.keyboard);
+            this.breakout = new Breakout($('.control-play'), this.keyboard, this.socketController);
             this.breakout.init();
         }
     }
