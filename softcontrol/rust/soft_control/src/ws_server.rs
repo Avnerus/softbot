@@ -12,7 +12,7 @@ struct Server {
   //  serial: ThreadOut<String>,
    soft_controller: Arc<Mutex<Option<Sender>>>,
    breakout: Option<JoinHandle<()>>,
-   config: Box<Config>
+   config: Arc<Config>
 
 }
 impl Handler for Server {
@@ -26,9 +26,10 @@ impl Handler for Server {
         println!("Server got message '{}'. ", msg);
         if msg.into_text().unwrap() == "SBREAKOUT" {
             println!("Start breakout!");
+            let breakout_config = Arc::clone(&self.config);
             self.breakout = Some(
                 thread::Builder::new().name("breakout".to_owned()).spawn(move || {
-                breakout::start(self.config);
+                    breakout::start(breakout_config);
             }).unwrap());
 
             self.ws.send("PBREAKOUT")?;
@@ -43,7 +44,7 @@ impl Handler for Server {
     }
 }
 
-pub fn start(server_sc: Arc< Mutex < Option< Sender > > >, config: Box<Config>) {
+pub fn start(server_sc: Arc< Mutex < Option< Sender > > >, config: Arc<Config>) {
     println!("Spawning server on port {}", config.server.port);
     listen(("127.0.0.1",config.server.port), |out| {
         println!("Connection");
@@ -51,7 +52,7 @@ pub fn start(server_sc: Arc< Mutex < Option< Sender > > >, config: Box<Config>) 
             ws: out,
             soft_controller: server_sc.clone(),
             breakout: None,
-            config: config
+            config: Arc::clone(&config)
         }
     }).unwrap();
 }

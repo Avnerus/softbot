@@ -54,7 +54,7 @@ fn read_config() -> Result<Config, Box<std::error::Error>> {
 fn main() {
     println!("Hello, Rusty WS server!");
 
-    let config = Box::new(read_config().unwrap());
+    let config = Arc::new(read_config().unwrap());
 
     let (broadcast_in, broadcast_out) = channel();
    // let (serial_in, serial_out) = channel();
@@ -98,7 +98,7 @@ fn main() {
     // Server thread
     let server_sc = soft_controller.clone();
     let server = thread::Builder::new().name("server".to_owned()).spawn(move || {
-        ws_server::start(server_sc, config);
+        ws_server::start(server_sc, Arc::clone(&config));
     }).unwrap();
 
 
