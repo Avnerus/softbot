@@ -1,20 +1,25 @@
 use std::sync::{Arc,Mutex};
 use ws::{listen, CloseCode, Message, Sender, Handler, Handshake};
+use ws::util::Token;
+use ws;
+
 use std::thread::{JoinHandle};
 use std::thread;
 use std::sync::mpsc;
+use std::sync::MutexGuard;
 use std::str;
 use std::rc::Rc;
 use std::io::{Error, ErrorKind};
-use ws;
+use std::collections::HashMap;
 
 use soft_error::SoftError;
 use Config;
 use breakout;
 
 struct ServerState {
-    soft_controller: Arc<Mutex<Option<Sender>>>,
-    soft_avatar: Arc<Mutex<Option<Sender>>>,
+    soft_controller: Option<Sender>,
+    soft_avatar: Option<Sender>,
+    tokens: HashMap<Token, u8>,
     breakout: Option<JoinHandle<()>>,
     breakout_tx: Option<mpsc::Sender<Vec<u8>>>
 }
@@ -24,10 +29,18 @@ struct Server {
    ws: Sender,
   //  serial: ThreadOut<String>,
    config: Arc<Config>,
-   state: Rc<ServerState>
+   state: Arc<Mutex<ServerState>>
 }
 
-fn handle_message(mut server: &Server, msg: Message) -> Result<(), SoftError> {
+struct Foo {
+    a: i32,
+    b: i32
+}
+
+fn handle_message(
+    server: &mut Server,
+    msg: Message
+) -> Result<(), SoftError> {
     println!("Server got message '{}'. ", msg);
     let data = msg.into_data();
 
@@ -46,21 +59,26 @@ fn handle_message(mut server: &Server, msg: Message) -> Result<(), SoftError> {
             // Register command
             let role = data[1];
             println!("Register command role {}", role);
-            if let Some(mut soft_target) = match role {
-                0 => Some(server.state.soft_controller.lock().unwrap()),
-                1 => Some(server.state.soft_avatar.lock().unwrap()),
+            let mut state = &mut *server.state.lock().unwrap();
+            if let Some(soft_target) = match role {
+                0 => Some(&mut state.soft_controller),
+                1 => Some(&mut state.soft_avatar),
                 _ => None
             } {
+                match soft_target {
+                    &mut Some(ref s) => {
+                        return Err(SoftError::new("Cannot register - user already connected!"));
+                    },
+                    &mut None => {
+                        *soft_target = Some(server.ws.clone());
+                         state.tokens.insert(server.ws.token(), role);
+                         println!("Registration successful")
+                    }
+                }
                 let target_exists = match soft_target.as_ref() {
                         Some(s) => true,
                         None => false
                 };
-                if !target_exists {
-                    *soft_target = Some(server.ws.clone());
-                    println!("Registeration sucessfull")
-                } else {
-                    return Err(SoftError::new("Cannot register - user already connected!"));
-                }
             } else {
                 return Err(SoftError::new("Cannot register. No such role!"));
             }
@@ -106,7 +124,10 @@ impl Handler for Server {
         Ok(())
     }
     fn on_message(&mut self, msg: Message) -> ws::Result<()> {
-        match handle_message(self, msg) {
+        match handle_message(
+            self,
+            msg
+        ) {
             Err(err) => {
                 println!("Error! {:?}", err);
                 let mut prefix = "E".to_string();
@@ -120,6 +141,17 @@ impl Handler for Server {
 
     fn on_close(&mut self, code: CloseCode, reason: &str) {
         println!("Client disconnected! ({:?}, {})",code,reason);
+        let state = &mut *self.state.lock().unwrap();
+        if let Some(role) = state.tokens.get(&self.ws.token()) {
+            if let Some(soft_target) = match role {
+                &0 => Some(&mut state.soft_controller),
+                &1 => Some(&mut state.soft_avatar),
+                _ => None
+            } {
+                println!("Disconnected from role {:}", role);
+                *soft_target = None;                
+            }
+        }
         /*
         let mut sc = self.state.soft_controller.lock().unwrap();
         *sc = None;*/
@@ -127,25 +159,24 @@ impl Handler for Server {
 }
 
 pub fn start(
-    server_sc: Arc< Mutex < Option< Sender > > >, 
-    server_sa: Arc< Mutex < Option< Sender > > >, 
     config: Arc<Config>
 ) {
     println!("Spawning server on port {}", config.server.port);
 
-    let state = Rc::new(ServerState {
-        soft_controller: server_sc,
-        soft_avatar: server_sa,
+    let state = Arc::new(Mutex::new(ServerState {
+        soft_controller: None,
+        soft_avatar: None,
+        tokens: HashMap::new(),
         breakout: None,
         breakout_tx: None
-    });
+    }));
 
     listen(("127.0.0.1",config.server.port), move |out| {
         println!("Connection");
         Server {
             ws: out,
             config: Arc::clone(&config),
-            state: Rc::clone(&state)
+            state: Arc::clone(&state)
         }
     }).unwrap();
 }

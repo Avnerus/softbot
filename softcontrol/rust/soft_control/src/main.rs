@@ -64,10 +64,6 @@ fn main() {
     let mut port_name = "".to_string();
     let baud_rate: u32 = 57600;
 
-    let sc:Option<Sender> = None;
-    let sa:Option<Sender> = None;
-    let soft_controller = Arc::new(Mutex::new(sc));
-    let soft_avatar = Arc::new(Mutex::new(sa));
 
     {
         let mut ap = ArgumentParser::new();
@@ -100,13 +96,13 @@ fn main() {
 
     
     // Server thread
-    let sc_server = soft_controller.clone();
     let server = thread::Builder::new().name("server".to_owned()).spawn(move || {
-        ws_server::start(sc_server, soft_avatar.clone(), Arc::clone(&config));
+        ws_server::start(Arc::clone(&config));
     }).unwrap();
 
 
     // From serial to broadcast
+    /*
     let sc_check = soft_controller.clone();
     let serial_broadcast = thread::spawn(move || {
         while let Ok(msg) = broadcast_out.recv() {
@@ -122,9 +118,9 @@ fn main() {
                 None => println!("No soft controller!"),
             }
         }
-    });
+    }); */
 
     let _ = serial.join();
     let _ = server.join();
-    let _ = serial_broadcast.join();
+    //let _ = serial_broadcast.join();
 }
