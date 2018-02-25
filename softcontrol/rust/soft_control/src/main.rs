@@ -24,7 +24,9 @@ use ws::{Sender};
 use argparse::{ArgumentParser, Store};
 
 mod breakout;
+mod soft_error;
 mod ws_server;
+
 
 #[derive(Deserialize, Debug)]
 struct Breakout {
@@ -63,7 +65,9 @@ fn main() {
     let baud_rate: u32 = 57600;
 
     let sc:Option<Sender> = None;
+    let sa:Option<Sender> = None;
     let soft_controller = Arc::new(Mutex::new(sc));
+    let soft_avatar = Arc::new(Mutex::new(sa));
 
     {
         let mut ap = ArgumentParser::new();
@@ -96,9 +100,9 @@ fn main() {
 
     
     // Server thread
-    let server_sc = soft_controller.clone();
+    let sc_server = soft_controller.clone();
     let server = thread::Builder::new().name("server".to_owned()).spawn(move || {
-        ws_server::start(server_sc, Arc::clone(&config));
+        ws_server::start(sc_server, soft_avatar.clone(), Arc::clone(&config));
     }).unwrap();
 
 

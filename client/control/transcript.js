@@ -3,9 +3,10 @@ import moment from 'moment'
 import Typed from 'typed.js'
 
 export default class Transcript {
-    constructor(socketMessenger, container) {
+    constructor(socketMessenger, socketController,container) {
         console.log("Transcript constructed with container", container);
         this.socketMessenger = socketMessenger;
+        this.socketController = socketController;
         this.container = container;
     }
     init() {
@@ -13,6 +14,13 @@ export default class Transcript {
             console.log("Recognized speech!", data)
             data.from = "Speaker";
             this.addLine(data);
+        });
+
+        this.socketController.subscribeToPrefix('E', (msg) => {
+            this.addLine({
+                from: "Error",
+                text: msg.slice(1)
+            });
         });
 
         events.on("transcript", (data) => {

@@ -44,7 +44,7 @@ export default class SocketController {
         this.prefixes[prefix] = callback;        
     }
 
-    sendValueCommand(command, ...values) {
+    sendSerialCommand(command, ...values) {
         console.log("Values", values);
         let buffer = new ArrayBuffer(3 + values.length);
         let z = new Uint8Array(buffer);
@@ -53,6 +53,16 @@ export default class SocketController {
         z[2] = values.length;
         for (let i = 0; i < values.length; i++) {
             z[i + 3] = values[i];
+        }
+        this.send(buffer);
+    }
+    sendValueCommand(command, ...values) {
+        console.log("Values", values);
+        let buffer = new ArrayBuffer(1 + values.length);
+        let z = new Uint8Array(buffer);
+        z[0] = command.charCodeAt(0); 
+        for (let i = 0; i < values.length; i++) {
+            z[i + 1] = values[i];
         }
         this.send(buffer);
     }

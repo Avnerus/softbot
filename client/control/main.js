@@ -31,6 +31,10 @@ export default class Main {
         //this.socketController.init();
         
         this.socketController = new SocketController("ws://127.0.0.1:3012");
+        events.on('socket_connected', () => {
+            console.log("Socket connected registering control");
+            this.socketController.sendValueCommand("R",0);
+        })
         this.socketController.init();
 
         this.socketMessenger = new SocketMessenger('registerControl');
@@ -56,7 +60,7 @@ export default class Main {
         this.janusConnection = new JanusConnection('http://stream.avner.us/janus');
         this.janusConnection.init();
 
-        this.transcript = new Transcript(this.socketMessenger, $('#transcript'));
+        this.transcript = new Transcript(this.socketMessenger, this.socketController, $('#transcript'));
         this.transcript.init();
 
         this.listener = new Listener(this.socketMessenger, $('#listen-container'));

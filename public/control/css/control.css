@@ -187,6 +187,9 @@ body {
 .transcript-line.speaker {
     color: #f9f100;
 }
+.transcript-line.error {
+    color: #ff0000;
+}
 .console-slider-control {
     display:flex;
 }
