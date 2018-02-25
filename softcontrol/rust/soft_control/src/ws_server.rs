@@ -44,73 +44,77 @@ fn handle_message(
     println!("Server got message '{}'. ", msg);
     let data = msg.into_data();
 
-    // First char is the command
-    let command = data[0] as char;
-    println!("Command code: {}.", command);
+    let mut state = &mut *server.state.lock().unwrap();
+    if let Some(role) =Y state.tokens.get(&self.ws.token()) {
+        // First char is the command
+        let command = data[0] as char;
+        println!("Command code: {}.", command);
 
-    match command {
-        'S' => {
-            // Start command
-            let app = str::from_utf8(&data[1..]).unwrap();
-            println!("Start app {:?}", app);
-        }
+        match command {
+            'S' => {
+                // Start command
+                let app = str::from_utf8(&data[1..]).unwrap();
+                println!("Start app {:?}", app);
+                if app == "BREAKOUT" {
+                    println!("Start breakout!");
+                    let breakout_config = Arc::clone(&server.config);
+                    let (breakout_tx, breakout_rx) = mpsc::channel();
+                    state.breakout_tx = Some(breakout_tx.clone());
+                    state.breakout = Some(
+                        thread::Builder::new().name("breakout".to_owned()).spawn(move || {
+                            breakout::start(
+                                breakout_config,
+                                breakout_rx
+                            );
+                    }).unwrap());
 
-        'R' => {
-            // Register command
-            let role = data[1];
-            println!("Register command role {}", role);
-            let mut state = &mut *server.state.lock().unwrap();
-            if let Some(soft_target) = match role {
-                0 => Some(&mut state.soft_controller),
-                1 => Some(&mut state.soft_avatar),
-                _ => None
-            } {
-                match soft_target {
-                    &mut Some(ref s) => {
-                        return Err(SoftError::new("Cannot register - user already connected!"));
-                    },
-                    &mut None => {
-                        *soft_target = Some(server.ws.clone());
-                         state.tokens.insert(server.ws.token(), role);
-                         println!("Registration successful")
-                    }
+                    server.ws.send("PBREAKOUT").unwrap();
                 }
-                let target_exists = match soft_target.as_ref() {
-                        Some(s) => true,
-                        None => false
-                };
-            } else {
-                return Err(SoftError::new("Cannot register. No such role!"));
+                 /*
+                if app == "AVNER" {
+                    println!("Send to breakout!");
+                    match self.breakout_tx.as_ref() {
+                        Some(c) => c.send(vec![1,1,1]).unwrap(),
+                        None => {},
+                    }
+                }*/
             }
+
+            'R' => {
+                // Register command
+                let role = data[1];
+                println!("Register command role {}", role);
+                if let Some(soft_target) = match role {
+                    0 => Some(&mut state.soft_controller),
+                    1 => Some(&mut state.soft_avatar),
+                    _ => None
+                } {
+                    match soft_target {
+                        &mut Some(ref s) => {
+                            return Err(SoftError::new("Cannot register - user already connected!"));
+                        },
+                        &mut None => {
+                            *soft_target = Some(server.ws.clone());
+                             state.tokens.insert(server.ws.token(), role);
+                             println!("Registration successful")
+                        }
+                    }
+                    let target_exists = match soft_target.as_ref() {
+                            Some(s) => true,
+                            None => false
+                    };
+                } else {
+                    return Err(SoftError::new("Cannot register. No such role!"));
+                }
+            }
+            _ => return Err(SoftError::new("Unknown command"))
         }
-        _ => return Err(SoftError::new("Unknown command"))
+
+    } else {
+      _ => return Err(SoftError::new("Unknown command"))
     }
 
-    /*
-    let msg_text = msg.into_text().unwrap();
 
-    if msg_text == "SBREAKOUT" {
-        println!("Start breakout!");
-        let breakout_config = Arc::clone(&self.config);
-        let (breakout_tx, breakout_rx) = mpsc::channel();
-        self.breakout_tx = Some(breakout_tx.clone());
-        self.breakout = Some(
-            thread::Builder::new().name("breakout".to_owned()).spawn(move || {
-                breakout::start(
-                    breakout_config,
-                    breakout_rx
-                );
-        }).unwrap());
-
-        self.ws.send("PBREAKOUT")?;
-    }
-    if msg_text == "AVNER" {
-        println!("Send to breakout!");
-        match self.breakout_tx.as_ref() {
-            Some(c) => c.send(vec![1,1,1]).unwrap(),
-            None => {},
-        }
-    }*/
 
     Ok(())
 }
@@ -152,6 +156,7 @@ impl Handler for Server {
                 *soft_target = None;                
             }
         }
+        state.tokens.remove(&self.ws.token());
         /*
         let mut sc = self.state.soft_controller.lock().unwrap();
         *sc = None;*/

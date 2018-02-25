@@ -27,6 +27,10 @@ export default class  {
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
         this.socketController = new SocketController("ws://127.0.0.1:3012");
+        events.on('socket_connected', () => {
+            console.log("Socket connected registering avatar");
+            this.socketController.sendValueCommand("R",1);
+        })
         this.socketController.init();
 
         this.expression = new Expression(this.socketController);
