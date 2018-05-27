@@ -4,7 +4,9 @@
   "description": "Softbot",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/gulp/bin/gulp.js"
+    "start": "./node_modules/gulp/bin/gulp.js",
+    "serve": "webpack-dev-server",
+    "build-wasm": "cargo +nightly build --manifest-path softcontrol/rust/soft_control/Cargo.toml --lib --target wasm32-unknown-unknown &&  wasm-bindgen softcontrol/rust/soft_control/target/wasm32-unknown-unknown/debug/breakout.wasm --out-dir client/common/breakout"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,7 @@
     "babel-preset-es2015": "^6.14.0",
     "babelify": "^7.2.0",
     "beefy": ">=0.7.1",
-    "browser-sync": "^2.15.0",
+    "browser-sync": "^2.24.4",
     "browserify": ">=3.20.0",
     "browserify-shim": "^3.8.10",
     "event-stream": "^3.3.4",
@@ -32,7 +34,10 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.11.0",
+    "webpack": "^4.9.1",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4"
   },
   "window": {
     "title": "Softbot",
@@ -47,10 +52,10 @@
     "emoji-replace": "^1.0.1",
     "express": "^4.14.0",
     "fullscreen": "^1.1.0",
-    "lodash": "^4.15.0",
+    "lodash": "^4.17.10",
     "moment": "^2.18.1",
     "nipplejs": "^0.6.7",
-    "node-google-translate-skidz": "^1.1.1",
+    "node-google-translate-skidz": "^1.1.2",
     "reconnecting-websocket": "^3.0.3",
     "recordrtc": "^5.4.1",
     "simplewebrtc": "^2.2.3",
