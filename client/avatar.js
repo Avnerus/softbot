@@ -1,12 +1,14 @@
-var Avatar = require('./avatar/index').default;
-var config = require('./avatar/config').default;
-var Stats = require('stats.js');
+const Avatar = import('./avatar/index');
+const config = import('./avatar/config');
 
-var avatar = new Avatar(config);
+//var Stats = require('stats.js');
+
+const avatar = new Avatar(config);
+/*
 var stats = new Stats();
-stats.showPanel(0);
+stats.showPanel(0);*/
 
-var fullscreen = require('fullscreen');
+//var fullscreen = require('fullscreen');
 
 console.log("Loading...");
 var el = document.documentElement;
@@ -26,7 +28,7 @@ function start() {
     window.addEventListener('vrdisplaypresentchange', resize, true); */
     avatar.start();
     avatar.resize();
-    stats.begin();
+    // stats.begin();
 }
 
 function resize() {

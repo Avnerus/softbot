@@ -6,8 +6,10 @@ import YoutubePlayer from './youtube-player'
 import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
-import Breakout from '../common/breakout'
 import Keyboard from '../common/keyboard'
+
+// WASM
+import Breakout from '../common/breakout/breakout'
 
 export default class  {
     constructor(config) {
@@ -67,11 +69,14 @@ export default class  {
        this.keyboard = new Keyboard();
        this.keyboard.init();
 
+       /*
        this.breakout = new Breakout($('#breakout'), this.keyboard);
-       this.breakout.init();
+       this.breakout.init();*/
     }
 
+
     start() {
+        console.log("Avatar START");
         this.recognizer.init();
     }
 
