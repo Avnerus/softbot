@@ -7,9 +7,7 @@ import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
-
-// WASM
-import Breakout from '../common/breakout/breakout'
+import {greet} from '../common/breakout/breakout'
 
 export default class  {
     constructor(config) {
@@ -72,6 +70,9 @@ export default class  {
        /*
        this.breakout = new Breakout($('#breakout'), this.keyboard);
        this.breakout.init();*/
+
+       greet("Bitch");
+
     }
 
 
@@ -81,7 +82,7 @@ export default class  {
     }
 
     resize() {
-        this.breakout.resize();
+        //this.breakout.resize();
     }
 
 }

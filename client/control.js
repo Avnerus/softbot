@@ -1,6 +1,6 @@
 //import SimpleWebRTC from 'simplewebrtc'
 console.log("Loading Control...");
-const Main = import('./control/main');
+import Main from './control/main';
 const main = new Main();
 
 var startTime = null;

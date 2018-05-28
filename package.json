@@ -19,14 +19,12 @@
   },
   "homepage": "https://github.com/Avnerus/divine#readme",
   "devDependencies": {
-    "babel-preset-es2015": "^6.14.0",
-    "babelify": "^7.2.0",
-    "beefy": ">=0.7.1",
-    "browser-sync": "^2.24.4",
-    "browserify": ">=3.20.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.7.0",
     "browserify-shim": "^3.8.10",
     "event-stream": "^3.3.4",
-    "glslify": "^2.3.1",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.1.0",
     "gulp-util": "^3.0.8",
@@ -34,7 +32,6 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
-    "watchify": "^3.11.0",
     "webpack": "^4.9.1",
     "webpack-cli": "^2.1.4",
     "webpack-dev-server": "^3.1.4"
@@ -66,15 +63,5 @@
     "watson-developer-cloud": "^2.33.0",
     "watson-speech": "^0.33.1",
     "youtube-iframe": "^1.0.3"
-  },
-  "browserify": {
-    "transform": [
-      "babelify"
-    ]
-  },
-  "babelify": {
-    "presets": [
-      "es2015"
-    ]
   }
 }

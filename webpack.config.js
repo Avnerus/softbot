@@ -7,6 +7,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "public"),
+    publicPath: '/',
     filename: "[name]-bundle.js",
   },
   mode: "development",
@@ -14,5 +15,20 @@ module.exports = {
       contentBase: path.join(__dirname, "public"),
       compress: true,
       port: 9000
+  },
+  module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components|wasm)/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['env'],
+              plugins: ["syntax-dynamic-import"]
+            }
+          }
+        }
+      ]
   }
 };
