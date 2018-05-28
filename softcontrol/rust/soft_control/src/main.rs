@@ -23,7 +23,7 @@ use ws::{Sender};
 
 use argparse::{ArgumentParser, Store};
 
-mod breakout;
+mod game;
 mod soft_error;
 mod ws_server;
 

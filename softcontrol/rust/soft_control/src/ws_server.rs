@@ -14,14 +14,14 @@ use std::collections::HashMap;
 
 use soft_error::SoftError;
 use Config;
-use breakout;
+use game;
 
 struct ServerState {
     soft_controller: Option<Sender>,
     soft_avatar: Option<Sender>,
     tokens: HashMap<Token, u8>,
-    breakout: Option<JoinHandle<()>>,
-    breakout_tx: Option<mpsc::Sender<Vec<u8>>>
+    game: Option<JoinHandle<()>>,
+    game_tx: Option<mpsc::Sender<Vec<u8>>>
 }
 
 // WebSocket connection handler for the server connection
@@ -85,13 +85,13 @@ fn handle_message(
                     if app == "BREAKOUT" {
                         println!("Start breakout!");
                         let breakout_config = Arc::clone(&server.config);
-                        let (breakout_tx, breakout_rx) = mpsc::channel();
-                        state.breakout_tx = Some(breakout_tx.clone());
-                        state.breakout = Some(
-                            thread::Builder::new().name("breakout".to_owned()).spawn(move || {
-                                breakout::start(
+                        let (game_tx, game_rx) = mpsc::channel();
+                        state.game_tx = Some(game_tx.clone());
+                        state.game = Some(
+                            thread::Builder::new().name("game".to_owned()).spawn(move || {
+                                game::start(
                                     breakout_config,
-                                    breakout_rx
+                                    game_rx
                                 );
                         }).unwrap());
 
@@ -169,8 +169,8 @@ pub fn start(
         soft_controller: None,
         soft_avatar: None,
         tokens: HashMap::new(),
-        breakout: None,
-        breakout_tx: None
+        game: None,
+        game_tx: None
     }));
 
     listen(("127.0.0.1",config.server.port), move |out| {
