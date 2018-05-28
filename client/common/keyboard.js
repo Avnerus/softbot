@@ -2,6 +2,9 @@ export default class {
     constructor() {
         this.keys = {};
     }
+    init() {
+
+    }
     grab() {
         window.addEventListener(
           "keydown", (event) => {
