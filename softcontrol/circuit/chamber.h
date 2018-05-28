@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "common.h"
-#include "pump.h"
+#include "pumpng.h"
 
 
 
@@ -18,7 +18,8 @@ class Chamber {
     public:
         Chamber(
             char* name,
-            Pump* pump,
+            PumpNg** pumps,
+            int numOfPumps,
             int entryValve,
             int releaseValve,
             int pressureSensor,
@@ -59,7 +60,7 @@ class Chamber {
         int _destinationPressure;
         char* _name;
 
-        Pump* _pump;
+        PumpNg** _pumps;
 
         unsigned long _lastDeflateToggle;
         bool _deflateToggle;
@@ -67,6 +68,7 @@ class Chamber {
         bool _usingPump;
         int _oscillateMin;
         int _oscillateMax;
+        int _numOfPumps;
 
         CHAMBER_STATE _state;
 
