@@ -64,18 +64,6 @@ fn main() {
     let mut port_name = "".to_string();
     let baud_rate: u32 = 57600;
 
-
-    {
-        let mut ap = ArgumentParser::new();
-        ap.set_description("Read from the given serial port");
-        ap.refer(&mut port_name)
-        .add_argument("port", Store, "Port name")
-        .required();
-
-        ap.parse_args_or_exit();
-    }
-
-
     let serial = thread::Builder::new().name("serial".to_owned()).spawn(move || -> Result<usize,serialport::Error> {
         let mut settings: SerialPortSettings = Default::default();
         settings.baud_rate = baud_rate.into();
