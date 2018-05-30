@@ -43,7 +43,6 @@ fn handle_message(
 ) -> Result<(), SoftError> {
     println!("Server got message '{}'. ", msg);
     let data = msg.into_data();
-
     let mut state = &mut *server.state.lock().unwrap();
     let command = data[0] as char;
     println!("Command code: {}.", command);
@@ -84,18 +83,26 @@ fn handle_message(
                     println!("Start app {:?}", app);
                     if app == "BREAKOUT" {
                         println!("Start breakout!");
-                        let breakout_config = Arc::clone(&server.config);
-                        let (game_tx, game_rx) = mpsc::channel();
-                        state.game_tx = Some(game_tx.clone());
-                        state.game = Some(
-                            thread::Builder::new().name("game".to_owned()).spawn(move || {
-                                game::start(
-                                    breakout_config,
-                                    game_rx
-                                );
-                        }).unwrap());
+                        // Check that both players are here
+                        if let (Some(ref sc), Some(ref sa)) = (&mut state.soft_controller, &mut state.soft_avatar) {
+                                let breakout_config = Arc::clone(&server.config);
+                                let (game_tx, game_rx) = mpsc::channel();
+                                state.game_tx = Some(game_tx.clone());
+                                state.game = Some(
+                                    thread::Builder::new().name("game".to_owned()).spawn(move || {
+                                        game::start(
+                                            breakout_config,
+                                            game_rx
+                                        );
+                                }).unwrap());
 
-                        server.ws.send("PBREAKOUT").unwrap();
+                                sc.send("PBREAKOUT").unwrap();
+                                sa.send("PBREAKOUT").unwrap();
+                        }
+                        else {
+                            println!("Can't play with just one player!");
+                            return Err(SoftError::new("Cannot play with just one player"))
+                        }
                     }
                      /*
                     if app == "AVNER" {

@@ -3,6 +3,8 @@ import('./avatar/index')
     console.log("Loaded avatar", Avatar);
     const avatar = new Avatar.default();
     avatar.init();
+    avatar.start();
+    avatar.resize();
 })
 
 
