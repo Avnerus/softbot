@@ -11,6 +11,7 @@ use std::str;
 use std::rc::Rc;
 use std::io::{Error, ErrorKind};
 use std::collections::HashMap;
+use std::sync::mpsc::channel;
 
 use soft_error::SoftError;
 use Config;
@@ -21,7 +22,8 @@ struct ServerState {
     soft_avatar: Option<Sender>,
     tokens: HashMap<Token, u8>,
     game: Option<JoinHandle<()>>,
-    game_tx: Option<mpsc::Sender<Vec<u8>>>
+    game_tx: Option<mpsc::Sender<Vec<u8>>>,
+    comm_tx: mpsc::Sender<Vec<u8>>
 }
 
 // WebSocket connection handler for the server connection
@@ -88,12 +90,14 @@ fn handle_message(
                                 let breakout_config = Arc::clone(&server.config);
                                 let (game_tx, game_rx) = mpsc::channel();
                                 state.game_tx = Some(game_tx.clone());
+                                let game_comm = state.comm_tx.clone();
                                 state.game = Some(
                                     thread::Builder::new().name("game".to_owned()).spawn(move || {
                                         game::start(
                                             breakout_config,
-                                            game_rx
-                                        );
+                                            game_rx,
+                                            game_comm
+                                        )
                                 }).unwrap());
 
                                 sc.send("PBREAKOUT").unwrap();
@@ -172,13 +176,23 @@ pub fn start(
 ) {
     println!("Spawning server on port {}", config.server.port);
 
+    let (comm_out, comm_in) = channel();
+
     let state = Arc::new(Mutex::new(ServerState {
         soft_controller: None,
         soft_avatar: None,
         tokens: HashMap::new(),
         game: None,
-        game_tx: None
+        game_tx: None,
+        comm_tx: comm_out.clone()
     }));
+
+    let comm_thread = thread::spawn(move || {
+        while let Ok(msg) = comm_in.recv() {
+            println!("Comm message!");
+        }
+    }); 
+
 
     listen(("127.0.0.1",config.server.port), move |out| {
         println!("Connection");
