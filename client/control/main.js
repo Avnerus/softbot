@@ -33,6 +33,7 @@ export default class Main {
         this.socketController = new SocketController("ws://127.0.0.1:3012");
         events.on('socket_connected', () => {
             console.log("Socket connected registering control");
+            events.emit("transcript", {from: "System", text: "Socket connected"});
             this.socketController.sendValueCommand("R",0);
         })
         this.socketController.init();

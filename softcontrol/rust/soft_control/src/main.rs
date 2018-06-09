@@ -1,10 +1,10 @@
 extern crate serialport;
 extern crate argparse;
-
 extern crate serde;
 extern crate serde_json;
-
 extern crate ws;
+extern crate byteorder;
+
 
 #[macro_use]
 extern crate serde_derive;

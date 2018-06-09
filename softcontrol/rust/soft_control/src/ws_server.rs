@@ -20,6 +20,7 @@ use game;
 struct ServerState {
     soft_controller: Option<Sender>,
     soft_avatar: Option<Sender>,
+    broadcaster: Option<Sender>,
     tokens: HashMap<Token, u8>,
     game: Option<JoinHandle<()>>,
     game_tx: Option<mpsc::Sender<Vec<u8>>>,
@@ -181,15 +182,33 @@ pub fn start(
     let state = Arc::new(Mutex::new(ServerState {
         soft_controller: None,
         soft_avatar: None,
+        broadcaster: None,
         tokens: HashMap::new(),
         game: None,
         game_tx: None,
         comm_tx: comm_out.clone()
     }));
 
+    let comm_state = state.clone();
+
     let comm_thread = thread::spawn(move || {
-        while let Ok(msg) = comm_in.recv() {
-            println!("Comm message!");
+        while let Ok(mut msg) = comm_in.recv() {
+            let role = msg[0];
+            println!("Comm message! to {}",role);
+            let mut state = &mut comm_state.lock().unwrap();
+            let handle = match role {
+                0 => & state.soft_controller,
+                1 => & state.soft_avatar,
+                2 => & state.broadcaster,
+                _ => & None
+            };
+            if let Some(soft_target) = handle {
+               println!("Sending!");
+               msg.remove(0);
+               soft_target.send(msg).unwrap();
+            } else {
+               println!("ERROR, Invalid comm target");
+            }
         }
     }); 
 
