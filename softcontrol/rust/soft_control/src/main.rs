@@ -23,10 +23,10 @@ use ws::{Sender};
 
 use argparse::{ArgumentParser, Store};
 
-mod game;
 mod soft_error;
+mod breakout_state;
 mod ws_server;
-
+mod game;
 
 #[derive(Deserialize, Debug)]
 struct Breakout {

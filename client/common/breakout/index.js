@@ -1,4 +1,6 @@
 import Paddle from './paddle'
+import {BreakoutAPI} from './breakout'
+import { memory } from "./breakout_bg";
 
 export default class Breakout {
     constructor(container, keyboard, socketController) {
@@ -16,6 +18,14 @@ export default class Breakout {
         this.paddle.position.x = 200;
         this.paddle.position.y = 200;
         this.app.stage.addChild(this.paddle);
+
+        this.breakoutApi = BreakoutAPI.new();
+        this.statePtr = this.breakoutApi.state();
+        this.p1Y = new Uint32Array(memory.buffer, this.statePtr, 1);
+
+        console.log("Breakout API", this.p1Y[0]);
+        this.breakoutApi.tick();
+        console.log("Tick", this.p1Y[0]);
     }
 
     setup() {

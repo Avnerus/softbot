@@ -47,6 +47,32 @@ export function greet(arg0) {
     }
 }
 
+export class BreakoutAPI {
+
+                static __construct(ptr) {
+                    return new BreakoutAPI(ptr);
+                }
+
+                constructor(ptr) {
+                    this.ptr = ptr;
+                }
+
+            free() {
+                const ptr = this.ptr;
+                this.ptr = 0;
+                wasm.__wbg_breakoutapi_free(ptr);
+            }
+        static new() {
+    return BreakoutAPI.__construct(wasm.breakoutapi_new());
+}
+state() {
+    return wasm.breakoutapi_state(this.ptr);
+}
+tick() {
+    return wasm.breakoutapi_tick(this.ptr);
+}
+}
+
 let slab = [];
 
 let slab_next = 0;

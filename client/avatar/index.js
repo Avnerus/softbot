@@ -7,6 +7,8 @@ import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
+import GameController from './game-controller'
+
 import {greet} from '../common/breakout/breakout'
 
 export default class  {
@@ -56,7 +58,7 @@ export default class  {
         this.voice.init();
 
 
-        this.idle = new Idle(this.SocketController, this.expression);
+        this.idle = new Idle(this.socketController, this.expression);
      //   this.idle.init();
 
 
@@ -67,11 +69,10 @@ export default class  {
        this.keyboard = new Keyboard();
        this.keyboard.init();
 
-       /*
-       this.breakout = new Breakout($('#breakout'), this.keyboard);
-       this.breakout.init();*/
+       this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
+       this.gameController.init();
 
-       greet("Bitch");
+       //greet("Bitch");
 
     }
 

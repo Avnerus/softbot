@@ -18,6 +18,7 @@ pub fn start(
     }));
     println!("Breakout game starting {:?}",config);
     comm_tx.send([1,2,3].to_vec());
+
     let game_loop = 
         thread::Builder::new().name("game_loop".to_owned()).spawn(move || {
             game_loop(game_state.clone());
@@ -32,7 +33,7 @@ fn game_loop(game_state: Arc<Mutex<GameState>>) {
     loop {
         let mut game_state = game_state.lock().unwrap();
         game_state.tick += 1;
-        println!("Tick");
+        //breakout::step();
         thread::sleep(time::Duration::from_millis(1000));
     }
 }
