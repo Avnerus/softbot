@@ -6,8 +6,8 @@
   "scripts": {
     "start": "./node_modules/gulp/bin/gulp.js",
     "serve": "webpack-dev-server",
-    "control": "cargo +nightly run --manifest-path softcontrol/rust/soft_control/Cargo.toml --features=\"binaries\"",
-    "build-wasm": "cargo +nightly build --manifest-path softcontrol/rust/soft_control/Cargo.toml --lib --target wasm32-unknown-unknown &&  wasm-bindgen softcontrol/rust/soft_control/target/wasm32-unknown-unknown/debug/breakout.wasm --out-dir client/common/breakout"
+    "control": "cargo run --manifest-path softcontrol/rust/soft_control/Cargo.toml",
+    "wasm": "cargo +nightly build --manifest-path softcontrol/rust/wasm/Cargo.toml --lib --target wasm32-unknown-unknown &&  wasm-bindgen softcontrol/rust/wasm/target/wasm32-unknown-unknown/debug/breakout.wasm --out-dir client/common/breakout"
   },
   "repository": {
     "type": "git",

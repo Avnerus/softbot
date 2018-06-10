@@ -45,3 +45,4 @@ bundle.js
 __pycache__
 logs/*
 softcontrol/rust/soft_control/target/*
+softcontrol/rust/soft_control/wasm/*
