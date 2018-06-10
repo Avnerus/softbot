@@ -15,13 +15,18 @@ export default class GameController {
 
     onPlayMessage(data) {
         console.log("Play message!", data);
-        if (data == 'PBREAKOUT') {
-            // Start the breakout game
-            $('.control-boxes').hide();
-            $('.control-play').show();
-            this.keyboard.grab();
-            this.breakout = new Breakout(this.container, this.keyboard, this.socketController);
-            this.breakout.init();
+        if (this.breakout) {
+            this.breakout.onMessage(data);
+        }
+        else {
+            if (data == 'PBREAKOUT') {
+                // Start the breakout game
+                $('.control-boxes').hide();
+                $('.control-play').show();
+                this.keyboard.grab();
+                this.breakout = new Breakout(this.container, this.keyboard, this.socketController);
+                this.breakout.init();
+            }
         }
     }
 }
