@@ -5,5 +5,9 @@
     },
     "breakout": {
         "name": "Avner"
+    },
+    "serial": {
+        "port": "/dev/cu.usbmodem2442501",
+        "baud_rate": 9600
     }
 }

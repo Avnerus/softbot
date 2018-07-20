@@ -18,6 +18,7 @@ use std::sync::mpsc::channel;
 use std::sync::{Arc,Mutex};
 use std::fs::File;
 use std::path::Path;
+use std::io::{self, Write};
 
 use ws::{Sender};
 
@@ -39,9 +40,16 @@ struct ServerConfig {
 }
 
 #[derive(Deserialize, Debug)]
+struct SerialConfig {
+    port: String,
+    baud_rate: u32
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Config {
     breakout: Breakout,
     server: ServerConfig,
+    serial: SerialConfig,
     version: String
 }
 
@@ -58,27 +66,47 @@ fn main() {
 
     let config = Arc::new(read_config().unwrap());
 
-    let (broadcast_in, broadcast_out) = channel();
+    //let (sensing_in, sensing_out) = channel();
    // let (serial_in, serial_out) = channel();
 
     let mut port_name = "".to_string();
-    let baud_rate: u32 = 57600;
+    let baud_rate: u32 = 9600;
+
+    let serial_config = Arc::clone(&config);
 
     let serial = thread::Builder::new().name("serial".to_owned()).spawn(move || -> Result<usize,serialport::Error> {
+        println!("Sensing thread");
         let mut settings: SerialPortSettings = Default::default();
-        settings.baud_rate = baud_rate.into();
 
-        let mut port = serialport::open_with_settings(&port_name, &settings)?;
-        let mut serial_buf: Vec<u8> = vec![0; 1];
-        println!("Receiving data on {} at {} baud:", &port_name, &baud_rate);
-        
-        loop {
-            let t = port.read(serial_buf.as_mut_slice())?;
-                //println!("{:?} ({})",serial_buf,t);
-            if t > 0 {
-                broadcast_in.send(serial_buf.clone()).unwrap();
+        let port_name = &serial_config.serial.port;
+        let baud_rate = serial_config.serial.baud_rate;
+
+        settings.baud_rate = baud_rate.into();
+        settings.timeout = Duration::from_millis(10);
+
+        match serialport::open_with_settings(port_name, &settings) {
+            Ok(mut port) => {
+                let mut serial_buf: Vec<u8> = vec![0; 1000];
+                println!("Receiving data on {} at {} baud:", port_name,baud_rate);
+                loop {
+                    match port.read(serial_buf.as_mut_slice()) {
+                        Ok(t) => {
+                            io::stdout().write_all(&serial_buf[..t]).unwrap();
+                            //sensing_in.send(serial_buf.clone()).unwrap();
+                        } 
+                        Err(ref e) if e.kind() == io::ErrorKind::TimedOut => (),
+                        Err(e) => eprintln!("{:?}", e)
+                    }
+                }
+            },
+            Err(e) => {
+                eprintln!(
+                    "Failed to open \"{}\". Error: {}",
+                    port_name,
+                    e
+                );
+                return Err(e);
             }
-            thread::sleep(Duration::from_millis(10));
         }
     }).unwrap();
 
@@ -108,7 +136,11 @@ fn main() {
         }
     }); */
 
-    let _ = serial.join();
+    if let Err(err) = serial.join() {
+        println!("Serial thread panicked! {:?}", err);
+    }
+
+    println!("Serial thread joined");
     let _ = server.join();
     //let _ = serial_broadcast.join();
 }
