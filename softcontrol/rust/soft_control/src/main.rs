@@ -66,7 +66,7 @@ fn main() {
 
     let config = Arc::new(read_config().unwrap());
 
-    //let (sensing_in, sensing_out) = channel();
+    let (sensing_in, sensing_out) = channel();
    // let (serial_in, serial_out) = channel();
 
     let mut port_name = "".to_string();
@@ -92,7 +92,7 @@ fn main() {
                     match port.read(serial_buf.as_mut_slice()) {
                         Ok(t) => {
                             io::stdout().write_all(&serial_buf[..t]).unwrap();
-                            //sensing_in.send(serial_buf.clone()).unwrap();
+                            sensing_in.send(serial_buf.clone()).unwrap();
                         } 
                         Err(ref e) if e.kind() == io::ErrorKind::TimedOut => (),
                         Err(e) => eprintln!("{:?}", e)
@@ -113,7 +113,10 @@ fn main() {
     
     // Server thread
     let server = thread::Builder::new().name("server".to_owned()).spawn(move || {
-        ws_server::start(Arc::clone(&config));
+        ws_server::start(
+            Arc::clone(&config),
+            sensing_out
+        );
     }).unwrap();
 
 

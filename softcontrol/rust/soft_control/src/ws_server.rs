@@ -173,7 +173,8 @@ impl Handler for Server {
 }
 
 pub fn start(
-    config: Arc<Config>
+    config: Arc<Config>,
+    sensing_rx: mpsc::Receiver<Vec<u8>>
 ) {
     println!("Spawning server on port {}", config.server.port);
 
@@ -212,6 +213,20 @@ pub fn start(
         }
     }); 
 
+
+    let sensing_state = state.clone();
+
+    let sensing_thread = thread::spawn(move || {
+        while let Ok(mut msg) = sensing_rx.recv() {
+            let mut state = &mut sensing_state.lock().unwrap();
+            println!("Sensing message!");
+            if let Some(soft_target) = & state.soft_avatar {
+               println!("Sending to avatar!");
+               soft_target.send(msg).unwrap();
+
+            }
+        }
+    }); 
 
     listen(("127.0.0.1",config.server.port), move |out| {
         println!("Connection");

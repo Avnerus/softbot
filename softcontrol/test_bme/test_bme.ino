@@ -52,14 +52,16 @@ void loop() {
     if (idlePressure != 0) {
         float diff = pressure - idlePressure;
 
-        if (diff > 20 && diff < 30 && !pushed) { 
-            Serial.println("Push!");
-            Serial.println(diff);
+        if (diff > 40 && diff < 100 && !pushed) { 
+            Serial.print("S");
+            Serial.println(1);
+         //   Serial.println(diff);
             pushed = true;
         }
-        if (diff < -20  && diff > -30 && pushed) { 
-            Serial.println("Release!");
-            Serial.println(diff);
+        else if (diff < -40  && diff > -80 && pushed) { 
+            Serial.print("S");
+            Serial.println(0);
+           // Serial.println(diff);
             pushed = false;
         }
     }
