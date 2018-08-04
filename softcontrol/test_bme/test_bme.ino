@@ -51,7 +51,9 @@ void loop() {
 
     if (idlePressure != 0) {
         float diff = pressure - idlePressure;
+        Serial.println(diff);
 
+        /*
         if (diff > 40 && diff < 100 && !pushed) { 
             Serial.print("S");
             Serial.println(1);
@@ -63,22 +65,20 @@ void loop() {
             Serial.println(0);
            // Serial.println(diff);
             pushed = false;
-        }
+        }*/
     }
     
     
     delay(10);
 
 
-/*
-
+    /*
     Serial.print(" Pressure: ");
     Serial.print(sensor.readFloatPressure(), 0);
 
 
     Serial.print(" Temp: ");
     Serial.print(sensor.readTempC(), 2);
-    Serial.print(sensor.readTempF(), 2);
 
     Serial.println();
 
@@ -87,4 +87,7 @@ void loop() {
 
     delay(1000); */
     
+    /*
+    Serial.println(sensor.readFloatPressure(), 0);
+    delay(10); */
 }
