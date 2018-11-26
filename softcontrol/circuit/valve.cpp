@@ -1,6 +1,6 @@
 #include "valve.h"
 
-const float OPEN_SPEED = 0.3;
+const float OPEN_SPEED = 0.2;
 const int MAX_SPEED = 255;
 
 Valve::Valve(int inPin1, int inPin2, int speedPin, int standByPin) {

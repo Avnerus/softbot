@@ -1,6 +1,6 @@
 #include "pumpng.h"
 
-const float INFLATION_SPEED = 1.0;
+const float INFLATION_SPEED = 1;
 const int MAX_SPEED = 255;
 
 PumpNg::PumpNg(int inPin1, int inPin2, int speedPin, int standByPin) {
@@ -28,10 +28,9 @@ void PumpNg::init() {
 void PumpNg::setSpeed(float speed) {
     if (speed >= 0.0 && speed <= 1.0) {
         _speed = speed;
-        _motorSpeed = (int)(255 * speed);
-        /*
-        Serial.print("Pump ");
-        Serial.println(_motorSpeed); */
+        _motorSpeed = (int)(MAX_SPEED * speed);
+        //Serial.print("Pump ");
+        //Serial.println(_motorSpeed); 
 
         analogWrite(_speedPin,_motorSpeed);
     }

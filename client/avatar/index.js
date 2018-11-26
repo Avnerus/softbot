@@ -72,6 +72,8 @@ export default class  {
        this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
        this.gameController.init();
 
+       this.audio = new (window.AudioContext || window.webkitAudioContext)();
+
        //greet("Bitch");
 
     }
@@ -80,6 +82,18 @@ export default class  {
     start() {
         console.log("Avatar START");
         this.recognizer.init();
+        this.oscillator = this.audio.createOscillator();
+        this.oscillator.type = 'sine';
+        this.oscillator.frequency.setValueAtTime(220, this.audio.currentTime);
+        this.oscillator.connect(this.audio.destination);
+        this.oscillator.start();
+
+        this.socketController.subscribeToPrefix('S', (data) => {
+            let view = new DataView(data);
+            let value = view.getUint8(1);
+            this.oscillator.frequency.setValueAtTime(220 + value, this.audio.currentTime);
+            //console.log(value); 
+        })
     }
 
     resize() {

@@ -7,7 +7,7 @@
         "name": "Avner"
     },
     "serial": {
-        "port": "/dev/ttyACM0",
+        "port": "/dev/cu.usbmodem2442501",
         "baud_rate": 9600
     }
 }

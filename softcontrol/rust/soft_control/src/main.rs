@@ -91,8 +91,10 @@ fn main() {
                 loop {
                     match port.read(serial_buf.as_mut_slice()) {
                         Ok(t) => {
-                            io::stdout().write_all(&serial_buf[..t]).unwrap();
-                            sensing_in.send(serial_buf.clone()).unwrap();
+                            //println!("Read {} bytes", t);
+                           // io::stdout().write_all(&serial_buf[..t]).unwrap();
+                            //sensing_in.send(serial_buf.clone()).unwrap();
+                            sensing_in.send(serial_buf[..t].to_vec()).unwrap();
                         } 
                         Err(ref e) if e.kind() == io::ErrorKind::TimedOut => (),
                         Err(e) => eprintln!("{:?}", e)

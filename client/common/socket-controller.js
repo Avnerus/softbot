@@ -33,16 +33,16 @@ export default class SocketController {
     }
 
     onMessage(msg) {
-        console.log("Socket controller message: ", msg);
+        // console.log("Socket controller message: ", msg);
         let prefix = '';
 
         if (msg.data instanceof ArrayBuffer) {
             prefix = String.fromCharCode(new Uint8Array(msg.data,0,1)[0]);
-            console.log("Array buffer prefix", prefix);
+            //     console.log("Array buffer prefix", prefix);
         }
         else {
             prefix = msg.data[0];
-            console.log("String prefix: ", msg.data[0]);
+            //      console.log("String prefix: ", msg.data[0]);
         }
         if (this.prefixes[prefix]) {
             this.prefixes[prefix](msg.data);
