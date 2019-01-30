@@ -1,6 +1,5 @@
 #include "common.h"
 #include "chamber.h"
-#include "pump.h"
 
 
 enum INPUT_STATE {
@@ -22,25 +21,25 @@ byte   currentLength = 0;
 INPUT_STATE currentState;
 const char* VALID_COMMANDS = "XPSEMC";
 
-Pump neckPump(7,40);
-Pump facePump(6,41);
+PumpNg pump(22,21,23,20);
 
 Chamber chambers[6] = {
-    Chamber("Down", &neckPump, 26,28,A1, 0, 700),
-    Chamber("Right", &neckPump, 32,24,A0, 0, 700),
-    Chamber("Left", &neckPump, 30,22,A2, 0, 700),
-    Chamber("Eyes", &facePump, 25,23,A3, 0, 200),
-    Chamber("Mouth", &facePump, 29,27,A4, 0, 520), // 190, 290)
-    Chamber("Cheeks", &facePump, 31 ,33, A5, 0, 200) 
+    Chamber("Right", 32,24,A0, 0, 700),
+    Chamber("Left", 30,22,A2, 0, 700),
+  //  Chamber("Down",  26,28,A1, 0, 700),
+  //  Chamber("Eyes", 25,23,A3, 0, 200),
+  //  Chamber("Mouth", 29,27,A4, 0, 520), // 190, 290)
+   // Chamber("Cheeks", 31 ,33, A5, 0, 200) 
 };
 
 enum CHAMBER_INDEX {
-    DOWN_CHAMBER   = 0,
-    RIGHT_CHAMBER  = 1,
-    LEFT_CHAMBER   = 2,
+    RIGHT_CHAMBER   = 0,
+    LEFT_CHAMBER  = 1,
+    /*
+    DOWN_CHAMBER   = 2,
     EYE_CHAMBERS   = 3,
     MOUTH_CHAMBER  = 4,
-    CHEEK_CHAMBERS = 5
+    CHEEK_CHAMBERS = 5*/
 };
 
 const int killPin = 39;
@@ -49,8 +48,7 @@ const int killPin = 39;
 void setup() {
   Serial.begin(9600); 
   Serial.println("Softbot starting");
-  neckPump.init();
-  facePump.init();
+  pump.init();
 
   for (int i = 0; i < MAX_VALUES;i++) {
     currentValue[i] = 0;

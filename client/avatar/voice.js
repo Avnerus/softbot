@@ -1,7 +1,6 @@
 export default class Voice {
-    constructor(socketMessenger, socketController, expression, textOutput) {
+    constructor(socketController, expression, textOutput) {
         console.log("Voice constructed!")
-        this.socketMessenger = socketMessenger;
         this.socketController = socketController;
         this.expression = expression;
         this.textOutput = textOutput;
@@ -12,7 +11,7 @@ export default class Voice {
             this.voices = window.speechSynthesis.getVoices();
             console.log("initial voices", this.voices);
         }
-        this.socketMessenger.on('speech',(data) => {
+        this.socketController.on('speech',(data) => {
             console.log("Speech!", data)
             this.textOutput.html(data.text);
             this.currentData = data;

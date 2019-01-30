@@ -18,8 +18,6 @@ class Chamber {
     public:
         Chamber(
             char* name,
-            PumpNg** pumps,
-            int numOfPumps,
             int entryValve,
             int releaseValve,
             int pressureSensor,
@@ -48,8 +46,6 @@ class Chamber {
 
     private:
         void inflate(float speed);
-        void grabPump();
-        void releasePump();
 
         int _entryValve;
         int _releaseValve;
@@ -60,15 +56,12 @@ class Chamber {
         int _destinationPressure;
         char* _name;
 
-        PumpNg** _pumps;
-
         unsigned long _lastDeflateToggle;
         bool _deflateToggle;
         bool _oscillating;
         bool _usingPump;
         int _oscillateMin;
         int _oscillateMax;
-        int _numOfPumps;
 
         CHAMBER_STATE _state;
 

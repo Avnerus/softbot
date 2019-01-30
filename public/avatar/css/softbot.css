@@ -22,6 +22,9 @@ body {
     align-items: center;
     justify-content: center;
 }
+#avatar img {
+    height: 45vh;
+}
 #interface {
     height: 50%;
     background-color: grey;

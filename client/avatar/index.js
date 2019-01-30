@@ -23,12 +23,13 @@ export default class  {
         global.events = this.emitter;
 
 
+        /*
         this.socketMessenger = new SocketMessenger('registerAvatar');
-  //      this.socketMessenger.init();
+        this.socketMessenger.init();*/
 
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
-        this.socketController = new SocketController("ws://127.0.0.1:3012");
+        this.socketController = new SocketController("ws://10.100.39.25:3012");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");
             this.socketController.sendValueCommand("R",1);
@@ -39,18 +40,16 @@ export default class  {
         this.expression.init();
 
         this.recognizer = new Recognizer(
-            this.socketMessenger, 
             this.socketController,
             this.expression, 
             $('#interface')
         );
 
-        this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');
+        this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
         this.youtubePlayer.init();
 
 
         this.voice = new Voice(
-            this.socketMessenger,
             this.socketController,
             this.expression,
             $('#text-output')
@@ -82,6 +81,7 @@ export default class  {
     start() {
         console.log("Avatar START");
         this.recognizer.init();
+        /*
         this.oscillator = this.audio.createOscillator();
         this.oscillator.type = 'sine';
         this.oscillator.frequency.setValueAtTime(220, this.audio.currentTime);
@@ -93,7 +93,10 @@ export default class  {
             let value = view.getUint8(1);
             this.oscillator.frequency.setValueAtTime(220 + value, this.audio.currentTime);
             //console.log(value); 
-        })
+        })*/
+        this.socketController.subscribeToPrefix('E', (msg) => {
+            console.warn("Error: ", msg.slice(1));
+        });
     }
 
     resize() {

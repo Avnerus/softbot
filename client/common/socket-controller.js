@@ -6,6 +6,7 @@ export default class SocketController {
         console.log("Socket controller constructed!")
         this.host = host;
         this.prefixes = {};
+        this.commands = {};
     }
     init() {
         //let host = document.location.host;
@@ -33,12 +34,25 @@ export default class SocketController {
     }
 
     onMessage(msg) {
-        // console.log("Socket controller message: ", msg);
+        console.log("Socket controller message: ", msg);
         let prefix = '';
 
         if (msg.data instanceof ArrayBuffer) {
             prefix = String.fromCharCode(new Uint8Array(msg.data,0,1)[0]);
-            //     console.log("Array buffer prefix", prefix);
+            console.log("Array buffer prefix", prefix);
+
+            if (prefix == 'C') {
+                // Parse it
+                let chars = new Uint16Array(msg.data, 2);
+                let json = new TextDecoder("utf-16").decode(chars);
+                console.log(json);
+                let obj = JSON.parse(json);
+                if (this.commands[obj.command]) {
+                    for (let func of this.commands[obj.command]) {
+                        func(obj);
+                    }
+                }
+            }
         }
         else {
             prefix = msg.data[0];
@@ -54,7 +68,7 @@ export default class SocketController {
     }
 
     sendSerialCommand(command, ...values) {
-        console.log("Values", values);
+        console.log("Sending Serial command: ", command);
         let buffer = new ArrayBuffer(3 + values.length);
         let z = new Uint8Array(buffer);
         z[0] = ">".charCodeAt(0);
@@ -66,7 +80,7 @@ export default class SocketController {
         this.send(buffer);
     }
     sendValueCommand(command, ...values) {
-        console.log("Values", values);
+        console.log("Sending Value command ", command);
         let buffer = new ArrayBuffer(1 + values.length);
         let z = new Uint8Array(buffer);
         z[0] = command.charCodeAt(0); 
@@ -74,5 +88,27 @@ export default class SocketController {
             z[i + 1] = values[i];
         }
         this.send(buffer);
+    }
+
+    sendJSONCommand(obj) {
+        console.log("Send json command", obj);
+        let text = JSON.stringify(obj);
+        console.log("Text length " + text.length);
+        let buffer = new ArrayBuffer(text.length * 2 + 2);
+        console.log("buffer length " ,buffer);
+        let command = new Uint8Array(buffer, 0);
+        command[0] = 'C'.charCodeAt(0); 
+        let bufView = new Uint16Array(buffer, 2);
+        for (let i = 0; i < text.length; i++) {
+            bufView[i] = text.charCodeAt(i);
+        }
+        this.send(buffer);
+    }
+
+    on(command, func) {
+        if (!this.commands[command]) {
+            this.commands[command] = [];
+        }
+        this.commands[command].push(func);
     }
 }

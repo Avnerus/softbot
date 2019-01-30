@@ -5,8 +5,6 @@ const int INFLATED_THRESHOLD = 70;
 
 Chamber::Chamber(
         char* name,
-        PumpNg** pumps,
-        int numOfPumps,
         int entryValve,
         int releaseValve,
         int pressureSensor,
@@ -20,8 +18,6 @@ Chamber::Chamber(
     _minPressure = minPressure < INFLATED_THRESHOLD ? INFLATED_THRESHOLD : minPressure;
     _maxPressure = maxPressure;
     _destinationPressure = maxPressure;
-    _pumps = pumps;
-    _numOfPumps = numOfPumps;
 }
 Chamber::~Chamber() {
 
@@ -39,14 +35,10 @@ void Chamber::init() {
     _state = IDLE;
     _pressure = analogRead(_pressureSensor);
     _oscillating = false;
-    _usingPump = false;
 
     Serial.print(_name);
     Serial.print(" Chamber initialzied - Initial Pressure: ");
     Serial.println(_pressure);
-
-    Serial.print("Number of pumps: ");
-    Serial.println(_numOfPumps);
 
     deflate();
     delay(2000);
@@ -59,7 +51,6 @@ void Chamber::update() {
     if (_state == INFLATING && _pressure > _destinationPressure) {
         if (_oscillating) {
             _destinationPressure = _oscillateMin;
-            releasePump(); 
             deflate();
         } else {
             stop();
@@ -80,27 +71,6 @@ void Chamber::update() {
         inflate(0.8);
     }
 
-    /*
-
-    // If I'm deflating I have the right to stop the pump
-    if (_state == DEFLATING && _pump->getMotorSpeed() > 0) {
-        _pump->stop();
-    }*/
-
-    /*
-
-    Interval deflation
-
-    if (_state == DEFLATING) {
-        unsigned long time = millis();
-        if (time - _lastDeflateToggle >= DEFLATE_INTERVAL_MS) {
-            _deflateToggle = !_deflateToggle;
-            digitalWrite(_releaseValve, _deflateToggle);
-            _lastDeflateToggle = time;
-        }
-    } 
-    */
-    //digitalWrite(_entryValve, HIGH);*/
 }
 
 void Chamber::inflateMax(float speed) {
@@ -136,13 +106,6 @@ void Chamber::inflate(float speed) {
             if (_entryValve > 0) {
                 digitalWrite(_entryValve, HIGH);
             }
-            grabPump();
-        }
-        for (int i = 0; i < _numOfPumps; i++) {
-            PumpNg* pump = _pumps[i];
-            if (pump->getSpeed() < speed) {
-                pump->setSpeed(speed);
-            }
         }
     } 
 }
@@ -158,10 +121,6 @@ void Chamber::deflate() {
             digitalWrite(_entryValve, LOW);
         }
         digitalWrite(_releaseValve, HIGH);
-        for (int i = 0; i < _numOfPumps; i++) {
-            PumpNg* pump = _pumps[i];
-            pump->stop();
-        }
     }
 }
 
@@ -179,7 +138,6 @@ void Chamber::stop() {
             digitalWrite(_entryValve, LOW);
         }
         digitalWrite(_releaseValve, LOW);
-        releasePump();
         _state = IDLE;
     }
 }
@@ -208,26 +166,6 @@ int Chamber::getPressure() {
 
 bool Chamber::isInflated() {
     return (_pressure >= INFLATED_THRESHOLD);
-}
-
-void Chamber::grabPump() {
-    if (!_usingPump) {
-        for (int i = 0; i < _numOfPumps; i++) {
-            PumpNg* pump = _pumps[i];
-            pump->grab();
-        }
-        _usingPump = true;
-    }
-}
-
-void Chamber::releasePump() {
-    if (_usingPump) {
-        for (int i = 0; i < _numOfPumps; i++) {
-            PumpNg* pump = _pumps[i];
-            pump->release();
-        }
-        _usingPump = false;
-    }
 }
 
 CHAMBER_STATE Chamber::getState() {

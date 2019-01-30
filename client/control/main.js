@@ -38,8 +38,9 @@ export default class Main {
         })
         this.socketController.init();
 
+        /*
         this.socketMessenger = new SocketMessenger('registerControl');
-        this.socketMessenger.init();
+        this.socketMessenger.init();*/
 
         this.recorder = new Recorder($('#recorder-container'));
 
@@ -52,19 +53,19 @@ export default class Main {
         this.camera = new Camera(this.socketController);
         this.camera.init();
 
-        this.speech = new Speech(this.socketMessenger, $("#speech-form"));
+        this.speech = new Speech(this.socketController, $("#speech-form"));
         this.speech.init();
 
-        this.youtubeRemote = new YoutubeRemote(this.socketMessenger, $('#youtube-form'));
+        this.youtubeRemote = new YoutubeRemote(this.socketController, $('#youtube-form'));
         this.youtubeRemote.init();
 
-        this.janusConnection = new JanusConnection('http://stream.avner.us/janus');
+        this.janusConnection = new JanusConnection('http://10.100.11.95:8088/janus');
         this.janusConnection.init();
 
-        this.transcript = new Transcript(this.socketMessenger, this.socketController, $('#transcript'));
+        this.transcript = new Transcript(this.socketController, $('#transcript'));
         this.transcript.init();
 
-        this.listener = new Listener(this.socketMessenger, $('#listen-container'));
+        this.listener = new Listener(this.socketController, $('#listen-container'));
         this.listener.init();
 
         this.expression = new Expression(this.socketController);

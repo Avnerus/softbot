@@ -24,10 +24,10 @@ export default class Comm {
             client.on('registerAvatar', () => {
                 // TODO: Token
                 if (!this.avatar) {
-                    console.log("Client registered as avatar!");
+                    console.log("COMM Client registered as avatar!");
                     this.avatar = client;
                 } else {
-                    console.log("Client tried to register as Avatar when there was already an Avatar!");
+                    console.log("COMM Client tried to register as Avatar when there was already an Avatar!");
                 }
             });
             client.on('registerControl', () => {

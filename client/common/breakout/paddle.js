@@ -16,7 +16,9 @@ export default class Paddle extends PIXI.Container {
     }
 
     update() {
-        this.position.y += this.velocity;
+        if (this.velocity != 0) {
+            this.position.y += this.velocity;
+        }
     }
 
     
