@@ -62,6 +62,7 @@ fn main() {
     println!("Hello, Rusty WS server!");
 
     let config = Arc::new(read_config().unwrap());
+    let mut log = File::create("log.txt").unwrap();
 
     let (sensing_in, sensing_out) = channel();
     let (motor_in, motor_out): (Sender<Vec<u8>>, Receiver<Vec<u8>>) = channel();
@@ -105,11 +106,15 @@ fn main() {
                     match port_read.read_exact(&mut buf) {
                         Ok(t) => {
                             let c = buf[0] as char;
-                            match (c)  {
+                            match c  {
                                 '>' => {
                                     serial_buf.drain(..);
                                 }
                                 '<' => {
+                                    if serial_buf[0] as char == 'D' {
+                                        log.write_all(&serial_buf);
+                                        log.write_all(b"\n");
+                                    }
                                     sensing_in.send(serial_buf.clone()).unwrap();
                                 }
                                 _ => {

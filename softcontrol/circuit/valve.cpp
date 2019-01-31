@@ -1,6 +1,7 @@
 #include "valve.h"
+#include "logger.h"
 
-const float OPEN_SPEED = 0.2;
+const float OPEN_SPEED = 1.0;
 const int MAX_SPEED = 255;
 
 Valve::Valve(int inPin1, int inPin2, int speedPin, int standByPin) {
@@ -37,6 +38,7 @@ void Valve::setSpeed(float speed) {
 
 void Valve::open() {
     //Serial.println("Inflating");
+    Logger::Printf("Valve opening (%d,%d)", _inPin1, _inPin2);
     digitalWrite(_standByPin,HIGH);
     digitalWrite(_inPin1,HIGH);
     digitalWrite(_inPin2,LOW);
@@ -44,12 +46,14 @@ void Valve::open() {
 }
 
 void Valve::close() {
+    Logger::Printf("Valve closing (%d,%d)", _inPin1, _inPin2);
     _motorSpeed = 0;
     _speed = 0.0;
 
     digitalWrite(_inPin1,HIGH);
     digitalWrite(_inPin2,HIGH);
     setSpeed(_motorSpeed);
+    //setSpeed(_motorSpeed);
 }
 
 int Valve::getMotorSpeed() {

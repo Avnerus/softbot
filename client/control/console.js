@@ -23,7 +23,7 @@ export default class Console {
                 }
             }
             console.log("Command values", valuesArray);
-            this.socketController.sendValueCommand.apply(
+            this.socketController.sendSerialCommand.apply(
                 this.socketController,
                 valuesArray
             )
@@ -55,12 +55,16 @@ export default class Console {
             );
         });
         this.consoleContainer.find("#pose-select").change(() => this.poseSelect());
+
+        this.consoleContainer.find("#clear-console-button").click((e) => {
+            $("#transcript").html("");
+        });
     }
 
     onSlide(ui) {
         let container = $(ui.handle).parent().parent();
         let command = container.data("command");
-        this.socketController.sendValueCommand(command, ui.value);
+        this.socketController.sendSerialCommand(command, ui.value);
 
         // Save the pose
         let selectedPose = this.consoleContainer.find("select option:selected").val();

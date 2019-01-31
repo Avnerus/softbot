@@ -1,5 +1,7 @@
 #include "common.h"
 #include "chamber.h"
+#include "pumpng.h"
+#include "logger.h"
 
 
 enum INPUT_STATE {
@@ -19,13 +21,40 @@ int   valueCounter = 0;
 byte   currentLength = 0;
 
 INPUT_STATE currentState;
-const char* VALID_COMMANDS = "XPSEMC";
+String VALID_COMMANDS = "XPSEMCWRL";
 
-PumpNg pump(22,21,23,20);
+PumpNg pump(22,21,23,25);
 
-Chamber chambers[6] = {
-    Chamber("Right", 32,24,A0, 0, 700),
-    Chamber("Left", 30,22,A2, 0, 700),
+Chamber chambers[4] = {
+    Chamber("LeftArm",
+            new Valve(20,18,38,25),
+            new Valve(20,19,38,25),
+            -1,
+            0, 
+            700
+    ),
+    Chamber("RightArm",
+            new Valve(17,15,38,25),
+            new Valve(17,16,37,25),
+            -1,
+            0, 
+            700
+    ),
+    Chamber("Left",
+            new Valve(2,4,5,25),
+            new Valve(2,3,5,25),
+            -1,
+            0, 
+            700
+    ),
+    Chamber("Right",
+            new Valve(6,8,9,25),
+            new Valve(6,7,9,25),
+            -1,
+            0, 
+            700
+    )
+    // //Chamber("Right", 32,24,A0, 0, 700),
   //  Chamber("Down",  26,28,A1, 0, 700),
   //  Chamber("Eyes", 25,23,A3, 0, 200),
   //  Chamber("Mouth", 29,27,A4, 0, 520), // 190, 290)
@@ -33,22 +62,26 @@ Chamber chambers[6] = {
 };
 
 enum CHAMBER_INDEX {
-    RIGHT_CHAMBER   = 0,
-    LEFT_CHAMBER  = 1,
-    /*
-    DOWN_CHAMBER   = 2,
-    EYE_CHAMBERS   = 3,
-    MOUTH_CHAMBER  = 4,
-    CHEEK_CHAMBERS = 5*/
+    LEFT_ARM_CHAMBER  = 0,
+    RIGHT_ARM_CHAMBER  = 1,
+    LEFT_CHAMBER  = 2,
+    RIGHT_CHAMBER   = 3,
+    DOWN_CHAMBER   = 4,
+    EYE_CHAMBERS   = 5,
+    MOUTH_CHAMBER  = 6,
+    CHEEK_CHAMBERS = 7
 };
 
 const int killPin = 39;
+int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
 
 
 void setup() {
   Serial.begin(9600); 
-  Serial.println("Softbot starting");
+
+  Logger::Write("Softbot starting");
   pump.init();
+  pump.inflate();
 
   for (int i = 0; i < MAX_VALUES;i++) {
     currentValue[i] = 0;
@@ -58,7 +91,6 @@ void setup() {
   currentState = START_INPUT;
 
 
-  int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
   for (int i = 0; i < numOfChambers; i++) {
      chambers[i].init();
      delay(10);
@@ -67,14 +99,21 @@ void setup() {
   pinMode(killPin, INPUT);
 }
 
+Chamber* getChamber(int id) {
+    if (id <= numOfChambers -1) {
+        return &chambers[id];
+    } else {
+        return NULL;
+    }
+}
+
 void loop() {
-    for (int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
+    for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update();
     }
     // Kill switch
     if (digitalRead(killPin) == HIGH) {
-        neckPump.stop();
-        facePump.stop();
+        pump.stop();
     }
 
     while (Serial.available() > 0) {
@@ -92,21 +131,23 @@ void processByte() {
         char input = Serial.read();
         if (input == '>') {
           currentState = COMMAND_INPUT;
+          //Logger::Write("Start command");
         }
     }
     else if (currentState == COMMAND_INPUT) {
         char input = Serial.read();
-        if(strchr(VALID_COMMANDS,input) != -1) {
+        if(VALID_COMMANDS.indexOf(input)!= -1) {
               currentCommand = input;
+          //    Logger::Printf("Command is %c", input);
               currentState = LENGTH_INPUT;
         } else {
-            Serial.println("WARNING INVALID COMMAND");
+            Logger::Write("WARNING INVALID COMMAND");
             currentState = START_INPUT;
         }
     }
     else if (currentState == VALUE_INPUT) {
        if (valueCounter > MAX_VALUES) {
-         Serial.println("WARNING VALUE COUNTER EXCEEDED MAX");
+         Logger::Write("WARNING VALUE COUNTER EXCEEDED MAX");
          currentState = START_INPUT;
         } else {
             currentValue[valueCounter] = Serial.read();
@@ -120,11 +161,13 @@ void processByte() {
     else if (currentState == LENGTH_INPUT) {
         currentLength = Serial.read();
         if (currentLength > MAX_VALUES) {
-            Serial.println("WARNING RECEIVED LENGTH LONGER THAN MAX");
+            Logger::Write("WARNING RECEIVED LENGTH LONGER THAN MAX");
             currentState = START_INPUT;
         }
         else if (currentLength > 0) {
             currentState = VALUE_INPUT;
+         //   Logger::Printf("Length of command: %d", currentLength);
+
         } else {
             processCommand();
             currentState = START_INPUT;
@@ -134,53 +177,96 @@ void processByte() {
 }
 
 void processCommand() {
+    //Logger::Printf("Processing command %c", currentCommand);
     switch(currentCommand)  {
         case 'X': {
             updateChambers(currentValue[0] - 50, currentValue[1] - 50);
             break;
         }
         case 'P': {
-            neckPump.setSpeed(currentValue[0]);
+            pump.setSpeed((float)currentValue[0] / 255.0);
             break;
         }
         case 'S': {
-            Serial.println("Stop Command");
+            Logger::Write("Stop Command");
             dispatchStop();
-            neckPump.stop();
+           // pump.stop();
             break;
         }
         case 'E': {
-            if (currentLength == 2) {
-                float inflationMin = (float)currentValue[0] / 255.0;
-                float inflationMax = (float)currentValue[1] / 255.0;
-                chambers[EYE_CHAMBERS].oscillate(inflationMin,inflationMax);
-            } else {
-                float inflation = (float)currentValue[0] / 255.0;
+            Chamber* eyes = getChamber(EYE_CHAMBERS);
+            if (eyes) {
+                if (currentLength == 2) {
+                    float inflationMin = (float)currentValue[0] / 255.0;
+                    float inflationMax = (float)currentValue[1] / 255.0;
+                    eyes->oscillate(inflationMin,inflationMax);
+                } else {
+                    float inflation = (float)currentValue[0] / 255.0;
 
-                chambers[EYE_CHAMBERS].inflateTo(inflation, 0.95);
+                    eyes->inflateTo(inflation, 0.95);
+                }
             }
             break;
         }
         case 'M': {
-            if (currentLength == 2) {
-                float inflationMin = (float)currentValue[0] / 255.0;
-                float inflationMax = (float)currentValue[1] / 255.0;
-                chambers[MOUTH_CHAMBER].oscillate(inflationMin,inflationMax);
-            } else {
-                float inflation = (float)currentValue[0] / 255.0;
-                chambers[MOUTH_CHAMBER].inflateTo(inflation, 0.95);
+            Chamber* mouth = getChamber(MOUTH_CHAMBER);
+            if (mouth) {
+                if (currentLength == 2) {
+                    float inflationMin = (float)currentValue[0] / 255.0;
+                    float inflationMax = (float)currentValue[1] / 255.0;
+                    mouth->oscillate(inflationMin,inflationMax);
+                    
+                } 
+                else {
+                    float inflation = (float)currentValue[0] / 255.0;
+                    mouth->inflateTo(inflation, 0.95);
+                }
+           }
+           break;
+        }
+        case 'C': {
+            Chamber* cheeks = getChamber(CHEEK_CHAMBERS);
+            if (cheeks) {
+                if (currentLength == 2) {
+                    float inflationMin = (float)currentValue[0] / 255.0;
+                    float inflationMax = (float)currentValue[1] / 255.0;
+                    cheeks->oscillate(inflationMin,inflationMax);
+                } else {
+                    float inflation = (float)currentValue[0] / 255.0;
+                    cheeks->inflateTo(inflation, 0.95);
+                }
             }
             break;
         }
-        case 'C': {
-            if (currentLength == 2) {
-                float inflationMin = (float)currentValue[0] / 255.0;
-                float inflationMax = (float)currentValue[1] / 255.0;
-                chambers[CHEEK_CHAMBERS].oscillate(inflationMin,inflationMax);
-            } else {
-                float inflation = (float)currentValue[0] / 255.0;
-                chambers[CHEEK_CHAMBERS].inflateTo(inflation, 0.95);
+        case 'R': {
+            Chamber* rightArm = getChamber(RIGHT_ARM_CHAMBER);
+            if (rightArm){ 
+                int value = (int)currentValue[0];
+                if (value > 0) {
+                    rightArm->inflateMax(1.0);
+                } else {
+                    rightArm->deflateMax();
+                }
             }
+            break;
+        }
+        case 'L': {
+            Chamber* leftArm = getChamber(LEFT_ARM_CHAMBER);
+            if (leftArm){ 
+                int value = (int)currentValue[0];
+                if (value > 0) {
+                    leftArm->inflateMax(1.0);
+                } else {
+                    leftArm->deflateMax();
+                }
+            }
+            break;
+        }
+        case 'W': {
+            int pin = (int)currentValue[0];
+            int value = (int)currentValue[1] == 0 ? LOW : HIGH;
+            digitalWrite(pin, value);
+            Logger::Printf("Write %d to pin %d", pin, value);
             break;
         }
         default: {
@@ -191,18 +277,14 @@ void processCommand() {
 
 
 void dispatchStop() {
-    for (int i = 0; i < 3; i++) { // Just neck
+    for (int i = 0; i < numOfChambers; i++) { // Just neck
         chambers[i].stop();
     }
 }
 
 void updateChambers(int x, int y) {
 
-/*
-    Serial.print("Movement ");
-    Serial.print(x);
-    Serial.print(",");
-    Serial.println(y); */
+    Logger::Printf("Movement (%d,%d)", x,y);
 
     int maxPower = max(abs(x), abs(y));
     float speed = (float)maxPower / MAX_POSITION;
@@ -222,45 +304,48 @@ void updateChambers(int x, int y) {
 }
 
 void left(float speed) {
-    if (chambers[RIGHT_CHAMBER].isInflated()) {
-        chambers[RIGHT_CHAMBER].deflateMax();
-    } else {
-        chambers[RIGHT_CHAMBER].stop();
-        chambers[LEFT_CHAMBER].inflateMax(speed);
+    Logger::Printf("Go left at %f", speed);
+    Chamber* leftNeck = getChamber(LEFT_CHAMBER);
+    Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
+
+    if (rightNeck && rightNeck->isInflated()) {
+        rightNeck->deflateMax();
     }
+    if (leftNeck) {
+        leftNeck->inflateMax(speed);
+    }
+    
 }
 void right(float speed) {
-    if (chambers[LEFT_CHAMBER].isInflated()) {
-        chambers[LEFT_CHAMBER].deflateMax();
-    } else {
-        chambers[LEFT_CHAMBER].stop();
-        chambers[RIGHT_CHAMBER].inflateMax(speed);
-    }
+    Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
+    Chamber* leftNeck = getChamber(LEFT_CHAMBER);
 
+    if (leftNeck && leftNeck->isInflated()) {
+        leftNeck->deflateMax();
+    }
+    if (rightNeck) {
+        rightNeck->inflateMax(speed);
+    }
 }
 void up(float speed) {
-    if (chambers[DOWN_CHAMBER].isInflated()) {
-        chambers[DOWN_CHAMBER].deflateMax();
-    } else {
-        chambers[DOWN_CHAMBER].stop();
-        chambers[LEFT_CHAMBER].inflateMax(speed);
-        chambers[RIGHT_CHAMBER].inflateMax(speed);
+    Chamber* downNeck = getChamber(DOWN_CHAMBER);
+    Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
+    Chamber* leftNeck = getChamber(LEFT_CHAMBER);
+    if (downNeck && downNeck->isInflated()) {
+        downNeck->deflateMax();
+    }
+    if (rightNeck && leftNeck) {
+        leftNeck->inflateMax(speed);
+        rightNeck->inflateMax(speed);
     }
 }
 void down(float speed) {
     /*
-    if (chambers[RIGHT_CHAMBER].isInflated()) {
-        chambers[RIGHT_CHAMBER].deflate();
-    } else {
-        chambers[RIGHT_CHAMBER].stop();
-    }
-    if (chambers[LEFT_CHAMBER].isInflated()) {
-        chambers[LEFT_CHAMBER].deflate();
-    } else {
-        chambers[LEFT_CHAMBER].stop();
-    }*/
-
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
         chambers[DOWN_CHAMBER].inflateMax(speed);
+    }*/
+    Chamber* downNeck = getChamber(DOWN_CHAMBER);
+    if (downNeck) {
+        downNeck->inflateMax(speed);
     }
 }

@@ -1,18 +1,17 @@
 //import SimpleWebRTC from 'simplewebrtc'
 console.log("Loading Control...");
+let main = null;
+let startTime = null;
+
 import ('./control/main')
 .then((Main) => {
-    const main = new Main.default();
-    main.init();
-})
 
-var startTime = null;
-/*
-
-window.onload = function() {
+    main = new Main.default();
     main.init();
+    console.log("Request animation?");
+
     requestAnimationFrame(animate);
-}
+})
 
 function animate(t) {
     if (!startTime) startTime = t;
@@ -21,4 +20,6 @@ function animate(t) {
     main.animate(dt);
     requestAnimationFrame(animate);
 }
-*/
+
+
+

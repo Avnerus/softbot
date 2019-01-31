@@ -15,11 +15,13 @@ class PumpNg {
         float getSpeed();
         void inflate();
         void stop();
+        void start();
         void grab();
         void release();
 
     private:
         float _speed;
+        bool _on;
         int _motorSpeed;
         int _inPin1;
         int _inPin2;
