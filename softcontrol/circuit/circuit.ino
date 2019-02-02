@@ -1,6 +1,7 @@
 #include "common.h"
 #include "chamber.h"
 #include "pumpng.h"
+#include "arm.h"
 #include "logger.h"
 
 
@@ -14,6 +15,7 @@ enum INPUT_STATE {
 
 const int MAX_POSITION = 50;
 const int MAX_VALUES = 4;
+const float NECK_DEFLATE_SPEED = 0.27;
 
 char currentCommand;
 byte  currentValue[MAX_VALUES];
@@ -34,7 +36,7 @@ Chamber chambers[4] = {
             700
     ),
     Chamber("RightArm",
-            new Valve(17,15,38,25),
+            new Valve(17,15,37,25),
             new Valve(17,16,37,25),
             -1,
             0, 
@@ -61,6 +63,9 @@ Chamber chambers[4] = {
    // Chamber("Cheeks", 31 ,33, A5, 0, 200) 
 };
 
+Arm* rightArmSensor = new Arm(1, 10, 20);
+Arm* leftArmSensor = new Arm(2, 28, 40);
+
 enum CHAMBER_INDEX {
     LEFT_ARM_CHAMBER  = 0,
     RIGHT_ARM_CHAMBER  = 1,
@@ -81,7 +86,7 @@ void setup() {
 
   Logger::Write("Softbot starting");
   pump.init();
-  pump.inflate();
+  //pump.inflate();
 
   for (int i = 0; i < MAX_VALUES;i++) {
     currentValue[i] = 0;
@@ -95,6 +100,8 @@ void setup() {
      chambers[i].init();
      delay(10);
   }
+  rightArmSensor->init();
+  //leftArmSensor->init();
 
   pinMode(killPin, INPUT);
 }
@@ -108,9 +115,13 @@ Chamber* getChamber(int id) {
 }
 
 void loop() {
+    unsigned long now = millis();
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update();
     }
+    rightArmSensor->update(now);
+    //leftArmSensor->update(now);
+
     // Kill switch
     if (digitalRead(killPin) == HIGH) {
         pump.stop();
@@ -242,8 +253,10 @@ void processCommand() {
             Chamber* rightArm = getChamber(RIGHT_ARM_CHAMBER);
             if (rightArm){ 
                 int value = (int)currentValue[0];
-                if (value > 0) {
+                if (value > 100) {
                     rightArm->inflateMax(1.0);
+                } else if (value > 0) {
+                    rightArm->stop();
                 } else {
                     rightArm->deflateMax();
                 }
@@ -254,8 +267,10 @@ void processCommand() {
             Chamber* leftArm = getChamber(LEFT_ARM_CHAMBER);
             if (leftArm){ 
                 int value = (int)currentValue[0];
-                if (value > 0) {
+                if (value > 100) {
                     leftArm->inflateMax(1.0);
+                } else if (value > 0) {
+                    leftArm->stop();
                 } else {
                     leftArm->deflateMax();
                 }
@@ -309,10 +324,10 @@ void left(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
 
     if (rightNeck && rightNeck->isInflated()) {
-        rightNeck->deflateMax();
+        rightNeck->deflate(NECK_DEFLATE_SPEED);
     }
     if (leftNeck) {
-        leftNeck->inflateMax(speed);
+        leftNeck->inflateMax(1.0);
     }
     
 }
@@ -321,25 +336,25 @@ void right(float speed) {
     Chamber* leftNeck = getChamber(LEFT_CHAMBER);
 
     if (leftNeck && leftNeck->isInflated()) {
-        leftNeck->deflateMax();
+        leftNeck->deflate(NECK_DEFLATE_SPEED);
     }
     if (rightNeck) {
-        rightNeck->inflateMax(speed);
+        rightNeck->inflateMax(1.0);
     }
 }
-void up(float speed) {
+void down(float speed) {
     Chamber* downNeck = getChamber(DOWN_CHAMBER);
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
     Chamber* leftNeck = getChamber(LEFT_CHAMBER);
     if (downNeck && downNeck->isInflated()) {
-        downNeck->deflateMax();
+        downNeck->deflate(NECK_DEFLATE_SPEED);
     }
     if (rightNeck && leftNeck) {
         leftNeck->inflateMax(speed);
         rightNeck->inflateMax(speed);
     }
 }
-void down(float speed) {
+void up(float speed) {
     /*
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
         chambers[DOWN_CHAMBER].inflateMax(speed);

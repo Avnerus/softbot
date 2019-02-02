@@ -26,9 +26,11 @@ void setup() {
       calibrationStats.clear();
       actionStats.clear();
 
-      if (sensor.begin() == false) { //Begin communication over SPI. Use pin 10 as CS. 
-          while (1) {
-              Serial.println("The sensor did not respond. Please check wiring.");
+      if (sensor.beginSPI(28) == false) { //Begin communication over SPI. Use pin 10 as CS. 
+          bool worked = false;
+          while (!worked) {
+              Serial.println("No");
+              worked = sensor.beginSPI(28);
           }
       } else {
           Serial.println("BME280 Sensor initalized succesfully.");
@@ -49,7 +51,7 @@ void loop() {
     //Serial.println(pressure); 
     calibrationStats.add(pressure);
 
-    if (calibrationStats.count() == 300) {
+    if (calibrationStats.count() == 50) {
         stdDev = calibrationStats.pop_stdev();
         if (stdDev < 5.0f) {
             idlePressure = calibrationStats.average();
@@ -60,8 +62,8 @@ void loop() {
 
     if (idlePressure != 0) {
         float diff = pressure - idlePressure;
-        Serial.write('S');
-        Serial.write((byte)diff); 
+        Serial.print('S');
+        Serial.println((byte)diff); 
         /*
 
         if (diff > 40 && diff < 100 && !pushed) { 

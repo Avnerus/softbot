@@ -13,7 +13,7 @@ class Valve {
         void setSpeed(float speed);
         int getMotorSpeed();
         float getSpeed();
-        void open();
+        void open(float speed);
         void close();
 
     private:

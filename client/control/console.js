@@ -59,6 +59,14 @@ export default class Console {
         this.consoleContainer.find("#clear-console-button").click((e) => {
             $("#transcript").html("");
         });
+        this.consoleContainer.find("#pump-checkbox").change((e) => {
+            console.log("Pump ?");
+            if($(e.target).prop('checked')) {
+                this.socketController.sendSerialCommand('P', 150);
+            } else {
+                this.socketController.sendSerialCommand('P', 0);
+            }
+        });
     }
 
     onSlide(ui) {

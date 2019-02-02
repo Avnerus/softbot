@@ -6,7 +6,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" href="css/control.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+        <!--link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet"-->
         <link rel="stylesheet" href="css/jquery-ui.css">
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link href="lib/emoji-picker/css/emoji.css" rel="stylesheet">
@@ -144,13 +144,16 @@
                         <div class="form-group">
                             <label for="console-command">Command: </label>
                             <input type="text" class="form-control" id="console-command">
-                            <label for="console-value1">Value 1: </label>
+                            <label for="console-Yvalue1">Value 1: </label>
                             <input type="number" class="form-control" id="console-value1">
                             <label for="console-value2">Value 2: </label>
                             <input type="number" class="form-control" id="console-value2">
                         </div>
                     </form>
                     <button id="clear-console-button" type="button" class="recognize-button btn-primary">Clear console</button>
+
+                    <label for="pump-checkbox">Pump: </label>
+                    <input id="pump-checkbox" name="pump-checkbox" type="checkbox" class=""></input>
                     <div id="console-expressions">
                         <div id="console-sliders">
                             <div data-command="E" class="console-slider-control">

@@ -18,17 +18,20 @@ float stdDev = 0;
 
 
 void setup() {
-  //Serial.begin(9600);
+  Serial.begin(9600);
   Serial.println("BME test");
 
   sensor.settings.commInterface = SPI_MODE;
   calibrationStats.clear();
   actionStats.clear();
+  bool worked = false;
 
-  if (sensor.begin() == false) { //Begin communication over SPI. Use pin 10 as CS.
-    Serial.println("The sensor did not respond. Please check wiring.");
+  if (sensor.beginSPI(10) == false) { //Begin communication over SPI. Use pin 10 as CS.
     // Freeze
-    while (1);
+      while (!worked) {
+        worked = sensor.beginSPI(28);
+        Serial.println("No");
+      }
   } else {
     Serial.println("BME280 Sensor initalized succesfully.");
     /*

@@ -43,7 +43,7 @@ void Chamber::init() {
 
     Logger::Printf("%s chamber initialized - Initial pressure: %d",_name, _pressure);
 
-    deflate();
+    deflateMax();
     delay(2000);
     stop();
 }
@@ -55,7 +55,7 @@ void Chamber::update() {
         if (_state == INFLATING && _pressure > _destinationPressure) {
             if (_oscillating) {
                 _destinationPressure = _oscillateMin;
-                deflate();
+                deflateMax();
             } else {
                 stop();
             }
@@ -78,11 +78,11 @@ void Chamber::update() {
 }
 
 void Chamber::inflateMax(float speed) {
-   // Logger::Printf("%s InflatMax %f",_name, speed );
     _destinationPressure = _maxPressure;
+    Logger::Printf("%s InflatMax pressure %d at speed %f",_name, _destinationPressure, speed );
     inflate(speed);
 }
-
+  
 void Chamber::inflateTo(float max, float speed) {
     if (_oscillating) {
         stop();
@@ -93,7 +93,7 @@ void Chamber::inflateTo(float max, float speed) {
     if (_destinationPressure > _pressure) {
         inflate(speed);
     } else if (_destinationPressure < _pressure && _pressure > INFLATED_THRESHOLD) {
-        deflate();
+        deflate(speed);
     }
 }
 
@@ -108,15 +108,15 @@ void Chamber::inflate(float speed) {
             }
             
             if (_entryValve) {
-                _entryValve->open();
+                _entryValve->open(speed);
             }
         }
     } 
 }
 
-void Chamber::deflate() {
+void Chamber::deflate(float speed) {
     if (_state != DEFLATING) {
-        Logger::Printf("%s Deflating", _name);
+        Logger::Printf("%s Deflating at %f", _name, speed);
         _state = DEFLATING;
         // Close before open because of the shared pins
         
@@ -124,14 +124,14 @@ void Chamber::deflate() {
             _entryValve->close();
         }
         if (_releaseValve) {
-            _releaseValve->open();
+            _releaseValve->open(speed);
         }
     }
 }
 
 void Chamber::deflateMax() {
     _destinationPressure = _minPressure;
-    deflate();
+    deflate(1.0);
 }
 
 void Chamber::stop() {
