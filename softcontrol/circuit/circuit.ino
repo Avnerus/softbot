@@ -53,8 +53,9 @@ Chamber chambers[4] = {
             new Valve(6,8,9,25),
             new Valve(6,7,9,25),
             A20,
-            10,
-            16
+            200,
+            300
+            
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
   //  Chamber("Down",  26,28,A1, 0, 700),

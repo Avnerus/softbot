@@ -51,7 +51,8 @@ void Chamber::init() {
 void Chamber::update(unsigned long now) {
     // Blast Protection
     if (_pressureSensor != -1) {
-        _pressure = max(readPressure() - _basePressure,0);
+        //_pressure = max(readPressure() - _basePressure,0);
+        _pressure = readPressure();
         if (now - _lastPressureSense >= PRESSURE_SENSE_INTERVAL) {
             Serial.print(">SP");
             Serial.write(_name, 10);
@@ -59,21 +60,20 @@ void Chamber::update(unsigned long now) {
             Serial.print("<");
             _lastPressureSense = now;
         }
-        /*
         if (_state == INFLATING && _pressure >= _destinationPressure) {
             if (_oscillating) {
                 _destinationPressure = _oscillateMin;
                 deflateMax();
             } else {
-                Logger::Printf("%s stopping because %d reached %d", _name, _pressure, _destinationPressure);
+                //Logger::Printf("%s stopping because %d reached %d", _name, _pressure, _destinationPressure);
                 stop();
             }
         }
         else if (_state == IDLE && _pressure < _minPressure) {
-            Logger::Printf("%s Inflating to min pressure %d", _name, _minPressure);
+           // Logger::Printf("%s Inflating to min pressure %d", _name, _minPressure);
             _destinationPressure = _minPressure;
             inflate(1.0);
-        } */
+        } 
         /*
         else if (_state == DEFLATING && 
                 (_pressure < _destinationPressure || _pressure < _minPressure)) {
@@ -104,7 +104,7 @@ void Chamber::inflateTo(float max, float speed) {
         _oscillating = false;
     }
     _destinationPressure = _minPressure + (float)(_maxPressure - _minPressure) * max;
-    Logger::Printf("%s inflating from %d to %d", _name,  _pressure, _destinationPressure);
+///    Logger::Printf("%s inflating from %d to %d", _name,  _pressure, _destinationPressure);
     if (_destinationPressure > _pressure) {
         inflate(speed);
     } else if (_destinationPressure < _pressure) {
@@ -113,7 +113,7 @@ void Chamber::inflateTo(float max, float speed) {
 }
 
 void Chamber::inflate(float speed) {
-    Logger::Printf("%s inflate() %d", _name, _pressure);
+   // Logger::Printf("%s inflate() %d", _name, _pressure);
     if (_pressure < _destinationPressure) {
         if (_state != INFLATING) {
             Logger::Printf("%s inflating at speed %d", _name, speed);
@@ -127,7 +127,7 @@ void Chamber::inflate(float speed) {
                 _entryValve->open(speed);
             }
         } else {
-            Logger::Printf("%s Already inflating!",_name);
+           // Logger::Printf("%s Already inflating!",_name);
         }
     }
 }
@@ -186,7 +186,8 @@ int16_t Chamber::getPressure() {
 
 uint16_t Chamber::readPressure() {
     if (_pressureSensor != -1) {
-        return 1023 - analogRead(_pressureSensor);
+        //return 1023 - analogRead(_pressureSensor);
+        return analogRead(_pressureSensor);
     } else {
         return 0;
     }
