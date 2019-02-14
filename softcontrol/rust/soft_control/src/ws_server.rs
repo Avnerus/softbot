@@ -240,11 +240,25 @@ pub fn start(
             let command = msg[0] as char;
             match(command) {
                 'S' => {
-                    let mut state = &mut sensing_state.lock().unwrap();
-                    println!("Sensing message!");
-                    if let Some(sa) = & state.soft_avatar {
-                       println!("Sending to avatar!");
-                       sa.send(msg).unwrap();
+                    let state = & sensing_state.lock().unwrap();
+                    match msg[1] as char {
+                        'A' => {
+                            println!("Arm sensing message!");
+                            if let Some(sa) = & state.soft_avatar {
+                               println!("Sending to avatar!");
+                               sa.send(msg).unwrap();
+                            }
+                        }
+                        'P' => {
+                            println!("Pressure sensing message!");
+                            if let Some(sc) = & state.soft_controller {
+                               println!("Sending to controller!");
+                               sc.send(msg).unwrap();
+                            }
+                        }
+                        _ => {
+                            println!("Unknown sensing message! {}", msg[1]);
+                        }
                     }
                 }
                 'D' => {

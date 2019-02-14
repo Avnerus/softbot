@@ -16,20 +16,25 @@ bool calibrated = false;
 bool pushed = false;
 float stdDev = 0;
 
+const int SPI_PORT = 10;
+
 
 void setup() {
   Serial.begin(9600);
+  delay(3000);
   Serial.println("BME test");
+  Serial.flush();
+
 
   sensor.settings.commInterface = SPI_MODE;
   calibrationStats.clear();
   actionStats.clear();
   bool worked = false;
 
-  if (sensor.beginSPI(10) == false) { //Begin communication over SPI. Use pin 10 as CS.
+  if (sensor.beginSPI(SPI_PORT) == false) { //Begin communication over SPI. Use pin 10 as CS.
     // Freeze
       while (!worked) {
-        worked = sensor.beginSPI(28);
+        worked = sensor.beginSPI(SPI_PORT);
         Serial.println("No");
       }
   } else {

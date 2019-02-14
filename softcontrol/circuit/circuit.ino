@@ -15,7 +15,7 @@ enum INPUT_STATE {
 
 const int MAX_POSITION = 50;
 const int MAX_VALUES = 4;
-const float NECK_DEFLATE_SPEED = 0.27;
+const float NECK_DEFLATE_SPEED = 1.0; //.27;
 
 char currentCommand;
 byte  currentValue[MAX_VALUES];
@@ -52,9 +52,9 @@ Chamber chambers[4] = {
     Chamber("Right",
             new Valve(6,8,9,25),
             new Valve(6,7,9,25),
-            -1,
-            0, 
-            700
+            A20,
+            10,
+            16
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
   //  Chamber("Down",  26,28,A1, 0, 700),
@@ -103,6 +103,9 @@ void setup() {
   rightArmSensor->init();
   //leftArmSensor->init();
 
+
+  //getChamber(RIGHT_CHAMBER)->oscillate(241,245);
+
   pinMode(killPin, INPUT);
 }
 
@@ -117,15 +120,16 @@ Chamber* getChamber(int id) {
 void loop() {
     unsigned long now = millis();
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
-        chambers[i].update();
+        chambers[i].update(now);
     }
     rightArmSensor->update(now);
     //leftArmSensor->update(now);
 
     // Kill switch
+    /*
     if (digitalRead(killPin) == HIGH) {
         pump.stop();
-    }
+    }*/
 
     while (Serial.available() > 0) {
         processByte();
@@ -326,18 +330,21 @@ void left(float speed) {
     if (rightNeck && rightNeck->isInflated()) {
         rightNeck->deflate(NECK_DEFLATE_SPEED);
     }
+    /*
     if (leftNeck) {
         leftNeck->inflateMax(1.0);
-    }
+    }*/
     
 }
 void right(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
     Chamber* leftNeck = getChamber(LEFT_CHAMBER);
 
+    /*
     if (leftNeck && leftNeck->isInflated()) {
         leftNeck->deflate(NECK_DEFLATE_SPEED);
-    }
+    }*/
+
     if (rightNeck) {
         rightNeck->inflateMax(1.0);
     }

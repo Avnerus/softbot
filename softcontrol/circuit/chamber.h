@@ -17,17 +17,17 @@ class Chamber {
 
     public:
         Chamber(
-            const char* name,
+            const char name[10],
             Valve* entryValve,
             Valve* releaseValve,
             int pressureSensor,
-            int minPressure,
-            int maxPressure
+            uint16_t minPressure,
+            uint16_t maxPressure
         );
         ~Chamber();
 
         void init();
-        void update();
+        void update(unsigned long now);
 
         void inflateMax(float speed);
         void inflateTo(float max, float speed);
@@ -35,7 +35,8 @@ class Chamber {
         void deflateMax();
         void stop();
 
-        int getPressure();
+        int16_t  getPressure();
+        uint16_t  readPressure();
         bool isInflated();
 
         void setInflation(float desiredInflation);
@@ -50,13 +51,16 @@ class Chamber {
         Valve* _entryValve;
         Valve* _releaseValve;
         int _pressureSensor;
-        int _maxPressure;
-        int _minPressure;
-        int _pressure;
-        int _destinationPressure;
-        const char* _name;
+        uint16_t _maxPressure;
+        uint16_t _minPressure;
+        uint16_t _basePressure;
+        int16_t _pressure;
+        uint16_t _destinationPressure;
+        char _name[10];
 
         unsigned long _lastDeflateToggle;
+        unsigned long _lastPressureSense;
+
         bool _deflateToggle;
         bool _oscillating;
         int _oscillateMin;

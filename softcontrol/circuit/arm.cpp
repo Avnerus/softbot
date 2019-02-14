@@ -12,6 +12,7 @@ Arm::Arm(int id, int pin, int threshold) {
     _idlePressure = 0;
     _pushed = false;
     _threshold = threshold;
+    _lastCheck = 0;
 }
 
 Arm::~Arm() {
@@ -46,13 +47,13 @@ void Arm::update(unsigned long now) {
                 float diff = abs(pressure - _idlePressure);
                 if (_pushed && diff < _threshold) {
                     _pushed = false;
-                    Serial.print(">SR");
+                    Serial.print(">SAR");
                     Serial.print(_id);
                     Serial.print("<");
                 }
                 if (!_pushed && diff > _threshold) {
                     _pushed = true;
-                    Serial.print(">SP");
+                    Serial.print(">SAP");
                     Serial.print(_id);
                     Serial.print("<");
                 }

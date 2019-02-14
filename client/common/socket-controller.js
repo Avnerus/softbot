@@ -39,7 +39,7 @@ export default class SocketController {
 
         if (msg.data instanceof ArrayBuffer) {
             prefix = String.fromCharCode(new Uint8Array(msg.data,0,1)[0]);
-            // console.log("Array buffer prefix", prefix);
+            //console.log("Array buffer prefix", prefix);
 
             if (prefix == 'C') {
                 // Parse it
@@ -56,7 +56,7 @@ export default class SocketController {
         }
         else {
             prefix = msg.data[0];
-            //      console.log("String prefix: ", msg.data[0]);
+            console.log("String prefix: ", msg.data[0]);
         }
         if (this.prefixes[prefix]) {
             this.prefixes[prefix](msg.data);

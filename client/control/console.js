@@ -7,6 +7,7 @@ export default class Console {
         this.socketController = socketController;
         this.expression = expression;
         this.consoleContainer = consoleContainer;
+        this.pressures = {};
     }
     init() {
         console.log("Init Console", this.consoleContainer);
@@ -62,11 +63,36 @@ export default class Console {
         this.consoleContainer.find("#pump-checkbox").change((e) => {
             console.log("Pump ?");
             if($(e.target).prop('checked')) {
-                this.socketController.sendSerialCommand('P', 150);
+                this.socketController.sendSerialCommand('P', 120);
             } else {
                 this.socketController.sendSerialCommand('P', 0);
             }
         });
+
+        this.socketController.subscribeToPrefix('S', (msg) => {
+            console.log("Control sensing", msg);
+            let chars = new Uint8Array(msg, 2,10);
+            let end = chars.findIndex(n => n == 0);
+            let chamber = new TextDecoder("utf-8").decode(chars.slice(0,end));
+            let pressure = new Uint16Array(msg,12,1)[0];
+            this.pressures[chamber] = pressure;
+            this.renderPressures();
+        })
+
+
+    }
+
+    renderPressures() {
+        let list = $("#pressure-list");
+        list.html("");
+        for (let entry of Object.entries(this.pressures)) {
+            let [key, value] = entry;
+            let li = document.createElement("li");
+            li.innerHTML = key + ": " + value;
+            list.append(li);
+        }
+
+
     }
 
     onSlide(ui) {

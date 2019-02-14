@@ -2,23 +2,25 @@
 #include "logger.h"
 
 const int DEFLATE_INTERVAL_MS = 10;
-const int INFLATED_THRESHOLD = 70;
+const int PRESSURE_SENSE_INTERVAL = 1000;
 
 Chamber::Chamber(
-        const char* name,
+        const char name[10],
         Valve* entryValve,
         Valve* releaseValve,
-        int pressureSensor,
-        int minPressure,
-        int maxPressure
+        int  pressureSensor,
+        uint16_t  minPressure,
+        uint16_t  maxPressure
     ) {
-    _name = name;
+    strcpy(_name, name);
     _entryValve = entryValve;
     _releaseValve = releaseValve;
     _pressureSensor = pressureSensor;
-    _minPressure = minPressure < INFLATED_THRESHOLD ? INFLATED_THRESHOLD : minPressure;
+    _minPressure = minPressure;
     _maxPressure = maxPressure;
-    _destinationPressure = maxPressure;
+    _destinationPressure = 0;
+    _basePressure = 0;
+    _lastPressureSense = 0;
 }
 Chamber::~Chamber() {
 
@@ -36,30 +38,43 @@ void Chamber::init() {
     }
 
     _state = IDLE;
-    if (_pressureSensor != -1) {
-        _pressure = analogRead(_pressureSensor);
-    }
     _oscillating = false;
 
     Logger::Printf("%s chamber initialized - Initial pressure: %d",_name, _pressure);
 
     deflateMax();
     delay(2000);
+    _pressure = _basePressure = readPressure();
     stop();
 }
 
-void Chamber::update() {
+void Chamber::update(unsigned long now) {
     // Blast Protection
     if (_pressureSensor != -1) {
-        _pressure = analogRead(_pressureSensor);
-        if (_state == INFLATING && _pressure > _destinationPressure) {
+        _pressure = max(readPressure() - _basePressure,0);
+        if (now - _lastPressureSense >= PRESSURE_SENSE_INTERVAL) {
+            Serial.print(">SP");
+            Serial.write(_name, 10);
+            Serial.write((byte*)&_pressure,2);
+            Serial.print("<");
+            _lastPressureSense = now;
+        }
+        /*
+        if (_state == INFLATING && _pressure >= _destinationPressure) {
             if (_oscillating) {
                 _destinationPressure = _oscillateMin;
                 deflateMax();
             } else {
+                Logger::Printf("%s stopping because %d reached %d", _name, _pressure, _destinationPressure);
                 stop();
             }
         }
+        else if (_state == IDLE && _pressure < _minPressure) {
+            Logger::Printf("%s Inflating to min pressure %d", _name, _minPressure);
+            _destinationPressure = _minPressure;
+            inflate(1.0);
+        } */
+        /*
         else if (_state == DEFLATING && 
                 (_pressure < _destinationPressure || _pressure < _minPressure)) {
             if (_oscillating) {
@@ -71,8 +86,8 @@ void Chamber::update() {
         } else if (_state == IDLE && _minPressure > INFLATED_THRESHOLD &&  _pressure < _minPressure) {
             Logger::Printf("%s Inflating to min pressure %d", _name, _minPressure);
             _destinationPressure = _minPressure;
-            inflate(0.8);
-        }
+            inflate(1.0);
+        }*/
     }
 
 }
@@ -80,7 +95,7 @@ void Chamber::update() {
 void Chamber::inflateMax(float speed) {
     _destinationPressure = _maxPressure;
     Logger::Printf("%s InflatMax pressure %d at speed %f",_name, _destinationPressure, speed );
-    inflate(speed);
+    inflate(0.5);
 }
   
 void Chamber::inflateTo(float max, float speed) {
@@ -92,15 +107,16 @@ void Chamber::inflateTo(float max, float speed) {
     Logger::Printf("%s inflating from %d to %d", _name,  _pressure, _destinationPressure);
     if (_destinationPressure > _pressure) {
         inflate(speed);
-    } else if (_destinationPressure < _pressure && _pressure > INFLATED_THRESHOLD) {
+    } else if (_destinationPressure < _pressure) {
         deflate(speed);
     }
 }
 
 void Chamber::inflate(float speed) {
+    Logger::Printf("%s inflate() %d", _name, _pressure);
     if (_pressure < _destinationPressure) {
-        Logger::Printf("%s inflating at speed %f", _name, speed);
         if (_state != INFLATING) {
+            Logger::Printf("%s inflating at speed %d", _name, speed);
             _state = INFLATING;
             // Close before open?
             if (_releaseValve)  {
@@ -110,8 +126,10 @@ void Chamber::inflate(float speed) {
             if (_entryValve) {
                 _entryValve->open(speed);
             }
+        } else {
+            Logger::Printf("%s Already inflating!",_name);
         }
-    } 
+    }
 }
 
 void Chamber::deflate(float speed) {
@@ -162,8 +180,16 @@ void Chamber::endOscillation() {
     _oscillating = false;
 }
 
-int Chamber::getPressure() {
+int16_t Chamber::getPressure() {
     return _pressure;
+}
+
+uint16_t Chamber::readPressure() {
+    if (_pressureSensor != -1) {
+        return 1023 - analogRead(_pressureSensor);
+    } else {
+        return 0;
+    }
 }
 
 bool Chamber::isInflated() {

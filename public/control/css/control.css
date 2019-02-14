@@ -229,3 +229,12 @@ body {
     margin-right: 10px;
     color: black;
 }
+
+#pressure-sensing {
+    border: 1px solid white;
+    width: 200px;
+}
+#pressure-sensing .title {
+    text-align: center;
+    text-decoration: underline;
+}
