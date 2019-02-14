@@ -4,6 +4,7 @@ extern crate serde;
 extern crate serde_json;
 extern crate ws;
 extern crate byteorder;
+extern crate chrono;
 
 
 #[macro_use]
@@ -20,6 +21,7 @@ use std::path::Path;
 use std::io::{self, Write};
 
 use argparse::{ArgumentParser, Store};
+use chrono::Local;
 
 mod soft_error;
 mod breakout_state;
@@ -112,6 +114,8 @@ fn main() {
                                 }
                                 '<' => {
                                     if serial_buf[0] as char == 'D' {
+                                        let date = Local::now();
+                                        log.write_all(format!("{} ",date.format("%H:%M:%S")).as_bytes());
                                         log.write_all(&serial_buf);
                                         log.write_all(b"\n");
                                     }
