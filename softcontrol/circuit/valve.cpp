@@ -28,10 +28,6 @@ void Valve::setSpeed(float speed) {
     if (speed >= 0.0 && speed <= 1.0) {
         _speed = speed;
         _motorSpeed = (int)(255 * speed);
-        /*
-        Serial.print("Pump ");
-        Serial.println(_motorSpeed); */
-
         analogWrite(_speedPin,_motorSpeed);
     }
 }

@@ -20,7 +20,8 @@ class Chamber {
             Valve* releaseValve,
             int pressureSensor,
             uint16_t minPressure,
-            uint16_t maxPressure
+            uint16_t maxPressure,
+            float deflationSpeed = 1.0
         );
         ~Chamber();
 
@@ -29,8 +30,13 @@ class Chamber {
 
         void inflateMax(float speed);
         void inflateTo(float max, float speed);
+
         void deflate(float speed);
+        void deflate();
+
         void deflateMax(float speed);
+        void deflateMax();
+
         void stop();
 
         int16_t  getPressure();
@@ -62,6 +68,8 @@ class Chamber {
 
         unsigned long _lastDeflateToggle;
         unsigned long _lastPressureSense;
+
+        float _deflationSpeed;
 
         bool _deflateToggle;
         bool _oscillating;

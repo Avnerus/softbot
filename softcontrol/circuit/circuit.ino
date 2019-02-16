@@ -53,7 +53,8 @@ Chamber chambers[4] = {
             new Valve(6,7,9,25),
             A20,
             200,
-            270
+            270,
+            0.305
             
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
@@ -256,9 +257,20 @@ void processCommand() {
         case 'R': {
             Chamber* rightArm = getChamber(RIGHT_CHAMBER);
             if (rightArm){ 
-                float inflationMin = (float)currentValue[0] / 255.0;
-                float inflationMax = (float)currentValue[1] / 255.0;
-                rightArm->oscillate(inflationMin,inflationMax);
+                if (currentLength == 2) {
+                    float inflationMin = (float)currentValue[0] / 255.0;
+                    float inflationMax = (float)currentValue[1] / 255.0;
+                    rightArm->oscillate(inflationMin,inflationMax);
+
+                    /*
+                    float inflation = (float)currentValue[0] / 255.0;
+                    float speed = (float)currentValue[1] / 255.0;
+                    rightArm->inflateTo(inflation, speed);*/
+
+                } else {
+                    float inflation = (float)currentValue[0] / 255.0;
+                    rightArm->inflateTo(inflation, 1.0);
+                }
             }
             break;
         }

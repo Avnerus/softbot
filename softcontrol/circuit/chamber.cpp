@@ -12,7 +12,8 @@ Chamber::Chamber(
         Valve* releaseValve,
         int  pressureSensor,
         uint16_t  minPressure,
-        uint16_t  maxPressure
+        uint16_t  maxPressure,
+        float deflationSpeed
     ) {
     strcpy(_name, name);
     _entryValve = entryValve;
@@ -20,6 +21,7 @@ Chamber::Chamber(
     _pressureSensor = pressureSensor;
     _minPressure = minPressure;
     _maxPressure = maxPressure;
+    _deflationSpeed = deflationSpeed;
     _destinationPressure = 0;
     _basePressure = 0;
     _lastPressureSense = 0;
@@ -78,7 +80,7 @@ void Chamber::update(unsigned long now) {
                 if (_state == INFLATING && _pressure >= _destinationPressure + PRESSURE_LEEWAY) {
                     if (_oscillating) {
                         _destinationPressure = _oscillateMin;
-                        deflate(1.0);
+                        deflate(_deflationSpeed);
                     } else {
                         //Logger::Printf("%s stopping because %d reached %d", _name, _pressure, _destinationPressure);
                         stop();
@@ -159,9 +161,17 @@ void Chamber::deflate(float speed) {
     }
 }
 
+void Chamber::deflate() {
+    deflate(_deflationSpeed);
+}
+
 void Chamber::deflateMax(float speed) {
     _destinationPressure = _minPressure;
     deflate(speed);
+}
+
+void Chamber::deflateMax() {
+    deflateMax(_deflationSpeed);
 }
 
 void Chamber::stop() {
