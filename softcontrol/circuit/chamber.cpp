@@ -3,7 +3,8 @@
 
 const int DEFLATE_INTERVAL_MS = 10;
 const int PRESSURE_SENSE_INTERVAL = 1000;
-const int PRESSURE_AVERAGE_COUNT = 5;
+const int PRESSURE_AVERAGE_COUNT = 100;
+const int PRESSURE_LEEWAY = 8;
 
 Chamber::Chamber(
         const char name[10],
@@ -22,6 +23,8 @@ Chamber::Chamber(
     _destinationPressure = 0;
     _basePressure = 0;
     _lastPressureSense = 0;
+    _pressureReadCount = 0;
+    _pressureReadSum = 0;
 }
 Chamber::~Chamber() {
 
@@ -43,9 +46,9 @@ void Chamber::init() {
 
     Logger::Printf("%s chamber initialized - Initial pressure: %d",_name, _pressure);
 
-    deflateMax();
+    deflateMax(1.0);
     delay(2000);
-    _pressure = _basePressure = readPressure();
+    _pressure = readPressure();
     stop();
 }
 
@@ -53,41 +56,50 @@ void Chamber::update(unsigned long now) {
     // Blast Protection
     if (_pressureSensor != -1) {
         //_pressure = max(readPressure() - _basePressure,0);
-        _pressure = readPressure();
-        if (now - _lastPressureSense >= PRESSURE_SENSE_INTERVAL) {
-            Serial.print(">SP");
-            Serial.write(_name, 10);
-            Serial.write((byte*)&_pressure,2);
-            Serial.print("<");
-            _lastPressureSense = now;
-        }
-        if (_pressure > _maxPressure) {
-            stop();
-        }
-        else {
-            if (_state == INFLATING && _pressure >= _destinationPressure) {
-                if (_oscillating) {
-                    _destinationPressure = _oscillateMin;
-                    deflateMax();
-                } else {
-                    //Logger::Printf("%s stopping because %d reached %d", _name, _pressure, _destinationPressure);
-                    stop();
+        int currentPressure = readPressure();
+        _pressureReadSum += currentPressure;
+        _pressureReadCount += 1;
+        if (_pressureReadCount >= PRESSURE_AVERAGE_COUNT) {
+            _pressure = _pressureReadSum / PRESSURE_AVERAGE_COUNT;
+            _pressureReadCount = 0;
+            _pressureReadSum = 0;
+
+            if (now - _lastPressureSense >= PRESSURE_SENSE_INTERVAL) {
+                Serial.print(">SP");
+                Serial.write(_name, 10);
+                Serial.write((byte*)&_pressure,2);
+                Serial.print("<");
+                _lastPressureSense = now;
+            }
+            if (_pressure > _maxPressure) {
+                stop();
+            }
+            else {
+                if (_state == INFLATING && _pressure >= _destinationPressure + PRESSURE_LEEWAY) {
+                    if (_oscillating) {
+                        _destinationPressure = _oscillateMin;
+                        deflate(1.0);
+                    } else {
+                        //Logger::Printf("%s stopping because %d reached %d", _name, _pressure, _destinationPressure);
+                        stop();
+                    }
+                }
+                else if (_state == IDLE && _pressure <= _minPressure - PRESSURE_LEEWAY) {
+                     Logger::Printf("%s Inflating from %d to min pressure %d", _name, _pressure, _minPressure);
+                    _destinationPressure = _minPressure;
+                     inflate(1.0);
+                } 
+                else if (_state == DEFLATING && 
+                        (_pressure <= _destinationPressure - PRESSURE_LEEWAY * 2 || _pressure <= _minPressure - PRESSURE_LEEWAY * 2)) {
+                    if (_oscillating) {
+                        _destinationPressure = _oscillateMax;
+                        inflate(1.0);
+                    } else {
+                        stop();
+                    }
                 }
             }
-            else if (_state == IDLE && _pressure < _minPressure) {
-                 Logger::Printf("%s Inflating from %d to min pressure %d", _name, _pressure, _minPressure);
-                _destinationPressure = _minPressure;
-                 inflate(1.0);
-            } 
-            else if (_state == DEFLATING && 
-                    (_pressure < _destinationPressure || _pressure < _minPressure)) {
-                if (_oscillating) {
-                    _destinationPressure = _oscillateMax;
-                    inflate(1.0);
-                } else {
-                    stop();
-                }
-            }
+
         }
     }
 }
@@ -103,8 +115,8 @@ void Chamber::inflateTo(float max, float speed) {
         stop();
         _oscillating = false;
     }
-    _destinationPressure = _minPressure + (float)(_maxPressure - _minPressure) * max;
-///    Logger::Printf("%s inflating from %d to %d", _name,  _pressure, _destinationPressure);
+    _destinationPressure = _minPressure + (float)(_maxPressure - _minPressure) * max + PRESSURE_LEEWAY;
+    Logger::Printf("%s inflating from %d to %d", _name,  _pressure, _destinationPressure);
     if (_destinationPressure > _pressure) {
         inflate(speed);
     } else if (_destinationPressure < _pressure) {
@@ -147,9 +159,9 @@ void Chamber::deflate(float speed) {
     }
 }
 
-void Chamber::deflateMax() {
+void Chamber::deflateMax(float speed) {
     _destinationPressure = _minPressure;
-    deflate(1.0);
+    deflate(speed);
 }
 
 void Chamber::stop() {
@@ -196,6 +208,10 @@ uint16_t Chamber::readPressure() {
 bool Chamber::isInflated() {
     //return (_pressure >= INFLATED_THRESHOLD);
     return true;
+}
+
+bool Chamber::pressureIsNear(uint16_t target) {
+    return abs(_pressure - target) <= PRESSURE_LEEWAY;
 }
 
 CHAMBER_STATE Chamber::getState() {

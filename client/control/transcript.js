@@ -26,7 +26,7 @@ export default class Transcript {
             this.addLine({
                 from: "Hitodama",
                 text: new TextDecoder("utf-8").decode(new Uint8Array(msg,1))
-            });
+            },false);
         });
 
         events.on("transcript", (data) => {
@@ -40,29 +40,35 @@ export default class Transcript {
         console.log("Current scroll height", this.currentScrollHeight);
     }
 
-    addLine(data) {
+    addLine(data, animate = true) {
         this.container.append('<div class="transcript-line ' + data.from.toLowerCase() + '"></div>');
-        let typed = new Typed(
-            this.container.children().last()[0], {
-                strings: ['[' +
-                    moment().format('HH:mm:ss') + '] <b>' + 
-                    data.from + ': </b>'  + data.text
-                ],
-                showCursor: false,
-                typeSpeed:0,
-                onStringTyped: () => {this.scroll();}
-            }
-
-        )
+        let text = '[' +  moment().format('HH:mm:ss') + '] <b>' +  data.from + ': </b>'  + data.text;
+        if (animate) {
+            let typed = new Typed(
+                this.container.children().last()[0], {
+                    strings: [text],
+                    showCursor: false,
+                    typeSpeed:0,
+                    onStringTyped: () => {this.scroll();}
+                }
+            )
+        } else {
+            this.container.children().last().html(text);
+            this.scroll(false);
+        }
     }
-    scroll() {
+    scroll(animate = true) {
         let scrollHeight = this.container.parent().get(0).scrollHeight;
         if (scrollHeight != this.currentScrollHeight) {
-          console.log("Scroll!");
-          this.container.parent().animate({
-            scrollTop: scrollHeight
-          }, 500)
-          this.currentScrollHeight = scrollHeight;
+            if (animate) {
+              this.container.parent().animate({
+                scrollTop: scrollHeight
+              }, 500)
+            }
+            else {
+                this.container.parent()[0].scrollTop = scrollHeight;
+            }
+            this.currentScrollHeight = scrollHeight;
         }
     }
 }

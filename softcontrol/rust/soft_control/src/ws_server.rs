@@ -88,7 +88,7 @@ fn handle_message(
                     if app == "BREAKOUT" {
                         println!("Start breakout!");
                         // Check that both players are here
-                        if let (Some(ref sc), Some(ref sa)) = (&mut state.soft_controller, &mut state.soft_avatar) {
+                        if let (Some(sc), Some(sa)) = (&state.soft_controller, &state.soft_avatar) {
                                 let breakout_config = Arc::clone(&server.config);
                                 let (game_tx, game_rx) = mpsc::channel();
                                 state.game_tx = Some(game_tx.clone());
@@ -122,7 +122,7 @@ fn handle_message(
                 'C' => {
                     println!("Comm message");
                     // Just send it to the avatar
-                    if let Some(sa) = & state.soft_avatar {
+                    if let Some(sa) = &state.soft_avatar {
                         sa.send(data);
                     } else {
                         return Err(SoftError::new("No avatar connected!"))

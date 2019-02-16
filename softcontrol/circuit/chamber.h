@@ -5,8 +5,6 @@
 #include "common.h"
 #include "valve.h"
 
-
-
 enum CHAMBER_STATE {
   IDLE,
   INFLATING,
@@ -32,7 +30,7 @@ class Chamber {
         void inflateMax(float speed);
         void inflateTo(float max, float speed);
         void deflate(float speed);
-        void deflateMax();
+        void deflateMax(float speed);
         void stop();
 
         int16_t  getPressure();
@@ -42,6 +40,8 @@ class Chamber {
         void setInflation(float desiredInflation);
         void oscillate(float min, float max);
         void endOscillation();
+
+        bool pressureIsNear(uint16_t target);
 
         CHAMBER_STATE getState();
 
@@ -54,7 +54,9 @@ class Chamber {
         uint16_t _maxPressure;
         uint16_t _minPressure;
         uint16_t _basePressure;
-        int16_t _pressure;
+        uint16_t _pressure;
+        uint8_t _pressureReadCount;
+        uint16_t _pressureReadSum;
         uint16_t _destinationPressure;
         char _name[10];
 

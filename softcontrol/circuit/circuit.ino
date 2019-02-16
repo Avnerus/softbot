@@ -4,7 +4,6 @@
 #include "arm.h"
 #include "logger.h"
 
-
 enum INPUT_STATE {
   START_INPUT = 0,
   COMMAND_INPUT = 1,
@@ -54,7 +53,7 @@ Chamber chambers[4] = {
             new Valve(6,7,9,25),
             A20,
             200,
-            300
+            270
             
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
@@ -255,16 +254,11 @@ void processCommand() {
             break;
         }
         case 'R': {
-            Chamber* rightArm = getChamber(RIGHT_ARM_CHAMBER);
+            Chamber* rightArm = getChamber(RIGHT_CHAMBER);
             if (rightArm){ 
-                int value = (int)currentValue[0];
-                if (value > 100) {
-                    rightArm->inflateMax(1.0);
-                } else if (value > 0) {
-                    rightArm->stop();
-                } else {
-                    rightArm->deflateMax();
-                }
+                float inflationMin = (float)currentValue[0] / 255.0;
+                float inflationMax = (float)currentValue[1] / 255.0;
+                rightArm->oscillate(inflationMin,inflationMax);
             }
             break;
         }
@@ -277,7 +271,7 @@ void processCommand() {
                 } else if (value > 0) {
                     leftArm->stop();
                 } else {
-                    leftArm->deflateMax();
+                    leftArm->deflateMax(1.0);
                 }
             }
             break;
@@ -329,7 +323,7 @@ void left(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
 
     if (rightNeck && rightNeck->isInflated()) {
-        rightNeck->deflate(NECK_DEFLATE_SPEED);
+        rightNeck->deflateMax(NECK_DEFLATE_SPEED);
     }
     /*
     if (leftNeck) {
@@ -355,7 +349,7 @@ void down(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
     Chamber* leftNeck = getChamber(LEFT_CHAMBER);
     if (downNeck && downNeck->isInflated()) {
-        downNeck->deflate(NECK_DEFLATE_SPEED);
+        downNeck->deflateMax(NECK_DEFLATE_SPEED);
     }
     if (rightNeck && leftNeck) {
         leftNeck->inflateMax(speed);

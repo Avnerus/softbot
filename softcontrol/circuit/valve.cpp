@@ -38,7 +38,7 @@ void Valve::setSpeed(float speed) {
 
 void Valve::open(float speed) {
     //Serial.println("Inflating");
-    Logger::Printf("Valve opening at %f (IN1 %d, IN2 %d, PWM %d)",speed,  _inPin1, _inPin2, _speedPin);
+    //Logger::Printf("Valve opening at %f (IN1 %d, IN2 %d, PWM %d)",speed,  _inPin1, _inPin2, _speedPin);
     digitalWrite(_standByPin,HIGH);
     digitalWrite(_inPin1,HIGH);
     digitalWrite(_inPin2,LOW);
@@ -46,7 +46,7 @@ void Valve::open(float speed) {
 }
 
 void Valve::close() {
-    Logger::Printf("Valve closing (IN1 %d, IN2 %d, PWM %d)", _inPin1, _inPin2, _speedPin);
+    //Logger::Printf("Valve closing (IN1 %d, IN2 %d, PWM %d)", _inPin1, _inPin2, _speedPin);
     _motorSpeed = 0;
     _speed = 0.0;
 
