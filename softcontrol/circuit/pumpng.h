@@ -6,7 +6,7 @@
 class PumpNg {
 
     public:
-        PumpNg(int inPin1, int inPin2, int speedPin, int standByPin = 0);
+        PumpNg(int inPin1, int inPin2, int speedPin, int standByPin, int resolution = 255);
         ~PumpNg();
 
         void init();
@@ -28,5 +28,6 @@ class PumpNg {
         int _speedPin;
         int _standByPin;
         int _useCount;
+        int _resolution;
 };
 #endif

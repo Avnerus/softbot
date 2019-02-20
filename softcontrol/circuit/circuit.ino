@@ -14,7 +14,6 @@ enum INPUT_STATE {
 
 const int MAX_POSITION = 50;
 const int MAX_VALUES = 4;
-const float NECK_DEFLATE_SPEED = 1.0; //.27;
 
 char currentCommand;
 byte  currentValue[MAX_VALUES];
@@ -39,23 +38,24 @@ Chamber chambers[4] = {
             new Valve(17,16,37,25),
             -1,
             0, 
-            700
+            700,
+            0.305
     ),
-    Chamber("Left",
-            new Valve(2,4,5,25),
+    Chamber("LeftNeck",
+            new Valve(2,26,5,25),
             new Valve(2,3,5,25),
-            -1,
-            0, 
-            700
+            A16, 
+            120, 
+            300,
+            0.232
     ),
-    Chamber("Right",
+    Chamber("RightNeck",
             new Valve(6,8,9,25),
             new Valve(6,7,9,25),
             A20,
-            200,
-            270,
-            0.305
-            
+            120,
+            300,
+            0.298
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
   //  Chamber("Down",  26,28,A1, 0, 700),
@@ -335,24 +335,21 @@ void left(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
 
     if (rightNeck && rightNeck->isInflated()) {
-        rightNeck->deflateMax(NECK_DEFLATE_SPEED);
+        rightNeck->deflateMax();
     }
-    /*
-    if (leftNeck) {
+    else if (leftNeck) {
         leftNeck->inflateMax(1.0);
-    }*/
+    }
     
 }
 void right(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
     Chamber* leftNeck = getChamber(LEFT_CHAMBER);
 
-    /*
     if (leftNeck && leftNeck->isInflated()) {
-        leftNeck->deflate(NECK_DEFLATE_SPEED);
-    }*/
-
-    if (rightNeck) {
+        leftNeck->deflateMax();
+    }
+    else if (rightNeck) {
         rightNeck->inflateMax(1.0);
     }
 }
@@ -361,7 +358,7 @@ void down(float speed) {
     Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
     Chamber* leftNeck = getChamber(LEFT_CHAMBER);
     if (downNeck && downNeck->isInflated()) {
-        downNeck->deflateMax(NECK_DEFLATE_SPEED);
+        downNeck->deflateMax();
     }
     if (rightNeck && leftNeck) {
         leftNeck->inflateMax(speed);

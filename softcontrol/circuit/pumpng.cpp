@@ -2,14 +2,14 @@
 #include "logger.h"
 
 const float INFLATION_SPEED = 1;
-const int MAX_SPEED = 255;
 
-PumpNg::PumpNg(int inPin1, int inPin2, int speedPin, int standByPin) {
+PumpNg::PumpNg(int inPin1, int inPin2, int speedPin, int standByPin, int resolution) {
 
     _inPin1 = inPin1;
     _inPin2 = inPin2;
     _speedPin = speedPin;
     _standByPin = standByPin;
+    _resolution = resolution;
 }
 
 PumpNg::~PumpNg() {
@@ -31,7 +31,7 @@ void PumpNg::setSpeed(float speed) {
     Logger::Printf("Pump set speed to %f", speed);
     if (speed >= 0.0 && speed <= 1.0) {
         _speed = speed;
-        _motorSpeed = (int)(MAX_SPEED * speed);
+        _motorSpeed = (int)(_resolution * speed);
         Logger::Printf("Pump setting motor speed to %d", _motorSpeed);
 
         analogWrite(_speedPin,_motorSpeed);

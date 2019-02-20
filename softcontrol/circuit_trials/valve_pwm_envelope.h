@@ -16,6 +16,7 @@ class Valve {
         void open(float speed);
         void open();
         void close();
+        void update();
 
     private:
         float _speed;
@@ -25,5 +26,6 @@ class Valve {
         int _speedPin;
         int _standByPin;
         int _resolution;
+        int _counter;
 };
 #endif

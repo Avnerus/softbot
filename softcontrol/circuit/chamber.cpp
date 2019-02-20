@@ -4,7 +4,7 @@
 const int DEFLATE_INTERVAL_MS = 10;
 const int PRESSURE_SENSE_INTERVAL = 1000;
 const int PRESSURE_AVERAGE_COUNT = 100;
-const int PRESSURE_LEEWAY = 8;
+const int PRESSURE_LEEWAY = 10;
 
 Chamber::Chamber(
         const char name[10],
@@ -49,7 +49,7 @@ void Chamber::init() {
     Logger::Printf("%s chamber initialized - Initial pressure: %d",_name, _pressure);
 
     deflateMax(1.0);
-    delay(2000);
+    delay(2500);
     _pressure = readPressure();
     stop();
 }
@@ -148,7 +148,7 @@ void Chamber::inflate(float speed) {
 
 void Chamber::deflate(float speed) {
     if (_state != DEFLATING) {
-        Logger::Printf("%s Deflating at %f", _name, speed);
+        Logger::Printf("%s Deflating at %f to %d", _name, speed, _destinationPressure);
         _state = DEFLATING;
         // Close before open because of the shared pins
         
@@ -216,8 +216,11 @@ uint16_t Chamber::readPressure() {
 }
 
 bool Chamber::isInflated() {
-    //return (_pressure >= INFLATED_THRESHOLD);
-    return true;
+    if (_pressureSensor == -1) {
+        return true;
+    } else {
+        return !pressureIsNear(_minPressure);
+    }
 }
 
 bool Chamber::pressureIsNear(uint16_t target) {
