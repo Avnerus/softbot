@@ -45,17 +45,17 @@ Chamber chambers[4] = {
             new Valve(2,26,5,25),
             new Valve(2,3,5,25),
             A16, 
-            120, 
+            140, 
             300,
-            0.232
+            0.226
     ),
     Chamber("RightNeck",
             new Valve(6,8,9,25),
             new Valve(6,7,9,25),
             A20,
-            120,
+            140,
             300,
-            0.298
+            0.3
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
   //  Chamber("Down",  26,28,A1, 0, 700),
@@ -86,6 +86,9 @@ void setup() {
   Serial.begin(9600); 
 
   Logger::Write("Softbot starting");
+
+  analogWriteResolution(10);
+
   pump.init();
   //pump.inflate();
 

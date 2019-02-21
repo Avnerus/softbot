@@ -6,7 +6,7 @@
 class Valve {
 
     public:
-        Valve(int inPin1, int inPin2, int speedPin, int standByPin, int resolution = 255);
+        Valve(int inPin1, int inPin2, int speedPin, int standByPin, int resolution = 1023);
         ~Valve();
 
         void init();
