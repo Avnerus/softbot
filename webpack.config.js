@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -16,6 +17,9 @@ module.exports = {
       compress: true,
       port: 9000
   },
+  plugins: [
+     new webpack.HotModuleReplacementPlugin()
+  ],
   module: {
       rules: [
         {
@@ -24,10 +28,14 @@ module.exports = {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
-              plugins: ["syntax-dynamic-import"]
+              presets: ['@babel/env'],
+              plugins: ["@babel/plugin-transform-runtime"]
             }
           }
+        },
+       {
+         test: /\.css$/,
+         use: ['style-loader', 'css-loader']
         }
       ]
   }

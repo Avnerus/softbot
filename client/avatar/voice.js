@@ -15,15 +15,17 @@ export default class Voice {
             console.log("Speech!", data)
             this.textOutput.html(data.text);
             this.currentData = data;
+            responsiveVoice.speak(data.text);
             // For now use responsiveVoice only for Japanese
-            if (data.translate != "en" && data.translate != "-") {
+            /* if (data.translate != "en" && data.translate != "-") {
                 responsiveVoice.speak(data.text, data.voice, {
                     pitch: data.pitch,
                     rate: 0.8,
                     onstart: () => this.voiceStart(),
                     onend: () => this.voiceEnd()
                 });
-            }
+             }
+               
             else {
                 // Speech Synthesis API
                 let utterThis = new SpeechSynthesisUtterance(data.text);
@@ -34,7 +36,7 @@ export default class Voice {
                 utterThis.onstart = () => this.voiceStart();
                 utterThis.onboundary = (event) => this.voiceBoundary(event);
                 window.speechSynthesis.speak(utterThis);
-            }
+            }*/
         });
     }
 

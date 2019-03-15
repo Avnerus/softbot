@@ -55,27 +55,21 @@ fn handle_message(
     if command == 'R' {
         let role = data[1];
         println!("Register command role {}", role);
-        if let Some(soft_target) = match role {
-            0 => Some(&mut state.soft_controller),
-            1 => Some(&mut state.soft_avatar),
-            _ => None
-        } {
-            match soft_target {
-                &mut Some(ref s) => {
-                    return Err(SoftError::new("Cannot register - user already connected!"));
-                },
-                &mut None => {
-                    *soft_target = Some(server.ws.clone());
-                     state.tokens.insert(server.ws.token(), role);
-                     println!("Registration successful")
+        if (role as usize <= 1) {
+            let targets = [&mut state.soft_controller,&mut state.soft_avatar];
+            if let Some(soft_target) = targets[role as usize] {
+                return Err(SoftError::new("Cannot register - user already connected!"));
+            } else {
+                *(targets[role as usize]) =  Some(server.ws.clone());
+                 state.tokens.insert(server.ws.token(), role);
+                 println!("Registration successful");
+                 if role == 1 {
+                     if let Some(sc) = targets[0] {
+                         println!("Notifying controller");
+                         sc.send("IAvatar connected!").unwrap();
+                     }
                 }
             }
-            let target_exists = match soft_target.as_ref() {
-                    Some(s) => true,
-                    None => false
-            };
-        } else {
-            return Err(SoftError::new("Cannot register. No such role!"));
         }
     }
     else {
@@ -172,19 +166,19 @@ impl Handler for Server {
         println!("Client disconnected! ({:?}, {})",code,reason);
         let state = &mut *self.state.lock().unwrap();
         if let Some(role) = state.tokens.get(&self.ws.token()) {
-            if let Some(soft_target) = match role {
-                &0 => Some(&mut state.soft_controller),
-                &1 => Some(&mut state.soft_avatar),
-                _ => None
-            } {
+            let targets = [&mut state.soft_controller,&mut state.soft_avatar];
+            if targets[*role as usize] != &mut None {
+                *(targets[*role as usize]) = None;                
                 println!("Disconnected from role {:}", role);
-                *soft_target = None;                
-            }
+                if *role == 1 {
+                    if let Some(sc) = targets[0] {
+                        println!("Notifying controller");
+                        sc.send("IAvatar disconnected.").unwrap();
+                    }
+               }
+            } 
         }
         state.tokens.remove(&self.ws.token());
-        /*
-        let mut sc = self.state.soft_controller.lock().unwrap();
-        *sc = None;*/
     }
 }
 

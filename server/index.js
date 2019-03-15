@@ -1,9 +1,10 @@
 import express from 'express';
-import socketio from 'socket.io'
 import _ from 'lodash';
 import fs from 'fs';
-import Comm from './comm';
-import watson from 'watson-developer-cloud';
+import webpack from 'webpack'
+import webpackConfig from '../webpack.config'
+import WebpackMiddleware from 'webpack-dev-middleware'
+
 //import Signaling from './signaling'
 
 const options = {
@@ -13,20 +14,22 @@ const options = {
 const app = express();
 //const server = require('https').Server(options, app);
 const server = require('http').Server(app);
-const io = socketio(server);
 
 /*
 const signaling = new Signaling(io);
 signaling.init(); */
 
-const comm = new Comm(io);
-comm.init();
-
-
 app.use(express.static('public'));
 
-// Watson token
+const compiler = webpack(webpackConfig);
+app.use(
+    WebpackMiddleware(compiler, {
+        publicPath: webpackConfig.output.publicPath
+    })
+);
 
+// Watson token
+/*
 app.get('/api/token',(req, res) => {
     let authorization = new watson.AuthorizationV1({
       username: 'f928b9d6-7bd0-4ad7-8c7e-67de63d94f9b',
@@ -40,7 +43,7 @@ app.get('/api/token',(req, res) => {
             res.send(token);
         }
     })
-});
+});*/
 
 server.listen(3080, () => {
     console.log('listening on port 3080!');

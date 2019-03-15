@@ -4,7 +4,7 @@ import Camera from './camera'
 import Speech from './speech'
 import JanusConnection from './janus-connection'
 import SocketController from '../common/socket-controller'
-import SocketMessenger from '../common/socket-messenger'
+//import SocketMessenger from '../common/socket-messenger'
 import Events from 'events'
 import Recorder from './recorder'
 import YoutubeRemote from './youtube-remote'
@@ -59,7 +59,7 @@ export default class Main {
         this.youtubeRemote = new YoutubeRemote(this.socketController, $('#youtube-form'));
         this.youtubeRemote.init();
 
-        this.janusConnection = new JanusConnection('http://192.168.8.213:8088/janus');
+        this.janusConnection = new JanusConnection('http://127.0.0.1:8088/janus');
         this.janusConnection.init();
 
         this.transcript = new Transcript(this.socketController, $('#transcript'));

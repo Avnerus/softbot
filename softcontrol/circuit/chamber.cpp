@@ -73,7 +73,7 @@ void Chamber::update(unsigned long now) {
                 Serial.print("<");
                 _lastPressureSense = now;
             }
-            if (_pressure > _maxPressure) {
+            if (_pressure > _maxPressure && _state != DEFLATING) {
                 stop();
             }
             else {

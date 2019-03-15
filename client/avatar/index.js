@@ -1,15 +1,15 @@
 import EventEmitter from 'events'
-import SocketMessenger from '../common/socket-messenger'
+//import SocketMessenger from '../common/socket-messenger'
 import SocketController  from '../common/socket-controller'
 import Voice from './voice';
 import YoutubePlayer from './youtube-player'
-import Recognizer from './recognizer'
+//import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
 import GameController from './game-controller'
 
-import {greet} from '../common/breakout/breakout'
+//import {greet} from '../common/breakout/breakout'
 
 export default class  {
     constructor(config) {
@@ -29,7 +29,7 @@ export default class  {
 
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
-        this.socketController = new SocketController("ws://192.168.8.112:3012");
+        this.socketController = new SocketController("ws://192.168.8.239:3012");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");
             this.socketController.sendValueCommand("R",1);
@@ -39,11 +39,12 @@ export default class  {
         this.expression = new Expression(this.socketController);
         this.expression.init();
 
+        /*
         this.recognizer = new Recognizer(
             this.socketController,
             this.expression, 
             $('#interface')
-        );
+        );*/
 
         this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
         this.youtubePlayer.init();
@@ -71,7 +72,14 @@ export default class  {
        this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
        this.gameController.init();
 
-       this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        //this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        
+        $("#audio-test").click((e) => {
+            e.preventDefault();
+            console.log("Audio test!");
+            $("#audio")[0].play();
+        })
+        
 
        //greet("Bitch");
 

@@ -37,23 +37,22 @@ Chamber chambers[4] = {
             new Valve(17,15,37,25),
             new Valve(17,16,37,25),
             A15,
-            120, 
-            200,
-            0.305
+            100, 
+            200
     ),
     Chamber("LeftNeck",
             new Valve(2,26,5,25),
             new Valve(2,3,5,25),
             A16, 
-            80, 
+            140, 
             200,
-            0.226
+            0.222
     ),
     Chamber("RightNeck",
             new Valve(6,8,9,25),
             new Valve(6,7,9,25),
             A20,
-            80,
+            140,
             200,
             0.3
     )
@@ -126,7 +125,7 @@ void loop() {
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update(now);
     }
-    rightArmSensor->update(now);
+    //rightArmSensor->update(now);
     //leftArmSensor->update(now);
 
     // Kill switch
@@ -258,22 +257,10 @@ void processCommand() {
             break;
         }
         case 'R': {
-            Chamber* rightArm = getChamber(RIGHT_CHAMBER);
+            Chamber* rightArm = getChamber(RIGHT_ARM_CHAMBER);
             if (rightArm){ 
-                if (currentLength == 2) {
-                    float inflationMin = (float)currentValue[0] / 255.0;
-                    float inflationMax = (float)currentValue[1] / 255.0;
-                    rightArm->oscillate(inflationMin,inflationMax);
-
-                    /*
-                    float inflation = (float)currentValue[0] / 255.0;
-                    float speed = (float)currentValue[1] / 255.0;
-                    rightArm->inflateTo(inflation, speed);*/
-
-                } else {
-                    float inflation = (float)currentValue[0] / 255.0;
-                    rightArm->inflateTo(inflation, 1.0);
-                }
+                int value = (int)currentValue[0];
+                rightArm->inflateTo((float)value / 255.0f, 1.0);
             }
             break;
         }
@@ -281,13 +268,7 @@ void processCommand() {
             Chamber* leftArm = getChamber(LEFT_ARM_CHAMBER);
             if (leftArm){ 
                 int value = (int)currentValue[0];
-                if (value > 100) {
-                    leftArm->inflateMax(1.0);
-                } else if (value > 0) {
-                    leftArm->stop();
-                } else {
-                    leftArm->deflateMax(1.0);
-                }
+                leftArm->inflateTo((float)value / 255.0f, 1.0);
             }
             break;
         }

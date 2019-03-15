@@ -29,6 +29,14 @@ export default class Transcript {
             },false);
         });
 
+        this.socketController.subscribeToPrefix('I', (msg) => {
+            console.log("Info message", msg);
+            this.addLine({
+                from: "System",
+                text: msg.slice(1)
+            },false);
+        });
+
         events.on("transcript", (data) => {
             this.addLine(data);
         });
