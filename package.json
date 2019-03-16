@@ -4,8 +4,7 @@
   "description": "Softbot",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/gulp/bin/gulp.js",
-    "serve": "webpack-dev-server",
+    "start": "nodemon server/index.js --exec babel-node",
     "control": "cargo run --manifest-path softcontrol/rust/soft_control/Cargo.toml",
     "wasm": "cargo +nightly build --manifest-path softcontrol/rust/wasm/Cargo.toml --lib --target wasm32-unknown-unknown &&  wasm-bindgen softcontrol/rust/wasm/target/wasm32-unknown-unknown/debug/breakout.wasm --out-dir client/common/breakout"
   },
@@ -20,22 +19,17 @@
   },
   "homepage": "https://github.com/Avnerus/divine#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-preset-env": "^1.7.0",
-    "browserify-shim": "^3.8.10",
-    "event-stream": "^3.3.4",
-    "gulp": "^3.9.1",
-    "gulp-nodemon": "^2.1.0",
-    "gulp-util": "^3.0.8",
-    "lodash.assign": "^4.2.0",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "vinyl-transform": "^1.0.0",
-    "webpack": "^4.16.1",
-    "webpack-cli": "^2.1.4",
-    "webpack-dev-server": "^3.1.4"
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "babel-loader": "^8.0.4",
+    "nodemon": "^1.18.10",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-dev-server": "^3.1.10"
   },
   "window": {
     "title": "Softbot",
@@ -47,22 +41,29 @@
     "fullscreen": true
   },
   "dependencies": {
+    "@babel/runtime": "^7.3.4",
+    "@google-cloud/text-to-speech": "^0.5.1",
+    "babel-runtime": "^6.26.0",
+    "bufferutil": "^4.0.1",
     "emoji-replace": "^1.0.1",
     "express": "^4.14.0",
     "fullscreen": "^1.1.0",
     "lodash": "^4.17.10",
     "moment": "^2.18.1",
+    "nan": "^2.12.1",
     "nipplejs": "^0.6.7",
     "node-google-translate-skidz": "^1.1.2",
     "reconnecting-websocket": "^3.0.3",
     "recordrtc": "^5.4.1",
-    "simplewebrtc": "^2.2.3",
-    "socket.io": "^1.4.8",
-    "socket.io-client": "^1.7.3",
+    "simplewebrtc": "^3.0.2",
     "stats.js": "^0.16.0",
     "typed.js": "^2.0.2",
-    "watson-developer-cloud": "^2.33.0",
-    "watson-speech": "^0.33.1",
+    "ws": "^6.2.0",
     "youtube-iframe": "^1.0.3"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "client/*"
+    ]
   }
 }

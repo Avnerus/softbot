@@ -1,9 +1,14 @@
-import express from 'express';
-import socketio from 'socket.io'
-import _ from 'lodash';
-import fs from 'fs';
-import Comm from './comm';
-import watson from 'watson-developer-cloud';
+import express from 'express'
+import _ from 'lodash'
+import fs from 'fs'
+import Comm from './comm'
+import {Server} from 'http'
+import textToSpeech from '@google-cloud/text-to-speech'
+import webpack from 'webpack'
+import webpackConfig from '../webpack.config'
+import WebpackMiddleware from 'webpack-dev-middleware'
+
+
 //import Signaling from './signaling'
 
 const options = {
@@ -12,18 +17,22 @@ const options = {
 };
 const app = express();
 //const server = require('https').Server(options, app);
-const server = require('http').Server(app);
-const io = socketio(server);
+const server = Server(app);
 
 /*
 const signaling = new Signaling(io);
 signaling.init(); */
 
-const comm = new Comm(io);
-comm.init();
-
 
 app.use(express.static('public'));
+
+const compiler = webpack(webpackConfig);
+app.use(
+    WebpackMiddleware(compiler, {
+        publicPath: webpackConfig.output.publicPath
+    })
+);
+
 
 // Watson token
 
@@ -40,6 +49,31 @@ app.get('/api/token',(req, res) => {
             res.send(token);
         }
     })
+});
+
+app.get('/api/speak',(req, res) => {
+    const client = new textToSpeech.TextToSpeechClient();
+
+    if (!req.query.text) {
+        res.send(500,"Invalid request");
+        return;
+    }
+
+    const request = {
+      input: {text: req.query.text},
+      voice: {languageCode: 'en-US', ssmlGender: 'NEUTRAL'},
+      audioConfig: {audioEncoding: 'MP3'},
+    };
+    // Performs the Text-to-Speech request
+    client.synthesizeSpeech(request, (err, response) => {
+        if (err) {
+            console.log(err);
+            res.send(500,err.toString());
+            return;
+        }
+        res.set('Content-Type', 'audio/mpeg');
+        res.send(response.audioContent);
+    });
 });
 
 server.listen(3080, () => {

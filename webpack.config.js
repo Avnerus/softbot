@@ -24,8 +24,8 @@ module.exports = {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['env'],
-              plugins: ["syntax-dynamic-import"]
+              presets: ['@babel/env'],
+              plugins: ["@babel/plugin-transform-runtime", "@babel/plugin-syntax-dynamic-import"]
             }
           }
         }

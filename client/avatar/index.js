@@ -3,7 +3,7 @@ import SocketMessenger from '../common/socket-messenger'
 import SocketController  from '../common/socket-controller'
 import Voice from './voice';
 import YoutubePlayer from './youtube-player'
-import Recognizer from './recognizer'
+//import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
@@ -38,12 +38,13 @@ export default class  {
         this.expression = new Expression(this.socketController);
         this.expression.init();
 
+        /*
         this.recognizer = new Recognizer(
             this.socketMessenger, 
             this.socketController,
             this.expression, 
             $('#interface')
-        );
+        );*/
 
         this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');
         this.youtubePlayer.init();
