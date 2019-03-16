@@ -1,9 +1,12 @@
 import express from 'express';
+import bodyParser from 'body-parser'
 import _ from 'lodash';
 import fs from 'fs';
 import webpack from 'webpack'
 import webpackConfig from '../webpack.config'
 import WebpackMiddleware from 'webpack-dev-middleware'
+
+import * as MSTTS from './ms-tts' 
 
 //import Signaling from './signaling'
 
@@ -19,6 +22,7 @@ const server = require('http').Server(app);
 const signaling = new Signaling(io);
 signaling.init(); */
 
+app.use(express.static('public'));
 app.use(express.static('public'));
 
 const compiler = webpack(webpackConfig);
@@ -44,6 +48,17 @@ app.get('/api/token',(req, res) => {
         }
     })
 });*/
+app.get('/api/ms-speech', async (req, res) => {
+    try {
+        let bodyStream = await MSTTS.getSpeech(req.query.text);
+        res.type("audio/mpeg");
+        bodyStream.pipe(res);
+    }
+    catch (e) {
+        console.log("Error", e);
+        res.send("Error " + e);
+    }
+});
 
 server.listen(3080, () => {
     console.log('listening on port 3080!');
