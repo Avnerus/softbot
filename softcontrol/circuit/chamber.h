@@ -3,9 +3,7 @@
 
 #include <Arduino.h>
 #include "common.h"
-#include "pumpng.h"
-
-
+#include "valve.h"
 
 enum CHAMBER_STATE {
   IDLE,
@@ -17,58 +15,66 @@ class Chamber {
 
     public:
         Chamber(
-            char* name,
-            PumpNg** pumps,
-            int numOfPumps,
-            int entryValve,
-            int releaseValve,
+            const char name[10],
+            Valve* entryValve,
+            Valve* releaseValve,
             int pressureSensor,
-            int minPressure,
-            int maxPressure
+            uint16_t minPressure,
+            uint16_t maxPressure,
+            float deflationSpeed = 1.0
         );
         ~Chamber();
 
         void init();
-        void update();
+        void update(unsigned long now);
 
         void inflateMax(float speed);
         void inflateTo(float max, float speed);
+
+        void deflate(float speed);
         void deflate();
+
+        void deflateMax(float speed);
         void deflateMax();
+
         void stop();
 
-        int getPressure();
+        int16_t  getPressure();
+        uint16_t  readPressure();
         bool isInflated();
 
         void setInflation(float desiredInflation);
         void oscillate(float min, float max);
         void endOscillation();
 
+        bool pressureIsNear(uint16_t target);
+
         CHAMBER_STATE getState();
 
     private:
         void inflate(float speed);
-        void grabPump();
-        void releasePump();
 
-        int _entryValve;
-        int _releaseValve;
+        Valve* _entryValve;
+        Valve* _releaseValve;
         int _pressureSensor;
-        int _maxPressure;
-        int _minPressure;
-        int _pressure;
-        int _destinationPressure;
-        char* _name;
-
-        PumpNg** _pumps;
+        uint16_t _maxPressure;
+        uint16_t _minPressure;
+        uint16_t _basePressure;
+        uint16_t _pressure;
+        uint8_t _pressureReadCount;
+        uint16_t _pressureReadSum;
+        uint16_t _destinationPressure;
+        char _name[10];
 
         unsigned long _lastDeflateToggle;
+        unsigned long _lastPressureSense;
+
+        float _deflationSpeed;
+
         bool _deflateToggle;
         bool _oscillating;
-        bool _usingPump;
         int _oscillateMin;
         int _oscillateMax;
-        int _numOfPumps;
 
         CHAMBER_STATE _state;
 

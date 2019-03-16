@@ -1,7 +1,6 @@
 export default class Voice {
-    constructor(socketMessenger, socketController, expression, textOutput) {
+    constructor(socketController, expression, textOutput) {
         console.log("Voice constructed!")
-        this.socketMessenger = socketMessenger;
         this.socketController = socketController;
         this.expression = expression;
         this.textOutput = textOutput;
@@ -12,19 +11,21 @@ export default class Voice {
             this.voices = window.speechSynthesis.getVoices();
             console.log("initial voices", this.voices);
         }
-        this.socketMessenger.on('speech',(data) => {
+        this.socketController.on('speech',(data) => {
             console.log("Speech!", data)
             this.textOutput.html(data.text);
             this.currentData = data;
+            responsiveVoice.speak(data.text);
             // For now use responsiveVoice only for Japanese
-            if (data.translate != "en" && data.translate != "-") {
+            /* if (data.translate != "en" && data.translate != "-") {
                 responsiveVoice.speak(data.text, data.voice, {
                     pitch: data.pitch,
                     rate: 0.8,
                     onstart: () => this.voiceStart(),
                     onend: () => this.voiceEnd()
                 });
-            }
+             }
+               
             else {
                 // Speech Synthesis API
                 let utterThis = new SpeechSynthesisUtterance(data.text);
@@ -35,7 +36,7 @@ export default class Voice {
                 utterThis.onstart = () => this.voiceStart();
                 utterThis.onboundary = (event) => this.voiceBoundary(event);
                 window.speechSynthesis.speak(utterThis);
-            }
+            }*/
         });
     }
 

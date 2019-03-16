@@ -15,4 +15,5 @@ serde = {version = "1.0"}
 serde_derive = {version = "1.0"}
 serde_json = {version = "1.0"}
 byteorder = {version = "*"}
+chrono = {version = "*"}
 

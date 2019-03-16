@@ -51,22 +51,22 @@ export default class Camera {
     onDir(data) {
         console.log("Camera dir!", data.direction.angle);
         let command = data.direction.angle.substring(0,1).toUpperCase();
-        //this.socketController.sendValueCommand(command,1)
+        //this.socketController.sendSerialCommand(command,1)
     }
     onEnd(data) {
         console.log("End!");
-        this.socketController.sendValueCommand("S")
+        this.socketController.sendSerialCommand("S")
         this.moveNow.x = this.moveNow.y = 0;
     }
     onSlide(value) {
         console.log("Slide!", value);
-        this.socketController.sendValueCommand("P",value);
+        this.socketController.sendSerialCommand("P",value);
     }
 
     update(dt) {
         this.timer += dt;
         if (this.timer > this.UPDATE_INTERVAL && (this.moveNow.x != 0 || this.moveNow.y != 0)) {
-            this.socketController.sendValueCommand(
+            this.socketController.sendSerialCommand(
                 'X', 
                 this.moveNow.x + 50,
                 this.moveNow.y + 50

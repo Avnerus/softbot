@@ -32,7 +32,8 @@ struct Server {
    ws: Sender,
   //  serial: ThreadOut<String>,
    config: Arc<Config>,
-   state: Arc<Mutex<ServerState>>
+   state: Arc<Mutex<ServerState>>,
+   motor_tx: mpsc::Sender<Vec<u8>>
 }
 
 struct Foo {
@@ -54,27 +55,21 @@ fn handle_message(
     if command == 'R' {
         let role = data[1];
         println!("Register command role {}", role);
-        if let Some(soft_target) = match role {
-            0 => Some(&mut state.soft_controller),
-            1 => Some(&mut state.soft_avatar),
-            _ => None
-        } {
-            match soft_target {
-                &mut Some(ref s) => {
-                    return Err(SoftError::new("Cannot register - user already connected!"));
-                },
-                &mut None => {
-                    *soft_target = Some(server.ws.clone());
-                     state.tokens.insert(server.ws.token(), role);
-                     println!("Registration successful")
+        if (role as usize <= 1) {
+            let targets = [&mut state.soft_controller,&mut state.soft_avatar];
+            if let Some(soft_target) = targets[role as usize] {
+                return Err(SoftError::new("Cannot register - user already connected!"));
+            } else {
+                *(targets[role as usize]) =  Some(server.ws.clone());
+                 state.tokens.insert(server.ws.token(), role);
+                 println!("Registration successful");
+                 if role == 1 {
+                     if let Some(sc) = targets[0] {
+                         println!("Notifying controller");
+                         sc.send("IAvatar connected!").unwrap();
+                     }
                 }
             }
-            let target_exists = match soft_target.as_ref() {
-                    Some(s) => true,
-                    None => false
-            };
-        } else {
-            return Err(SoftError::new("Cannot register. No such role!"));
         }
     }
     else {
@@ -87,7 +82,7 @@ fn handle_message(
                     if app == "BREAKOUT" {
                         println!("Start breakout!");
                         // Check that both players are here
-                        if let (Some(ref sc), Some(ref sa)) = (&mut state.soft_controller, &mut state.soft_avatar) {
+                        if let (Some(sc), Some(sa)) = (&state.soft_controller, &state.soft_avatar) {
                                 let breakout_config = Arc::clone(&server.config);
                                 let (game_tx, game_rx) = mpsc::channel();
                                 state.game_tx = Some(game_tx.clone());
@@ -117,6 +112,21 @@ fn handle_message(
                             None => {},
                         }
                     }*/
+                }
+                'C' => {
+                    println!("Comm message");
+                    // Just send it to the avatar
+                    if let Some(sa) = &state.soft_avatar {
+                        sa.send(data);
+                    } else {
+                        return Err(SoftError::new("No avatar connected!"))
+                    }
+
+                }
+                '>' => {
+                    // Send to serial
+                    server.motor_tx.send(data);
+
                 }
                 _ => return Err(SoftError::new("Unknown command"))
             }
@@ -156,25 +166,27 @@ impl Handler for Server {
         println!("Client disconnected! ({:?}, {})",code,reason);
         let state = &mut *self.state.lock().unwrap();
         if let Some(role) = state.tokens.get(&self.ws.token()) {
-            if let Some(soft_target) = match role {
-                &0 => Some(&mut state.soft_controller),
-                &1 => Some(&mut state.soft_avatar),
-                _ => None
-            } {
+            let targets = [&mut state.soft_controller,&mut state.soft_avatar];
+            if targets[*role as usize] != &mut None {
+                *(targets[*role as usize]) = None;                
                 println!("Disconnected from role {:}", role);
-                *soft_target = None;                
-            }
+                if *role == 1 {
+                    if let Some(sc) = targets[0] {
+                        println!("Notifying controller");
+                        sc.send("IAvatar disconnected.").unwrap();
+                    }
+               }
+            } 
         }
         state.tokens.remove(&self.ws.token());
-        /*
-        let mut sc = self.state.soft_controller.lock().unwrap();
-        *sc = None;*/
     }
 }
 
 pub fn start(
     config: Arc<Config>,
-    sensing_rx: mpsc::Receiver<Vec<u8>>
+    sensing_rx: mpsc::Receiver<Vec<u8>>,
+    motor_tx: mpsc::Sender<Vec<u8>>
+
 ) {
     println!("Spawning server on port {}", config.server.port);
 
@@ -192,6 +204,7 @@ pub fn start(
 
     let comm_state = state.clone();
 
+    /*
     let comm_thread = thread::spawn(move || {
         while let Ok(mut msg) = comm_in.recv() {
             let role = msg[0];
@@ -211,29 +224,58 @@ pub fn start(
                println!("ERROR, Invalid comm target");
             }
         }
-    }); 
+    }); */
 
 
     let sensing_state = state.clone();
 
     let sensing_thread = thread::spawn(move || {
         while let Ok(mut msg) = sensing_rx.recv() {
-            let mut state = &mut sensing_state.lock().unwrap();
-            println!("Sensing message!");
-            if let Some(soft_target) = & state.soft_avatar {
-               println!("Sending to avatar!");
-               soft_target.send(msg).unwrap();
-
+            let command = msg[0] as char;
+            match(command) {
+                'S' => {
+                    let state = & sensing_state.lock().unwrap();
+                    match msg[1] as char {
+                        'A' => {
+                            println!("Arm sensing message!");
+                            if let Some(sa) = & state.soft_avatar {
+                               println!("Sending to avatar!");
+                               sa.send(msg).unwrap();
+                            }
+                        }
+                        'P' => {
+                            println!("Pressure sensing message!");
+                            if let Some(sc) = & state.soft_controller {
+                               println!("Sending to controller!");
+                               sc.send(msg).unwrap();
+                            }
+                        }
+                        _ => {
+                            println!("Unknown sensing message! {}", msg[1]);
+                        }
+                    }
+                }
+                'D' => {
+                    let state = & sensing_state.lock().unwrap();
+                    println!("Debug message!");
+                    if let Some(sc) = & state.soft_controller {
+                       sc.send(msg).unwrap();
+                    }
+                }
+                _ => {
+                    println!("Unknown sensing command! {}",command);
+                }
             }
         }
     }); 
 
-    listen(("127.0.0.1",config.server.port), move |out| {
+    listen(("0.0.0.0",config.server.port), move |out| {
         println!("Connection");
         Server {
             ws: out,
             config: Arc::clone(&config),
-            state: Arc::clone(&state)
+            state: Arc::clone(&state),
+            motor_tx: motor_tx.clone()
         }
     }).unwrap();
 }

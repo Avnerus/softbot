@@ -6,13 +6,14 @@
 class Valve {
 
     public:
-        Valve(int inPin1, int inPin2, int speedPin, int standByPin);
+        Valve(int inPin1, int inPin2, int speedPin, int standByPin, int resolution = 1023);
         ~Valve();
 
         void init();
         void setSpeed(float speed);
         int getMotorSpeed();
         float getSpeed();
+        void open(float speed);
         void open();
         void close();
 
@@ -23,5 +24,6 @@ class Valve {
         int _inPin2;
         int _speedPin;
         int _standByPin;
+        int _resolution;
 };
 #endif

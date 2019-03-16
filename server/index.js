@@ -1,13 +1,14 @@
-import express from 'express'
-import _ from 'lodash'
-import fs from 'fs'
-import Comm from './comm'
+import express from 'express';
+import bodyParser from 'body-parser'
+import _ from 'lodash';
+import fs from 'fs';
 import {Server} from 'http'
 import textToSpeech from '@google-cloud/text-to-speech'
 import webpack from 'webpack'
 import webpackConfig from '../webpack.config'
 import WebpackMiddleware from 'webpack-dev-middleware'
 
+import * as MSTTS from './ms-tts' 
 
 //import Signaling from './signaling'
 
@@ -23,7 +24,6 @@ const server = Server(app);
 const signaling = new Signaling(io);
 signaling.init(); */
 
-
 app.use(express.static('public'));
 
 const compiler = webpack(webpackConfig);
@@ -32,7 +32,6 @@ app.use(
         publicPath: webpackConfig.output.publicPath
     })
 );
-
 
 // Watson token
 
@@ -49,9 +48,8 @@ app.get('/api/token',(req, res) => {
             res.send(token);
         }
     })
-});
-
-app.get('/api/speak',(req, res) => {
+});*/
+app.get('/api/google-speak',(req, res) => {
     const client = new textToSpeech.TextToSpeechClient();
 
     if (!req.query.text) {
@@ -74,6 +72,17 @@ app.get('/api/speak',(req, res) => {
         res.set('Content-Type', 'audio/mpeg');
         res.send(response.audioContent);
     });
+});
+app.get('/api/ms-speech', async (req, res) => {
+    try {
+        let bodyStream = await MSTTS.getSpeech(req.query.text);
+        res.type("audio/mpeg");
+        bodyStream.pipe(res);
+    }
+    catch (e) {
+        console.log("Error", e);
+        res.send("Error " + e);
+    }
 });
 
 server.listen(3080, () => {

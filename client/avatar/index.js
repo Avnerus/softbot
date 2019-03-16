@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-import SocketMessenger from '../common/socket-messenger'
+//import SocketMessenger from '../common/socket-messenger'
 import SocketController  from '../common/socket-controller'
 import Voice from './voice';
 import YoutubePlayer from './youtube-player'
@@ -9,7 +9,7 @@ import Idle from './idle'
 import Keyboard from '../common/keyboard'
 import GameController from './game-controller'
 
-import {greet} from '../common/breakout/breakout'
+//import {greet} from '../common/breakout/breakout'
 
 export default class  {
     constructor(config) {
@@ -23,12 +23,13 @@ export default class  {
         global.events = this.emitter;
 
 
+        /*
         this.socketMessenger = new SocketMessenger('registerAvatar');
-  //      this.socketMessenger.init();
+        this.socketMessenger.init();*/
 
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
-        this.socketController = new SocketController("ws://127.0.0.1:3012");
+        this.socketController = new SocketController("ws://192.168.8.239:3012");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");
             this.socketController.sendValueCommand("R",1);
@@ -40,18 +41,16 @@ export default class  {
 
         /*
         this.recognizer = new Recognizer(
-            this.socketMessenger, 
             this.socketController,
             this.expression, 
             $('#interface')
         );*/
 
-        this.youtubePlayer = new YoutubePlayer(this.socketMessenger, 'player');
+        this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
         this.youtubePlayer.init();
 
 
         this.voice = new Voice(
-            this.socketMessenger,
             this.socketController,
             this.expression,
             $('#text-output')
@@ -73,7 +72,14 @@ export default class  {
        this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
        this.gameController.init();
 
-       this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        //this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        
+        $("#audio-test").click((e) => {
+            e.preventDefault();
+            console.log("Audio test!");
+            $("#audio")[0].play();
+        })
+        
 
        //greet("Bitch");
 
@@ -82,19 +88,31 @@ export default class  {
 
     start() {
         console.log("Avatar START");
+        /*
         this.recognizer.init();
         this.oscillator = this.audio.createOscillator();
         this.oscillator.type = 'sine';
         this.oscillator.frequency.setValueAtTime(220, this.audio.currentTime);
         this.oscillator.connect(this.audio.destination);
-        this.oscillator.start();
+        this.oscillator.start();*/
 
         this.socketController.subscribeToPrefix('S', (data) => {
+            console.log("Sense message!", data);
             let view = new DataView(data);
             let value = view.getUint8(1);
-            this.oscillator.frequency.setValueAtTime(220 + value, this.audio.currentTime);
+            console.log(value);
+            if (value == 80) {
+                $("#breakout").css("background-color", "yellow");
+            } else {
+
+                $("#breakout").css("background-color", "black");
+            }
+            //this.oscillator.frequency.setValueAtTime(220 + value, this.audio.currentTime);
             //console.log(value); 
         })
+        this.socketController.subscribeToPrefix('E', (msg) => {
+            console.warn("Error: ", msg.slice(1));
+        });
     }
 
     resize() {

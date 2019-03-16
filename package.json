@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/index.js --exec babel-node",
+    "serve": "webpack-dev-server --host 0.0.0.0",
     "control": "cargo run --manifest-path softcontrol/rust/soft_control/Cargo.toml",
     "wasm": "cargo +nightly build --manifest-path softcontrol/rust/wasm/Cargo.toml --lib --target wasm32-unknown-unknown &&  wasm-bindgen softcontrol/rust/wasm/target/wasm32-unknown-unknown/debug/breakout.wasm --out-dir client/common/breakout"
   },
@@ -25,11 +26,14 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "babel-loader": "^8.0.4",
-    "nodemon": "^1.18.10",
+    "css-loader": "^2.0.1",
+    "nodemon": "^1.18.9",
+    "style-loader": "^0.23.1",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
-    "webpack-dev-server": "^3.1.10"
+    "webpack-dev-server": "^3.1.10",
+    "webpack-hot-middleware": "^2.24.3"
   },
   "window": {
     "title": "Softbot",
@@ -41,24 +45,21 @@
     "fullscreen": true
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.4",
-    "@google-cloud/text-to-speech": "^0.5.1",
-    "babel-runtime": "^6.26.0",
-    "bufferutil": "^4.0.1",
+    "@babel/runtime": "^7.2.0",
+    "body-parser": "^1.18.3",
     "emoji-replace": "^1.0.1",
     "express": "^4.14.0",
     "fullscreen": "^1.1.0",
     "lodash": "^4.17.10",
     "moment": "^2.18.1",
-    "nan": "^2.12.1",
-    "nipplejs": "^0.6.7",
+    "nipplejs": "^0.7.1",
+    "node-fetch": "^2.3.0",
     "node-google-translate-skidz": "^1.1.2",
-    "reconnecting-websocket": "^3.0.3",
+    "reconnecting-websocket": "^4.1.10",
     "recordrtc": "^5.4.1",
-    "simplewebrtc": "^3.0.2",
-    "stats.js": "^0.16.0",
+    "stats.js": "^0.17.0",
     "typed.js": "^2.0.2",
-    "ws": "^6.2.0",
+    "xmlbuilder": "^11.0.0",
     "youtube-iframe": "^1.0.3"
   },
   "nodemonConfig": {

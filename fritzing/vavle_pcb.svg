@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Fritzing (http://www.fritzing.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.2"
+   x="0in"
+   y="0in"
+   width="0.3in"
+   height="0.15in"
+   viewBox="0 0 21.6 10.8"
+   id="svg46"
+   sodipodi:docname="vavle_pcb.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata52">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs50" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="3200"
+     inkscape:window-height="1697"
+     id="namedview48"
+     showgrid="false"
+     inkscape:zoom="16.388888"
+     inkscape:cx="0.54915256"
+     inkscape:cy="7.2000003"
+     inkscape:window-x="0"
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg46" />
+  <g
+     partID="68330"
+     id="g5">
+    <g
+       id="copper0"
+       gorn="0.4.0">
+      <path
+         id="connector1pin"
+         stroke-opacity="1"
+         stroke-width="1.44"
+         fill="none"
+         style="stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+         stroke="#f6ca34"
+         gorn="0.4.0.0"
+         d="m9,3.6a1.8,1.8,0,0,1,-3.6,0,1.8,1.8,0,1,1,3.6,0z" />
+      <path
+         id="connector2pin"
+         stroke-opacity="1"
+         stroke-width="1.44"
+         fill="none"
+         style="stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+         stroke="#f6ca34"
+         gorn="0.4.0.1"
+         d="m16.2,3.6a1.8,1.8,0,0,1,-3.6,0,1.8,1.8,0,1,1,3.6,0z" />
+    </g>
+  </g>
+  <g
+     partID="68331"
+     id="g14">
+    <g
+       id="copper1">
+      <g
+         id="g11"
+         gorn="0.4.0">
+        <path
+           id="path7"
+           stroke-opacity="1"
+           stroke-width="1.44"
+           fill="none"
+           style="stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+           stroke="#f6ca34"
+           gorn="0.4.0.0"
+           d="m9,3.6a1.8,1.8,0,0,1,-3.6,0,1.8,1.8,0,1,1,3.6,0z" />
+        <path
+           id="path9"
+           stroke-opacity="1"
+           stroke-width="1.44"
+           fill="none"
+           style="stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+           stroke="#f6ca34"
+           gorn="0.4.0.1"
+           d="m16.2,3.6a1.8,1.8,0,0,1,-3.6,0,1.8,1.8,0,1,1,3.6,0z" />
+      </g>
+    </g>
+  </g>
+  <g
+     partID="68332"
+     id="g44">
+    <g
+       id="silkscreen"
+       gorn="0.4.1">
+      <g
+         transform="matrix(1, 0, 0, 1, 0, -9.44032)"
+         id="g27">
+        <g
+           id="g25">
+          <g
+             id="g23">
+            <g
+               id="g21">
+              <g
+                 id="g19">
+                <g
+                   id="text8757"
+                   xml:space="preserve"
+                   fill="#000000"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;font-family:OCRA;-inkscape-font-specification:OCRA"
+                   font-size="0"
+                   stroke="none"
+                   gorn="0.4.1.0.0.0.0.0"
+                   fill-opacity="1">
+       <g
+   id="tspan8759"
+   fill="#ffffff"
+   font-size="0"
+   gorn="0.4.1.0.0.0.0.0.0"
+   fill-opacity="1">
+        <text
+   id="tspan12480"
+   y="18.36"
+   x="7.2"
+   font-size="0"
+   gorn="0.4.1.0.0.0.0.0.0.0">1</text>
+
+       </g>
+      </g>              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g
+         transform="matrix(1, 0, 0, 1, 0, -18.4003)"
+         id="g40">
+        <g
+           id="g38">
+          <g
+             id="g36">
+            <g
+               id="g34">
+              <g
+                 id="g32">
+                <g
+                   id="text8761"
+                   xml:space="preserve"
+                   fill="#000000"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;font-family:OCRA;-inkscape-font-specification:OCRA"
+                   font-size="0"
+                   stroke="none"
+                   gorn="0.4.1.1.0.0.0.0"
+                   fill-opacity="1">
+       <g
+   id="tspan8763"
+   fill="#ffffff"
+   font-size="0"
+   gorn="0.4.1.1.0.0.0.0.0"
+   fill-opacity="1">
+        <text
+   id="tspan12478"
+   y="27.36"
+   x="14.4"
+   font-size="0"
+   gorn="0.4.1.1.0.0.0.0.0.0">2</text>
+
+       </g>
+      </g>              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <rect
+         width="20.88"
+         id="connector3pin"
+         y="0.359961"
+         height="10.08"
+         stroke-opacity="1"
+         stroke-width="0.36"
+         x="0.36"
+         fill="none"
+         style="stroke-miterlimit:4;stroke-dasharray:none"
+         stroke="#ffffff"
+         gorn="0.4.1.2" />
+    </g>
+  </g>
+  <g
+     transform="translate(0.06610156,4.3423727)"
+     partID="68331"
+     id="g14-6">
+    <g
+       id="copper1-2">
+      <g
+         id="g11-6"
+         gorn="0.4.0">
+        <path
+           inkscape:connector-curvature="0"
+           id="path7-1"
+           style="display:inline;fill:none;stroke:#f6ca34;stroke-width:1.44000006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           gorn="0.4.0.0"
+           d="m 9,3.6 a 1.8,1.8 0 0 1 -3.6,0 1.8,1.8 0 1 1 3.6,0 z" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path9-8"
+           style="display:inline;fill:none;stroke:#f6ca34;stroke-width:1.44000006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           gorn="0.4.0.1"
+           d="m 16.2,3.6 a 1.8,1.8 0 0 1 -3.6,0 1.8,1.8 0 1 1 3.6,0 z" />
+      </g>
+    </g>
+  </g>
+</svg>

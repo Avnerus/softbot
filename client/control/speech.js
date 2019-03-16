@@ -1,7 +1,7 @@
 export default class Speech {
-    constructor(socketMessenger, speechForm) {
+    constructor(socketController, speechForm) {
         console.log("Speech constructed!")
-        this.socketMessenger = socketMessenger;
+        this.socketController = socketController;
         this.speechForm = speechForm;
     }
     init() {
@@ -25,7 +25,8 @@ export default class Speech {
             if (event.currentTarget[0].value.length > 0) {
 
                 console.log("Say! ", event.currentTarget[0].value,event.currentTarget[1].value, event.currentTarget[2].value, event.currentTarget[3].value);
-                this.socketMessenger.emit('speech', {
+                this.socketController.sendJSONCommand({
+                    command: 'speech',
                     text: event.currentTarget[0].value,
                     voice: event.currentTarget[1].value,
                     pitch: event.currentTarget[2].value,

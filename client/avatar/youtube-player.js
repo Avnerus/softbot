@@ -1,13 +1,13 @@
 import YoutubeIframe from 'youtube-iframe'
 
 export default class YoutubePlayer {
-    constructor(socketMessenger, playerContainer) {
+    constructor(socketController, playerContainer) {
         this.playerContainer = playerContainer;
-        this.socketMessenger = socketMessenger;
+        this.socketController = socketController;
     }
     init() {
         console.log("Init youtube player", this.playerContainer);
-        this.socketMessenger.on('youtube',(data) => {
+        this.socketController.on('youtube',(data) => {
             if (data.stop && this.player) {
                 this.stopVideo();
 

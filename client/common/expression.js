@@ -60,7 +60,7 @@ export default class Expression {
         console.log("Pose", pose, commands);
         commands.forEach((command) => {
             if (typeof(pose[command]) == "number") {
-                this.socketController.sendValueCommand(command,pose[command]);
+                this.socketController.sendSerialCommand('E',command,pose[command]);
             } else if (typeof(pose[command]) == "object") {
                 this.socketController.sendValueCommand.apply(
                     this.socketController,

@@ -3,14 +3,13 @@ import moment from 'moment'
 import Typed from 'typed.js'
 
 export default class Transcript {
-    constructor(socketMessenger, socketController,container) {
+    constructor(socketController,container) {
         console.log("Transcript constructed with container", container);
-        this.socketMessenger = socketMessenger;
         this.socketController = socketController;
         this.container = container;
     }
     init() {
-        this.socketMessenger.on('recognized-speech',(data) => {
+        this.socketController.on('recognized-speech',(data) => {
             console.log("Recognized speech!", data)
             data.from = "Speaker";
             this.addLine(data);
@@ -21,6 +20,21 @@ export default class Transcript {
                 from: "Error",
                 text: msg.slice(1)
             });
+        });
+
+        this.socketController.subscribeToPrefix('D', (msg) => {
+            this.addLine({
+                from: "Hitodama",
+                text: new TextDecoder("utf-8").decode(new Uint8Array(msg,1))
+            },false);
+        });
+
+        this.socketController.subscribeToPrefix('I', (msg) => {
+            console.log("Info message", msg);
+            this.addLine({
+                from: "System",
+                text: msg.slice(1)
+            },false);
         });
 
         events.on("transcript", (data) => {
@@ -34,29 +48,35 @@ export default class Transcript {
         console.log("Current scroll height", this.currentScrollHeight);
     }
 
-    addLine(data) {
+    addLine(data, animate = true) {
         this.container.append('<div class="transcript-line ' + data.from.toLowerCase() + '"></div>');
-        let typed = new Typed(
-            this.container.children().last()[0], {
-                strings: ['[' +
-                    moment().format('HH:mm:ss') + '] <b>' + 
-                    data.from + ': </b>'  + data.text
-                ],
-                showCursor: false,
-                typeSpeed:0,
-                onStringTyped: () => {this.scroll();}
-            }
-
-        )
+        let text = '[' +  moment().format('HH:mm:ss') + '] <b>' +  data.from + ': </b>'  + data.text;
+        if (animate) {
+            let typed = new Typed(
+                this.container.children().last()[0], {
+                    strings: [text],
+                    showCursor: false,
+                    typeSpeed:0,
+                    onStringTyped: () => {this.scroll();}
+                }
+            )
+        } else {
+            this.container.children().last().html(text);
+            this.scroll(false);
+        }
     }
-    scroll() {
+    scroll(animate = true) {
         let scrollHeight = this.container.parent().get(0).scrollHeight;
         if (scrollHeight != this.currentScrollHeight) {
-          console.log("Scroll!");
-          this.container.parent().animate({
-            scrollTop: scrollHeight
-          }, 500)
-          this.currentScrollHeight = scrollHeight;
+            if (animate) {
+              this.container.parent().animate({
+                scrollTop: scrollHeight
+              }, 500)
+            }
+            else {
+                this.container.parent()[0].scrollTop = scrollHeight;
+            }
+            this.currentScrollHeight = scrollHeight;
         }
     }
 }

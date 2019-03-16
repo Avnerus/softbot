@@ -187,6 +187,9 @@ body {
 .transcript-line.speaker {
     color: #f9f100;
 }
+.transcript-line.hitodama {
+    color: #fefefe;
+}
 .transcript-line.error {
     color: #ff0000;
 }
@@ -225,4 +228,13 @@ body {
 #console-poses select {
     margin-right: 10px;
     color: black;
+}
+
+#pressure-sensing {
+    border: 1px solid white;
+    width: 200px;
+}
+#pressure-sensing .title {
+    text-align: center;
+    text-decoration: underline;
 }
