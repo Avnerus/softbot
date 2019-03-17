@@ -9,6 +9,7 @@ import webpackConfig from '../webpack.config'
 import WebpackMiddleware from 'webpack-dev-middleware'
 
 import * as MSTTS from './ms-tts' 
+import * as GoogleTranslate from './google-translate'
 
 //import Signaling from './signaling'
 
@@ -33,22 +34,6 @@ app.use(
     })
 );
 
-// Watson token
-
-app.get('/api/token',(req, res) => {
-    let authorization = new watson.AuthorizationV1({
-      username: 'f928b9d6-7bd0-4ad7-8c7e-67de63d94f9b',
-      password: 'IgSspCBI5Yjx',
-      url: watson.SpeechToTextV1.URL
-    });
-    authorization.getToken((err, token) => {
-        if (!token) {
-            res.send(err);
-        } else {
-            res.send(token);
-        }
-    })
-});*/
 app.get('/api/google-speak',(req, res) => {
     const client = new textToSpeech.TextToSpeechClient();
 
@@ -73,9 +58,15 @@ app.get('/api/google-speak',(req, res) => {
         res.send(response.audioContent);
     });
 });
-app.get('/api/ms-speech', async (req, res) => {
+app.get('/api/ms-speak', async (req, res) => {
     try {
-        let bodyStream = await MSTTS.getSpeech(req.query.text);
+        if (!req.query.text) {
+            res.send(500,"Invalid request");
+            return;
+        }
+        let text = req.query.target ? await GoogleTranslate.translate(req.query.text, req.query.target) : req.query.text;
+        console.log("Text ", text);
+        let bodyStream = await MSTTS.getSpeech(text, req.query.target);
         res.type("audio/mpeg");
         bodyStream.pipe(res);
     }

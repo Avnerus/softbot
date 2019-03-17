@@ -1,6 +1,16 @@
 import fetch from 'node-fetch'
 import xmlbuilder from 'xmlbuilder'
 
+const TARGET_VOICES = {
+    "fi" : "Microsoft Server Speech Text to Speech Voice (fi-FI, HeidiRUS)",
+    "he": "Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)",
+    "ja" : "Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)",
+    //"en" : "Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)",
+    "en" : "Microsoft Server Speech Text to Speech Voice (en-US, Guy24kRUS)",
+    "ar" : "Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)",
+    "ru": "Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)"
+}
+
 function getAccessToken(subscriptionKey) {
     let options = {
         method: 'POST',
@@ -15,10 +25,8 @@ function getAccessToken(subscriptionKey) {
     ).then(res => res.text())
 }
 
-export async function getSpeech(text) {
+export async function getSpeech(text, target = 'en') {
 
-    console.log("Key: " + process.env['MS_KEY']);
-    console.log("Text", text);
     let token = await getAccessToken(process.env['MS_KEY']);
 
     console.log("Token: ", token);
@@ -28,11 +36,11 @@ export async function getSpeech(text) {
         .att('xml:lang', 'en-us')
         .ele('voice')
         .att('xml:lang', 'en-us')
-    //.att('name', 'Microsoft Server Speech Text to Speech Voice (en-US, Guy24KRUS)')
-    //  .att('name', 'Microsoft Server Speech Text to Speech Voice (fi-FI, HeidiRUS)')
-        .att('name', 'Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)')
-        .ele('prosody')
-        .att('pitch', 'high')
+        .att('name', TARGET_VOICES[target])
+      // .att('name', 'Microsoft Server Speech Text to Speech Voice (fi-FI, HeidiRUS)')
+     //   .att('name', 'Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)')
+    //    .ele('prosody')
+     //   .att('pitch', 'high')
         .txt(text)
         .end();
 
