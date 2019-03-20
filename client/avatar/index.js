@@ -50,8 +50,10 @@ export default class  {
         this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
         this.youtubePlayer.init();
 
+        window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();
 
         this.voice = new Voice(
+            this.audio,
             this.socketController,
             this.expression,
             $('#text-output')
@@ -73,7 +75,6 @@ export default class  {
        this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
        this.gameController.init();
 
-       window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();
         
         $("#audio-test").click((e) => {
             e.preventDefault();

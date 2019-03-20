@@ -1,20 +1,31 @@
 export default class Voice {
-    constructor(socketController, expression, textOutput) {
+    constructor(audioContext, socketController, expression, textOutput) {
         console.log("Voice constructed!")
         this.socketController = socketController;
         this.expression = expression;
         this.textOutput = textOutput;
+        this.audioContext = audioContext;
     }
     init() {
         console.log("Init voice", this.textOutput);
+        /*
         if (window.speechSynthesis) {
             this.voices = window.speechSynthesis.getVoices();
             console.log("initial voices", this.voices);
-        }
-        this.socketController.on('speech',(data) => {
+        }*/
+        this.socketController.on('speech', async (data) => {
             console.log("Speech!", data)
             this.textOutput.html(data.text);
             this.currentData = data;
+            let uri  = '/api/ms-speak?text=' + data.text;
+            if (data.translate) {
+                uri += '&target=' + data.translate;
+            }
+            let res = await fetch(uri);
+            let blob = res.blob()
+            console.lob("Blob", blob);
+            
+            /*
             let speech  = document.createElement('audio');
             speech.type     = 'audio/mpeg';
             speech.src  = '/api/ms-speak?text=' + data.text;
@@ -22,7 +33,7 @@ export default class Voice {
                 speech.src += '&target=' + data.translate;
             }
             speech.play();
-            window.speech = speech;
+            window.speech = speech;*/
         });
     }
 
