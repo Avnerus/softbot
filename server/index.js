@@ -66,9 +66,21 @@ app.get('/api/ms-speak', async (req, res) => {
         }
         let text = req.query.target ? await GoogleTranslate.translate(req.query.text, req.query.target) : req.query.text;
         console.log("Text ", text);
-        let bodyStream = await MSTTS.getSpeech(text, req.query.target);
+        let {bodyStream, headers} = await MSTTS.getSpeech(text, req.query.target);
+        console.log("Response headers", headers);
         res.type("audio/mpeg");
         bodyStream.pipe(res);
+    }
+    catch (e) {
+        console.log("Error", e);
+        res.send("Error " + e);
+    }
+});
+
+app.get('/api/stream', async (req, res) => {
+    try {
+        res.type("audio/mpeg");
+        fs.createReadStream("public/test/speak.mpga").pipe(res);
     }
     catch (e) {
         console.log("Error", e);

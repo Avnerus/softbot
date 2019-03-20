@@ -63,5 +63,5 @@ export async function getSpeech(text, target = 'en') {
         'https://northeurope.tts.speech.microsoft.com/cognitiveservices/v1',
         options
     )
-    .then((res) => res.body)
+    .then(res => ({headers: res.headers, bodyStream: res.body}))
 }
