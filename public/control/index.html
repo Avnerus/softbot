@@ -19,7 +19,6 @@
         <script src="lib/bootstrap.min.js"></script>
         <script src="lib/adapter.min.js"></script>
         <script src="lib/janus.js"></script>
-        <script src="lib/responsivevoice.js"></script>
         <script src="lib/pixi.min.js"></script>
 
         <script src="../control-bundle.js"></script>
@@ -66,27 +65,14 @@
                         <div class="form-group" style="position:relative;">
                             <label for="speech-text">Say:</label>
                             <input type="text" class="form-control" id="speech-text" data-emojiable="true">
-                            <label for="speech-voice">Voice:</label>
-                            <select class="form-control" id="speech-voice">
-                                <option>UK English Female</option>
-                                <option>UK English Male</option>
-                                <option>Japanese Female</option>
-                                <option>Finnish Male</option>
-                                <option>Arabic Male</option>
-                                <option>Arabic Female</option>
-                                <option>Russian Female</option>
-                                <option>Brazilian Portuguese Female</option>
-                                <option>Chinese Female</option>
-                            </select>
-                            <label for="speech-pitch">Pitch:</label>
-                            <input type="number" value=2.0 class="form-control" id="speech-pitch">
                             <label for="speech-translate">Translate:</label>
                             <select class="form-control" id="speech-translate">
-                                <option>-</option>
+                                <option value="">-</option>
                                 <option>en</option>
                                 <option>ja</option>
                                 <option>fi</option>
                                 <option>zh</option>
+                                <option>it</option>
                             </select>
                         </div>
                     </form>
