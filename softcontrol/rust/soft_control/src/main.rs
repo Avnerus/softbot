@@ -159,7 +159,6 @@ fn main() {
                 port_name,
                 e
             );
-            return;
         }
     }
 

@@ -9,13 +9,18 @@ export default class Synth {
 
         this.gainNode = this.audioContext.createGain();
         this.gainNode.connect(this.audioContext.destination);
-        this.gainNode.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+        this.gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
 
         this.oscillator = this.audioContext.createOscillator();
         this.oscillator.type = 'sawtooth';
         this.oscillator.frequency.setValueAtTime(50, this.audioContext.currentTime); // value in hertz
         this.oscillator.connect(this.gainNode);
-        this.oscillator.start();
+        //this.oscillator.start();
+
+        window.oscillator = this.oscillator;
+        window.gain = this.gainNode;
+
+        console.log("Synth playing");
     }
     onSensorMessage(data) {
         let value = new Uint8Array(data,1,1)[0];

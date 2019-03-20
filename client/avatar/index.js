@@ -8,6 +8,7 @@ import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
 import GameController from './game-controller'
+import Synth from './synth'
 
 //import {greet} from '../common/breakout/breakout'
 
@@ -72,13 +73,16 @@ export default class  {
        this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
        this.gameController.init();
 
-        //this.audio = new (window.AudioContext || window.webkitAudioContext)();
+       window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();
         
         $("#audio-test").click((e) => {
             e.preventDefault();
             console.log("Audio test!");
             $("#audio")[0].play();
         })
+
+        this.synth = new Synth (this.audio, this.socketController);
+        this.synth.init();
         
 
        //greet("Bitch");
@@ -90,11 +94,7 @@ export default class  {
         console.log("Avatar START");
         /*
         this.recognizer.init();
-        this.oscillator = this.audio.createOscillator();
-        this.oscillator.type = 'sine';
-        this.oscillator.frequency.setValueAtTime(220, this.audio.currentTime);
-        this.oscillator.connect(this.audio.destination);
-        this.oscillator.start();*/
+        */
 
         this.socketController.subscribeToPrefix('S', (data) => {
             console.log("Sense message!", data);
