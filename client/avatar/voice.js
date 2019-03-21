@@ -22,8 +22,20 @@ export default class Voice {
                 uri += '&target=' + data.translate;
             }
             let res = await fetch(uri);
-            let blob = res.blob()
-            console.lob("Blob", blob);
+            let blob = await res.blob()
+            console.log("Blob", blob);
+            let arraybuffer = await blobToArrayBuffer(blob);
+            console.log("ArrayBuffer", arraybuffer);
+            let source  = this.audioContext.createBufferSource();
+            this.audioContext.decodeAudioData(arraybuffer, (buffer) => {
+                source.buffer = buffer;
+                source.connect(this.audioContext.destination);
+                source.start();
+              },
+              function(e){ console.log("Error with decoding audio data" + e.err); 
+            });
+
+          });
             
             /*
             let speech  = document.createElement('audio');
@@ -34,7 +46,6 @@ export default class Voice {
             }
             speech.play();
             window.speech = speech;*/
-        });
     }
 
     voiceStart() {
@@ -57,3 +68,13 @@ export default class Voice {
         this.expression.express(this.currentData.text);
     }
 }
+function blobToArrayBuffer(blob) {
+	const fileReader = new FileReader();
+
+	return new Promise((resolve, reject) => {
+		fileReader.onload = () => resolve(fileReader.result);
+		fileReader.onerror = reject;
+
+		fileReader.readAsArrayBuffer(blob);
+	});
+};
