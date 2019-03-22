@@ -1,3 +1,5 @@
+import PitchShifter from './pitch-shifter'
+
 export default class Voice {
     constructor(audioContext, socketController, expression, textOutput) {
         console.log("Voice constructed!")
@@ -5,6 +7,12 @@ export default class Voice {
         this.expression = expression;
         this.textOutput = textOutput;
         this.audioContext = audioContext;
+
+        const pitchShifter = new PitchShifter(1.3, 0.5, 512);
+        this.pitchShiftNode = this.audioContext.createScriptProcessor(512, 1, 1);
+        this.pitchShiftNode.onaudioprocess = (e) => pitchShifter.onaudioprocess(e);
+        this.pitchShiftNode.connect(this.audioContext.destination);
+        console.log("Pitch shifter", this.pitchShiftNode);
     }
     init() {
         console.log("Init voice", this.textOutput);
@@ -18,6 +26,7 @@ export default class Voice {
             this.textOutput.html(data.text);
             this.currentData = data;
             let uri  = '/api/ms-speak?text=' + data.text;
+            //let uri  = '/api/stream';
             if (data.translate) {
                 uri += '&target=' + data.translate;
             }
@@ -29,7 +38,7 @@ export default class Voice {
             let source  = this.audioContext.createBufferSource();
             this.audioContext.decodeAudioData(arraybuffer, (buffer) => {
                 source.buffer = buffer;
-                source.connect(this.audioContext.destination);
+                source.connect(this.pitchShiftNode);
                 source.start();
               },
               function(e){ console.log("Error with decoding audio data" + e.err); 
