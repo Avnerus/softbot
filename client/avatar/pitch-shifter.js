@@ -8,7 +8,7 @@ export default class PitchShifter {
         this.grainWindow = hannWindow(grainSize);
     }
     onaudioprocess(event) {
-        console.log("Audio process!!");
+        // console.log("Audio process!!");
         let inputData = event.inputBuffer.getChannelData(0);
         let outputData = event.outputBuffer.getChannelData(0);
 
