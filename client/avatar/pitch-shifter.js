@@ -11,42 +11,44 @@ export default class PitchShifter {
         // console.log("Audio process!!");
         let inputData = event.inputBuffer.getChannelData(0);
         let outputData = event.outputBuffer.getChannelData(0);
+        if (inputData.length > 0) {
+            for (let i = 0; i < inputData.length; i++) {
 
-        for (let i = 0; i < inputData.length; i++) {
+                // Apply the window to the input buffer
+                inputData[i] *= this.grainWindow[i];
 
-            // Apply the window to the input buffer
-            inputData[i] *= this.grainWindow[i];
+                // Shift half of the buffer
+                this.buffer[i] = this.buffer[i + this.grainSize];
 
-            // Shift half of the buffer
-            this.buffer[i] = this.buffer[i + this.grainSize];
+                // Empty the buffer tail
+                this.buffer[i + this.grainSize] = 0.0;
+            }
 
-            // Empty the buffer tail
-            this.buffer[i + this.grainSize] = 0.0;
-        }
+            // Calculate the pitch shifted grain re-sampling and looping the input
+            let grainData = new Float32Array(this.grainSize * 2);
+            for (let i = 0, j = 0.0;
+                 i < this.grainSize;
+                 i++, j += this.pitchRatio) {
 
-        // Calculate the pitch shifted grain re-sampling and looping the input
-        let grainData = new Float32Array(this.grainSize * 2);
-        for (let i = 0, j = 0.0;
-             i < this.grainSize;
-             i++, j += this.pitchRatio) {
+                let index = Math.floor(j) % this.grainSize;
+                let a = inputData[index];
+                let b = inputData[(index + 1) % this.grainSize];
+                grainData[i] += linearInterpolation(a, b, j % 1.0) * this.grainWindow[i];
+            }
 
-            let index = Math.floor(j) % this.grainSize;
-            let a = inputData[index];
-            let b = inputData[(index + 1) % this.grainSize];
-            grainData[i] += linearInterpolation(a, b, j % 1.0) * this.grainWindow[i];
-        }
+            // Copy the grain multiple times overlapping it
+            for (let i = 0; i < this.grainSize; i += Math.round(this.grainSize * (1 - this.overlapRatio))) {
+                for (let j = 0; j <= this.grainSize; j++) {
+                    this.buffer[i + j] += grainData[j];
+                }
+            }
 
-        // Copy the grain multiple times overlapping it
-        for (let i = 0; i < this.grainSize; i += Math.round(this.grainSize * (1 - this.overlapRatio))) {
-            for (let j = 0; j <= this.grainSize; j++) {
-                this.buffer[i + j] += grainData[j];
+            // Output the first half of the buffer
+            for (let i = 0; i < this.grainSize; i++) {
+                outputData[i] = this.buffer[i];
             }
         }
 
-        // Output the first half of the buffer
-        for (let i = 0; i < this.grainSize; i++) {
-            outputData[i] = this.buffer[i];
-        }
     }
 
 }

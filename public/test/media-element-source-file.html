@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <title>Test</title>
+    </head>
+    <body>
+        <div id="container">
+        </div>
+
+        <script>
+        window.onload = function() {
+
+                const audio = new (window.AudioContext || window.webkitAudioContext)();
+                let uri  = 'web-audio-speech.mpga';
+
+                let speech  = document.createElement('audio');
+                speech.type = 'audio/mpeg';
+                speech.src  = uri;
+                let source = audio.createMediaElementSource(speech);
+                source.connect(audio.destination);
+                speech.play();
+        };
+
+        </script>
+    </body>
+</html>

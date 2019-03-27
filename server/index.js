@@ -80,7 +80,7 @@ app.get('/api/ms-speak', async (req, res) => {
 app.get('/api/stream', async (req, res) => {
     try {
         res.type("audio/mpeg");
-        fs.createReadStream("public/test/speak.mpga").pipe(res);
+        fs.createReadStream("public/test/web-audio-speech.mpga").pipe(res);
     }
     catch (e) {
         console.log("Error", e);
