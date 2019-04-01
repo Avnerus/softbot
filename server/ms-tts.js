@@ -9,7 +9,8 @@ const TARGET_VOICES = {
     "en" : "Microsoft Server Speech Text to Speech Voice (en-US, Guy24kRUS)",
     "ar" : "Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)",
     "ru": "Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)",
-    "it": "Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)"
+    "it": "Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)",
+    "de": "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)"
 }
 
 function getAccessToken(subscriptionKey) {
