@@ -12,7 +12,8 @@ const TARGET_VOICES = {
     "it": "Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)",
     "es": "Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)",
     "ru": "Microsoft Server Speech Text to Speech Voice (ru-RU, Pavel, Apollo)",
-    "fr": "Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)"
+    "fr": "Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)",
+    "de": "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)"
 }
 
 function getAccessToken(subscriptionKey) {
