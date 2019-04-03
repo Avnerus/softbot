@@ -79,6 +79,21 @@ export default class Main {
         this.display = new Display(this.socketController, $("#breakout-form"), this.keyboard);
         this.display.init();
 
+
+        $("#test-buttons").click((e) => {
+            console.log("Button click",e.target.id);
+            $(e.target).addClass("on");
+            this.socketController.sendJSONCommand({
+                command: 'button-on',
+                id: e.target.id
+            });
+        });
+
+        this.socketController.on('button-off', (data) => {
+            console.log("Button-off", data);
+            $('#' + data.id).removeClass("on");
+        });
+
     }
     animate(dt) {
         this.update(dt);

@@ -5,7 +5,7 @@ export default class Synth {
         this.audioContext = audioContext;
     }
     init() {
-        this.socketController.subscribeToPrefix('S', (data) => this.onSensorMessage(data));
+        //this.socketController.subscribeToPrefix('S', (data) => this.onSensorMessage(data));
 
         this.gainNode = this.audioContext.createGain();
         this.gainNode.connect(this.audioContext.destination);
@@ -21,6 +21,15 @@ export default class Synth {
         window.gain = this.gainNode;
 
         console.log("Synth playing");
+    }
+    playFreq(freq) {
+        console.log("Play freq", freq);
+        let oscillator = this.audioContext.createOscillator();
+        oscillator.connect(this.audioContext.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime); // value in hertz
+        oscillator.start();
+        oscillator.stop(this.audioContext.currentTime + 0.1);
     }
     onSensorMessage(data) {
         let value = new Uint8Array(data,1,1)[0];

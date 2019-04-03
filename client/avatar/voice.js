@@ -8,7 +8,7 @@ export default class Voice {
         this.textOutput = textOutput;
         this.audioContext = audioContext;
 
-        const pitchShifter = new PitchShifter(1.5, 0.5, 512);
+        const pitchShifter = new PitchShifter(1.3, 0.5, 512);
         this.pitchShiftNode = this.audioContext.createScriptProcessor(512, 1, 1);
         this.pitchShiftNode.onaudioprocess = (e) => pitchShifter.onaudioprocess(e);
         this.pitchShiftNode.connect(this.audioContext.destination);

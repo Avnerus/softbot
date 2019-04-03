@@ -116,12 +116,24 @@ fn handle_message(
                 'C' => {
                     println!("Comm message");
                     // Just send it to the avatar
-                    if let Some(sa) = &state.soft_avatar {
-                        sa.send(data);
-                    } else {
-                        return Err(SoftError::new("No avatar connected!"))
-                    }
+                    match role {
+                        0 => {
+                            if let Some(sa) = &state.soft_avatar {
+                                sa.send(data);
+                            } else {
+                                return Err(SoftError::new("No avatar connected!"))
+                            }
+                        }
+                        1 => {
+                            if let Some(sc) = &state.soft_controller {
+                                sc.send(data);
+                            } else {
+                                return Err(SoftError::new("No controller connected!"))
+                            }
+                        }
+                        _ => {}
 
+                    }
                 }
                 '>' => {
                     // Send to serial
@@ -214,7 +226,7 @@ pub fn start(
                 0 => & state.soft_controller,
                 1 => & state.soft_avatar,
                 2 => & state.broadcaster,
-                _ => & None
+                _ => & none
             };
             if let Some(soft_target) = handle {
                println!("Sending!");
@@ -237,16 +249,15 @@ pub fn start(
                     let state = & sensing_state.lock().unwrap();
                     match msg[1] as char {
                         'A' => {
-                            println!("Arm sensing message!");
+                            println!("Arm sensing message! {}", String::from_utf8(msg.clone()).unwrap());
                             if let Some(sa) = & state.soft_avatar {
                                println!("Sending to avatar!");
                                sa.send(msg).unwrap();
                             }
                         }
                         'P' => {
-                            println!("Pressure sensing message!");
+                        //    println!("Pressure sensing message!");
                             if let Some(sc) = & state.soft_controller {
-                               println!("Sending to controller!");
                                sc.send(msg).unwrap();
                             }
                         }

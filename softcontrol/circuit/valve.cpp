@@ -21,6 +21,8 @@ void Valve::init() {
     pinMode(_speedPin, OUTPUT);
     pinMode(_standByPin, OUTPUT);
 
+    //analogWriteFrequency(_speedPin, 50);
+
     _motorSpeed = 0;
     _speed = 0.0;
 }

@@ -238,3 +238,23 @@ body {
     text-align: center;
     text-decoration: underline;
 }
+
+#test-buttons {
+    display: flex;
+    justify-content: center;
+}
+#test-buttons div {
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+    height: 100px;
+    width: 100px;
+    margin: 5px;
+}
+
+#button1.on {
+    background-color: purple;
+}
+#button2.on {
+    background-color: blue;
+}

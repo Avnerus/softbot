@@ -63,14 +63,14 @@ export default class Console {
         this.consoleContainer.find("#pump-checkbox").change((e) => {
             console.log("Pump ?");
             if($(e.target).prop('checked')) {
-                this.socketController.sendSerialCommand('P', 120);
+                this.socketController.sendSerialCommand('P', 100);
             } else {
                 this.socketController.sendSerialCommand('P', 0);
             }
         });
 
         this.socketController.subscribeToPrefix('S', (msg) => {
-            console.log("Control sensing", msg);
+            //console.log("Control sensing", msg);
             let chars = new Uint8Array(msg, 2,10);
             let end = chars.findIndex(n => n == 0);
             let chamber = new TextDecoder("utf-8").decode(chars.slice(0,end));

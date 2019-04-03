@@ -23,12 +23,13 @@ byte   currentLength = 0;
 INPUT_STATE currentState;
 String VALID_COMMANDS = "XPSEMCWRL";
 
-PumpNg pump(22,21,23,25);
+PumpNg pump(22,21,4,25);
 
 Chamber chambers[4] = {
     Chamber("LeftArm",
             new Valve(20,18,38,25),
             new Valve(20,19,38,25),
+            &pump,
             A0,
             120, 
             200
@@ -36,6 +37,7 @@ Chamber chambers[4] = {
     Chamber("RightArm",
             new Valve(17,15,37,25),
             new Valve(17,16,37,25),
+            &pump,
             A15,
             100, 
             200
@@ -43,18 +45,22 @@ Chamber chambers[4] = {
     Chamber("LeftNeck",
             new Valve(2,26,5,25),
             new Valve(2,3,5,25),
+            &pump,
             A16, 
-            140, 
-            200,
-            0.222
+            90, 
+            250,
+            0.5
+           // 0.220
     ),
     Chamber("RightNeck",
             new Valve(6,8,9,25),
             new Valve(6,7,9,25),
+            &pump,
             A20,
-            140,
-            200,
-            0.3
+            90,
+            250,
+            0.5
+         //   0.29
     )
     // //Chamber("Right", 32,24,A0, 0, 700),
   //  Chamber("Down",  26,28,A1, 0, 700),
@@ -63,8 +69,8 @@ Chamber chambers[4] = {
    // Chamber("Cheeks", 31 ,33, A5, 0, 200) 
 };
 
-Arm* rightArmSensor = new Arm(1, 10, 20);
-Arm* leftArmSensor = new Arm(2, 28, 40);
+Arm* rightArmSensor = new Arm(1, 10, 60, true);
+Arm* leftArmSensor = new Arm(2, 28, 60, false);
 
 enum CHAMBER_INDEX {
     LEFT_ARM_CHAMBER  = 0,
@@ -104,7 +110,7 @@ void setup() {
      delay(10);
   }
   rightArmSensor->init();
-  //leftArmSensor->init();
+  leftArmSensor->init();
 
 
   //getChamber(RIGHT_CHAMBER)->oscillate(241,245);
@@ -125,8 +131,8 @@ void loop() {
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update(now);
     }
-    //rightArmSensor->update(now);
-    //leftArmSensor->update(now);
+    rightArmSensor->update(now);
+    leftArmSensor->update(now);
 
     // Kill switch
     /*

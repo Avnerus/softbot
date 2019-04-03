@@ -9,6 +9,7 @@ import Idle from './idle'
 import Keyboard from '../common/keyboard'
 import GameController from './game-controller'
 import Synth from './synth'
+import Arms from './arms'
 
 //import {greet} from '../common/breakout/breakout'
 
@@ -73,6 +74,9 @@ export default class  {
        this.keyboard = new Keyboard();
        this.keyboard.init();
 
+       this.arms = new Arms(this.socketController);
+       this.arms.init();
+
        this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
        this.gameController.init();
 
@@ -84,7 +88,6 @@ export default class  {
         })
 
         this.synth = new Synth (this.audio, this.socketController);
-        this.synth.init();
         
 
        //greet("Bitch");
@@ -98,23 +101,40 @@ export default class  {
         this.recognizer.init();
         */
 
-        this.socketController.subscribeToPrefix('S', (data) => {
-            console.log("Sense message!", data);
-            let view = new DataView(data);
-            let value = view.getUint8(1);
-            console.log(value);
-            if (value == 80) {
-                $("#breakout").css("background-color", "yellow");
-            } else {
-
-                $("#breakout").css("background-color", "black");
-            }
-            //this.oscillator.frequency.setValueAtTime(220 + value, this.audio.currentTime);
-            //console.log(value); 
-        })
         this.socketController.subscribeToPrefix('E', (msg) => {
             console.warn("Error: ", msg.slice(1));
         });
+
+        this.socketController.on('button-on', (data) => {
+            console.log("Button-on", data);
+            if (!$('#' + data.id).hasClass("on")) {
+                $('#' + data.id).addClass("on");
+                if (data.id == "button1") {
+                    this.synth.playFreq(495);
+                } else {
+                    this.synth.playFreq(668.68);
+                }
+            }
+        });
+
+        events.on("arm-press", (data) => {
+            console.log("Press " + data.id);
+            if ($('#button' + data.id).hasClass("on")) {
+                $('#button' + data.id).removeClass("on");
+                this.socketController.sendJSONCommand({
+                    command: 'button-off',
+                    id: "button" + data.id
+                });
+                if (data.id == 1 ) {
+                    this.synth.playFreq(556.88);
+                } else {
+                    this.synth.playFreq(742.50);
+                }
+            }
+        })
+        events.on("arm-release", (data) => {
+            console.log("Release " + data.id);
+        })
     }
 
     resize() {

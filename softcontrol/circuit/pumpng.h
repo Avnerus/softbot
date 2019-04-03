@@ -18,6 +18,7 @@ class PumpNg {
         void start();
         void grab();
         void release();
+        bool isOn();
 
     private:
         float _speed;

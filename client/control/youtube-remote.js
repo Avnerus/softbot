@@ -1,7 +1,7 @@
 export default class YoutubeRemote {
-    constructor(socketMessenger, youtubeForm) {
+    constructor(socketController, youtubeForm) {
         console.log("Remote youtub player constructed!")
-        this.socketMessenger = socketMessenger;
+        this.socketController = socketController;
         this.youtubeForm = youtubeForm;
     }
     init() {
@@ -16,7 +16,8 @@ export default class YoutubeRemote {
         });
         this.youtubeForm.submit((event) => {
             console.log("Play youtube!! ", event.currentTarget[0].value);
-            this.socketMessenger.emit('youtube', {
+            this.socketController.sendJSONCommand({
+                command: 'youtube',
                 id: event.currentTarget[0].value
             } );
             event.currentTarget[0].value = "";

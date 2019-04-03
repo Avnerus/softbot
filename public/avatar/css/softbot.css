@@ -45,3 +45,27 @@ body {
     font-size: 48px;
 }
 
+#player { 
+    position: absolute;
+    left: 25%;
+}
+
+#test-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#test-buttons div {
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+    height: 200px;
+    width: 200px;
+    margin: 20px;
+}
+#button1.on {
+    background-color: purple;
+}
+#button2.on {
+    background-color: blue;
+}

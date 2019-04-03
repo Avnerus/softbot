@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "common.h"
 #include "valve.h"
+#include "pumpng.h"
 
 enum CHAMBER_STATE {
   IDLE,
@@ -18,6 +19,7 @@ class Chamber {
             const char name[10],
             Valve* entryValve,
             Valve* releaseValve,
+            PumpNg* pump,
             int pressureSensor,
             uint16_t minPressure,
             uint16_t maxPressure,
@@ -75,6 +77,8 @@ class Chamber {
         bool _oscillating;
         int _oscillateMin;
         int _oscillateMax;
+
+        PumpNg* _pump;
 
         CHAMBER_STATE _state;
 

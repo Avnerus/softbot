@@ -17,17 +17,24 @@ unsigned long lastCheck;
 int step = 0;
 int sampleCount = 50;
 
+float threshold = 60.0;
+float currentThreshold = 60.0;
+
+
 void setup() {
       Serial.begin(9600);
+      delay(3000);
       Serial.println("BME test");
 
       sensor.settings.commInterface = SPI_MODE;
+      sensor.settings.chipSelectPin = 10;
       calibrationStats.clear();
 
       if (sensor.beginSPI(10) == false) { //Begin communication over SPI. Use pin 10 as CS. 
+          /*
           while (1) {
               Serial.println("The sensor did not respond. Please check wiring.");
-          }
+          }*/
       } else {
           Serial.println("BME280 Sensor initalized succesfully.");
           /*
@@ -46,23 +53,40 @@ void loop() {
     if (millis() - lastCheck >= 20) {
         lastCheck = millis();
         float pressure = sensor.readFloatPressure();
-        //Serial.println(pressure); 
         calibrationStats.add(pressure);
 
-        if (calibrationStats.count() == 40) {
-            stdDev = calibrationStats.pop_stdev();
-            if (stdDev < 5.0f) {
-                idlePressure = calibrationStats.average();
-            }
+        if (!pushed && calibrationStats.count() >= 20) {
+           // stdDev = calibrationStats.pop_stdev();
+            //if (stdDev < 0.0f) {
+            idlePressure = calibrationStats.average();
+            //}
+            /*
+            if (pushed) {
+                currentThreshold = threshold * -1.0f;
+            } else {
+                currentThreshold = threshold;
+            }*/
             calibrationStats.clear();
         } 
         if (idlePressure != 0) {
             float diff = pressure - idlePressure;
-            if (pushed && diff < 20) {
+            Serial.print(diff);
+            Serial.print(" - ");
+            Serial.print(pushed);
+            Serial.print(" ( ");
+            Serial.print(currentThreshold);
+            Serial.print(")");
+            Serial.print(" [");
+            Serial.print(pressure);
+            Serial.print(",");
+            Serial.print(idlePressure);
+            Serial.println("]");
+
+            if (pushed && diff < currentThreshold) {
                 pushed = false;
                 Serial.print('R');
             }
-            if (!pushed && diff > 20) {
+            if (!pushed && diff > currentThreshold) {
                 pushed = true;
                 Serial.print('P');
             }

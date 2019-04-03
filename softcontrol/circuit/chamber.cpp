@@ -10,6 +10,7 @@ Chamber::Chamber(
         const char name[10],
         Valve* entryValve,
         Valve* releaseValve,
+        PumpNg* pump,
         int  pressureSensor,
         uint16_t  minPressure,
         uint16_t  maxPressure,
@@ -22,6 +23,7 @@ Chamber::Chamber(
     _minPressure = minPressure;
     _maxPressure = maxPressure;
     _deflationSpeed = deflationSpeed;
+    _pump = pump;
     _destinationPressure = 0;
     _basePressure = 0;
     _lastPressureSense = 0;
@@ -86,7 +88,7 @@ void Chamber::update(unsigned long now) {
                         stop();
                     }
                 }
-                else if (_state == IDLE && _pressure <= _minPressure - PRESSURE_LEEWAY) {
+                else if (_state == IDLE && _pressure <= _minPressure - PRESSURE_LEEWAY && _pump->isOn()) {
                      Logger::Printf("%s Inflating from %d to min pressure %d", _name, _pressure, _minPressure);
                     _destinationPressure = _minPressure;
                      inflate(1.0);

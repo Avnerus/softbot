@@ -36,8 +36,11 @@ void PumpNg::setSpeed(float speed) {
 
         analogWrite(_speedPin,_motorSpeed);
 
-        if (!_on) {
+        if (speed > 0.0 && !_on) {
             start();
+        }
+        else if (speed == 0.0 && _on) {
+            stop();
         }
     }
 }
@@ -57,7 +60,6 @@ void PumpNg::start() {
 }
 
 
-
 void PumpNg::stop() {
     _motorSpeed = 0;
     _speed = 0.0;
@@ -74,5 +76,9 @@ int PumpNg::getMotorSpeed() {
 
 float PumpNg::getSpeed() {
     return _speed;
+}
+
+bool PumpNg::isOn() {
+    return _on;
 }
 

@@ -8,7 +8,7 @@
 
 class Arm {
     public:
-        Arm(int id ,int pin, int threshold);
+        Arm(int id ,int pin, int threshold, bool springy);
         ~Arm();
 
         void init();
@@ -20,9 +20,11 @@ class Arm {
         float _idlePressure;
         int _pin;
         int _id;
-        int _threshold;
+        float _threshold;
+        float _currentThreshold;
         unsigned long _lastCheck;
-        BME280 _sensor;
-        Statistic _calibrationStats; 
+        bool _springy;
+        BME280* _sensor;
+        Statistic* _calibrationStats; 
 };
 #endif

@@ -31,8 +31,8 @@ export default class YoutubePlayer {
         if (this.YouTube) {
             this.player = new this.YouTube.Player(
                 this.playerContainer,{
-                height: '390',
-                width: '640',
+                height: '400',
+                width: '400',
                 videoId: id,
                 events : {
                     onReady: () => {this.onPlayerReady()},
@@ -46,6 +46,7 @@ export default class YoutubePlayer {
 
     onPlayerReady() {
         console.log("Player ready!", this.player);
+        this.player.setVolume(10);
         this.player.playVideo();
     }
 
