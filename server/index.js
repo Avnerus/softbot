@@ -4,12 +4,17 @@ import _ from 'lodash';
 import fs from 'fs';
 import {Server} from 'http'
 import textToSpeech from '@google-cloud/text-to-speech'
+import speech from '@google-cloud/speech'
 import webpack from 'webpack'
 import webpackConfig from '../webpack.config'
 import WebpackMiddleware from 'webpack-dev-middleware'
+import opus from 'node-opus'
+import ogg from 'ogg'
+import wav from 'wav'
 
 import * as MSTTS from './ms-tts' 
 import * as GoogleTranslate from './google-translate'
+import * as Forms from './forms'
 
 //import Signaling from './signaling'
 
@@ -33,6 +38,7 @@ app.use(
         publicPath: webpackConfig.output.publicPath
     })
 );
+app.use(bodyParser.json());
 
 app.get('/api/google-speak',(req, res) => {
     const client = new textToSpeech.TextToSpeechClient();
@@ -87,6 +93,77 @@ app.get('/api/stream', async (req, res) => {
         res.send("Error " + e);
     }
 });
+
+app.post('/transcribe', async function(req, res) {
+    try {
+        const file = fs.createReadStream(await Forms.getFile(req,'audio'));
+        const opusDecodeStream = new opus.Decoder(48000, 2, 4800);
+        const oggDecode = new ogg.Decoder();
+        oggDecode.on('stream', function (stream) {
+          let bufs = [];
+          console.log("Got OGG stream");
+          stream._readableState.highWaterMark = 1;
+          opusDecodeStream.on('format', function (format) {
+            console.log("Raw format:",format);
+            const outputWavStream = new wav.Writer({
+                sampleRate: format.sampleRate,
+                channels: format.channels
+            });
+            //outputWavStream.setEncoding('base64');
+            opusDecodeStream.pipe(outputWavStream);
+            outputWavStream.on('data', (chunk) => {
+                bufs.push(chunk);
+            })
+          });
+          opusDecodeStream.on('end', function (e) {
+            console.log("Finished writing!");
+            const waveBuffer = Buffer.concat(bufs);
+            const base64Wave = waveBuffer.toString('base64');
+            const client = new speech.SpeechClient();
+            const audio = {
+              content: base64Wave,
+            };
+            const config = {
+                enoding: 'LINEAR16', 
+                languageCode: 'en-US',
+                //encoding: 'OGG_OPUS',
+                // sampleRateHertz: 48000,
+                audioChannelCount: 2
+            };
+            const request = {
+              audio: audio,
+              config: config,
+            };
+            client
+            .recognize(request)
+            .then(data => {
+                const response = data[0];
+                console.log(data);
+                const transcription = response.results
+                  .map(result => result.alternatives[0].transcript)
+                  .join('\n');
+                console.log(`Transcription: ${transcription}`);
+                res.send({status: "success", transcript: transcription});
+            })
+            .catch(err => {
+                console.error('ERROR:', err);
+                res.send({status: "error", error: err.toString()});
+            });  
+          }); 
+          opusDecodeStream.on('error', function (err) {
+              console.log("Error decoding opus", err);
+          });
+
+          stream.pipe(opusDecodeStream);
+        });
+
+        file.pipe(oggDecode);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({message: err.toString()})
+    }
+})
 
 server.listen(3080, () => {
     console.log('listening on port 3080!');
