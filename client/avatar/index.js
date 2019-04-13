@@ -11,6 +11,9 @@ import GameController from './game-controller'
 import Synth from './synth'
 import Arms from './arms'
 
+import '../common/css/softbot.css'
+import './css/voice-anim.scss'
+
 //import {greet} from '../common/breakout/breakout'
 
 export default class  {
@@ -88,6 +91,7 @@ export default class  {
         })
 
         this.synth = new Synth (this.audio, this.socketController);
+        window.synth = this.synth;
         
 
        //greet("Bitch");
@@ -118,23 +122,41 @@ export default class  {
         });
 
         events.on("arm-press", (data) => {
-            console.log("Press " + data.id);
-            if ($('#button' + data.id).hasClass("on")) {
-                $('#button' + data.id).removeClass("on");
-                this.socketController.sendJSONCommand({
-                    command: 'button-off',
-                    id: "button" + data.id
-                });
-                if (data.id == 1 ) {
-                    this.synth.playFreq(556.88);
-                } else {
-                    this.synth.playFreq(742.50);
-                }
-            }
+            console.log("Press!!! " + data.id);
+            this.toggleButton(data.id);
+
         })
         events.on("arm-release", (data) => {
             console.log("Release " + data.id);
         })
+      $('.blue').css("animation","updown 1.2s infinite ease-in-out alternate");
+      $('.red').css("animation","updown 1.2s 0.2s infinite ease-in-out alternate");
+      $('.yellow').css("animation","updown 1.2s 0.4s infinite ease-in-out alternate");
+      $('.green').css("animation","updown 1.2s 0.6s infinite ease-in-out alternate");
+
+    }
+    toggleButton(id) {
+        console.log("Toogle!", id);
+        if ($('#button' + id).hasClass("on")) {
+            $('#button' + id).removeClass("on");
+            this.socketController.sendJSONCommand({
+                command: 'button-off',
+                id: "button" + id
+            });
+            if (id == 1 ) {
+                this.synth.playFreq(556.88);
+            } else {
+                this.synth.playFreq(742.50);
+            }
+        }
+        else {
+            $('#button' + id).addClass("on");
+            if (id == 1) {
+                this.synth.playFreq(495);
+            } else {
+                this.synth.playFreq(668.68);
+            }
+        }
     }
 
     resize() {

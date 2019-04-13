@@ -11,6 +11,7 @@ export default class Synth {
         this.gainNode.connect(this.audioContext.destination);
         this.gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
 
+        /*
         this.oscillator = this.audioContext.createOscillator();
         this.oscillator.type = 'sawtooth';
         this.oscillator.frequency.setValueAtTime(50, this.audioContext.currentTime); // value in hertz
@@ -18,18 +19,23 @@ export default class Synth {
         //this.oscillator.start();
 
         window.oscillator = this.oscillator;
-        window.gain = this.gainNode;
+        window.gain = this.gainNode;*/
 
         console.log("Synth playing");
     }
-    playFreq(freq) {
+    recordSound() {
+        this.playFreq(620,{start: 0, type:'sine', end: 0.1});
+        this.playFreq(780,{start:0.05, type: 'sine', end:0.1});
+        this.playFreq(880,{start:0.15, type: 'sine', end:0.1});
+    }
+    playFreq(freq, {start = 0, end = 0.1, type = 'sine'} = {start: 0, end: 0.1, type: 'sine'}) {
         console.log("Play freq", freq);
         let oscillator = this.audioContext.createOscillator();
         oscillator.connect(this.audioContext.destination);
-        oscillator.type = 'sine';
+        oscillator.type = type;
         oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime); // value in hertz
-        oscillator.start();
-        oscillator.stop(this.audioContext.currentTime + 0.1);
+        oscillator.start(this.audioContext.currentTime + start);
+        oscillator.stop(this.audioContext.currentTime + end);
     }
     onSensorMessage(data) {
         let value = new Uint8Array(data,1,1)[0];

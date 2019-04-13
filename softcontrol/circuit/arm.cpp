@@ -44,7 +44,7 @@ void Arm::update(unsigned long now) {
     if (_active) {
         if (now - _lastCheck >= CHECK_INTERVAL) {
             _lastCheck = now;
-            float pressure = abs(_sensor->readFloatPressure());
+            float pressure = (_sensor->readFloatPressure());
             _calibrationStats->add(pressure);
             if (!(_pushed && _springy) && (_calibrationStats->count() >= CALIBRATION_SAMPLES)) {
                 //float stdDev = _calibrationStats.pop_stdev();

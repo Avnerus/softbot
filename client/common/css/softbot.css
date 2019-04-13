@@ -1,0 +1,71 @@
+body {
+    margin: 0px;
+    background-color: #000000;
+    overflow: hidden;
+}
+
+#game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#loading-image {
+    margin: auto;
+}
+#avatar {
+    height: 50%;
+    background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#avatar img {
+    height: 45vh;
+}
+#interface {
+    height: 50%;
+    background-color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#breakout {
+    height: 50%;
+    background-color: black;
+}
+
+#interface.on {
+    background-color: purple;
+}
+#text-output {
+    color: white;
+    font-size: 48px;
+}
+
+#player { 
+    position: absolute;
+    left: 25%;
+}
+
+#test-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#test-buttons div {
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+    height: 200px;
+    width: 200px;
+    margin: 20px;
+}
+#button1.on {
+    background-color: purple;
+}
+#button2.on {
+    background-color: blue;
+}

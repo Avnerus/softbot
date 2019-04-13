@@ -30,7 +30,8 @@ void setup() {
       sensor.settings.chipSelectPin = 10;
       calibrationStats.clear();
 
-      if (sensor.beginSPI(10) == false) { //Begin communication over SPI. Use pin 10 as CS. 
+     // if (sensor.beginSPI(10) == false) { //Begin communication over SPI. Use pin 10 as CS. 
+      if (sensor.beginSPI(28) == false) { //Begin communication over SPI. Use pin 10 as CS. 
           /*
           while (1) {
               Serial.println("The sensor did not respond. Please check wiring.");

@@ -15,6 +15,8 @@ import Console from './console'
 import Display from './display'
 import Keyboard from '../common/keyboard'
 
+import '../common/css/softbot.css'
+
 export default class Main {
     constructor() {
         console.log("Control Main constructed!")
