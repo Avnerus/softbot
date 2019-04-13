@@ -61,6 +61,7 @@ export default class Listener {
         })
         .catch((err) => {
             console.log("Error posting blob", err);
+            events.emit("transcript", {from: "Error", text: err.error});
         })
     }
 }

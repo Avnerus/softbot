@@ -147,21 +147,27 @@ app.post('/transcribe', async function(req, res) {
             })
             .catch(err => {
                 console.error('ERROR:', err);
-                res.send({status: "error", error: err.toString()});
+                res.status(500).send({status: "error", error: err.toString()});
             });  
           }); 
           opusDecodeStream.on('error', function (err) {
               console.log("Error decoding opus", err);
+              res.status(500).send({status: "error", error: "Error decoding opus: " + err.toString()});
           });
 
           stream.pipe(opusDecodeStream);
+        });
+
+        oggDecode.on('error', function (err) {
+            console.log("Error decoding ogg", err);
+            res.status(500).send({status: "error", error: "Error decoding ogg: " + err.toString()});
         });
 
         file.pipe(oggDecode);
     }
     catch (err) {
         console.log(err);
-        res.status(500).send({message: err.toString()})
+        res.status(500).send({status: "error", error: err.toString()})
     }
 })
 
