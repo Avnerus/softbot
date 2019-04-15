@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
-        <link type="text/css" href="css/control.css" rel="stylesheet">
         <!--link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet"-->
         <link rel="stylesheet" href="css/jquery-ui.css">
         <link rel="stylesheet" href="css/font-awesome.min.css">
@@ -89,17 +88,17 @@
                                 <button id="start-recognize-button" type="button" class="recognize-button btn-primary">START RECOGNIZING SPEECH</button>
                                 <button id="stop-recognize-button" type="button" class="recognize-button btn-danger" style="display:none;">STOP RECOGNIZING SPEECH</button>
                                 <label for="recognize-model">Model:</label>
-                                <select class="form-control" id="recognize-model">
-                                    <option>en-US_BroadbandModel</option>
-                                    <option>ja-JP_BroadbandModel</option>
-                                    <option>zh-CN_BroadbandModel</option>
+                                <select name="model" class="form-control" id="recognize-model">
+                                    <option>en-US</option>
+                                    <option>fi-FI</option>
+                                    <option>he-IL</option>
                                 </select>
                                 <label for="recognize-translate">Translate:</label>
-                                <select class="form-control" id="recognize-translate">
-                                    <option>-</option>
+                                <select name="translate" class="form-control" id="recognize-translate">
+                                    <option value="">-</option>
                                     <option>en</option>
-                                    <option>ja</option>
-                                    <option>zh</option>
+                                    <option>fi</option>
+                                    <option>he</option>
                                 </select>
                             </div>
                         </form>

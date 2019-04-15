@@ -96,6 +96,10 @@ app.get('/api/stream', async (req, res) => {
 
 app.post('/transcribe', async function(req, res) {
     try {
+        if (!req.query.model) {
+            res.send(500,"Invalid request");
+            return;
+        }
         const file = fs.createReadStream(await Forms.getFile(req,'audio'));
         const opusDecodeStream = new opus.Decoder(48000, 2, 4800);
         const oggDecode = new ogg.Decoder();
@@ -125,9 +129,7 @@ app.post('/transcribe', async function(req, res) {
             };
             const config = {
                 enoding: 'LINEAR16', 
-                languageCode: 'en-US',
-                //encoding: 'OGG_OPUS',
-                // sampleRateHertz: 48000,
+                languageCode: req.query.model,
                 audioChannelCount: 2
             };
             const request = {
@@ -136,14 +138,23 @@ app.post('/transcribe', async function(req, res) {
             };
             client
             .recognize(request)
-            .then(data => {
+            .then(async data => {
                 const response = data[0];
                 console.log(data);
                 const transcription = response.results
                   .map(result => result.alternatives[0].transcript)
                   .join('\n');
                 console.log(`Transcription: ${transcription}`);
-                res.send({status: "success", transcript: transcription});
+                let returnData = {
+                    "status": "success",
+                    "transcription": transcription
+                };
+                if (req.query.translate && req.query.translate.length > 0) {
+                    let translation = await GoogleTranslate.translate(transcription, req.query.translate);
+                    console.log(`Translation: ${translation}`);
+                    returnData.translation = translation;
+                }
+                res.send(returnData);
             })
             .catch(err => {
                 console.error('ERROR:', err);

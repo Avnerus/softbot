@@ -15,7 +15,7 @@ import Console from './console'
 import Display from './display'
 import Keyboard from '../common/keyboard'
 
-import '../common/css/softbot.css'
+import './css/control.css'
 
 export default class Main {
     constructor() {

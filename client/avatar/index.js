@@ -3,7 +3,7 @@ import EventEmitter from 'events'
 import SocketController  from '../common/socket-controller'
 import Voice from './voice';
 import YoutubePlayer from './youtube-player'
-//import Recognizer from './recognizer'
+import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
@@ -11,7 +11,7 @@ import GameController from './game-controller'
 import Synth from './synth'
 import Arms from './arms'
 
-import '../common/css/softbot.css'
+import './css/softbot.css'
 import './css/voice-anim.scss'
 
 //import {greet} from '../common/breakout/breakout'
@@ -45,17 +45,13 @@ export default class  {
         this.expression = new Expression(this.socketController);
         this.expression.init();
 
-        /*
-        this.recognizer = new Recognizer(
-            this.socketController,
-            this.expression, 
-            $('#interface')
-        );*/
 
         this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
         this.youtubePlayer.init();
 
         window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        this.synth = new Synth (this.audio, this.socketController);
+        window.synth = this.synth;
 
         this.voice = new Voice(
             this.audio,
@@ -65,6 +61,13 @@ export default class  {
         );
         this.voice.init();
 
+        this.recognizer = new Recognizer(
+            this.socketController,
+            this.expression, 
+            this.synth,
+            $('#voice-anim')
+        );
+        this.recognizer.init();
 
         this.idle = new Idle(this.socketController, this.expression);
      //   this.idle.init();
@@ -90,8 +93,6 @@ export default class  {
             $("#audio")[0].play();
         })
 
-        this.synth = new Synth (this.audio, this.socketController);
-        window.synth = this.synth;
         
 
        //greet("Bitch");
@@ -121,6 +122,7 @@ export default class  {
             }
         });
 
+        /*
         events.on("arm-press", (data) => {
             console.log("Press!!! " + data.id);
             this.toggleButton(data.id);
@@ -128,21 +130,13 @@ export default class  {
         })
         events.on("arm-release", (data) => {
             console.log("Release " + data.id);
-        })
-      $('.blue').css("animation","updown 1.2s infinite ease-in-out alternate");
-      $('.red').css("animation","updown 1.2s 0.2s infinite ease-in-out alternate");
-      $('.yellow').css("animation","updown 1.2s 0.4s infinite ease-in-out alternate");
-      $('.green').css("animation","updown 1.2s 0.6s infinite ease-in-out alternate");
+        })*/
 
     }
     toggleButton(id) {
         console.log("Toogle!", id);
         if ($('#button' + id).hasClass("on")) {
             $('#button' + id).removeClass("on");
-            this.socketController.sendJSONCommand({
-                command: 'button-off',
-                id: "button" + id
-            });
             if (id == 1 ) {
                 this.synth.playFreq(556.88);
             } else {
@@ -161,6 +155,9 @@ export default class  {
 
     resize() {
         //this.breakout.resize();
+    }
+    animate(dt) {
+        this.arms.update(dt);
     }
 
 }

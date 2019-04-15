@@ -28,6 +28,11 @@ export default class Synth {
         this.playFreq(780,{start:0.05, type: 'sine', end:0.1});
         this.playFreq(880,{start:0.15, type: 'sine', end:0.1});
     }
+    stopRecordSound() {
+        this.playFreq(820,{start: 0, type:'sine', end: 0.1});
+        this.playFreq(580,{start:0.05, type: 'sine', end:0.1});
+        this.playFreq(480,{start:0.15, type: 'square', end:0.1});
+    }
     playFreq(freq, {start = 0, end = 0.1, type = 'sine'} = {start: 0, end: 0.1, type: 'sine'}) {
         console.log("Play freq", freq);
         let oscillator = this.audioContext.createOscillator();

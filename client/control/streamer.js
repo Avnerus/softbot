@@ -20,7 +20,7 @@ export default class Streamer {
                         this.getStream();
                     },
                     onmessage: (msg, jsep) => {
-                        console.log("Janus message!", msg, jsep);
+                        //console.log("Janus message!", msg, jsep);
                         let result = msg["result"];
                         if(result) {
                             if(result["status"]) {
@@ -55,6 +55,7 @@ export default class Streamer {
                     onremotestream: (stream) => {
                         console.log("Got remote stream!", stream);
                         this.stream = stream;
+                        events.emit("transcript", {from: "System", text: "Vision acquired!"});
                         Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
                         if (this.recorder) {
@@ -69,7 +70,6 @@ export default class Streamer {
             $("#waitingvideo").bind("playing",  () => {
                 console.log("Video playing!", this.stream, this.stream.currentTime);
                 if (typeof(this.stream.currentTime) == 'undefined' || this.stream.currentTime > 1) {
-                    events.emit("transcript", {from: "System", text: "Vision acquired!"});
                     $("#loading").hide();
                     $("#joystick").show();
                     // For some reason this is needed for the joystick to start functioning
