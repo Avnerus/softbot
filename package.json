@@ -66,6 +66,7 @@
     "reconnecting-websocket": "^4.1.10",
     "recordrtc": "^5.4.1",
     "stats.js": "^0.17.0",
+    "tone": "^13.4.9",
     "typed.js": "^2.0.2",
     "wav": "^1.0.2",
     "xmlbuilder": "^11.0.0",

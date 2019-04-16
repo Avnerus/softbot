@@ -1,4 +1,6 @@
+import Tone from 'tone'
 import EventEmitter from 'events'
+
 //import SocketMessenger from '../common/socket-messenger'
 import SocketController  from '../common/socket-controller'
 import Voice from './voice';
@@ -49,9 +51,14 @@ export default class  {
         this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
         this.youtubePlayer.init();
 
-        window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        //window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();
+        //Tone.setContext(this.audio);
+        Tone.start();
+        this.audio = null;
         this.synth = new Synth (this.audio, this.socketController);
+        this.synth.init();
         window.synth = this.synth;
+        window.Tone = Tone;
 
         this.voice = new Voice(
             this.audio,
