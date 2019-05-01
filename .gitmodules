@@ -1,0 +1,3 @@
+[submodule "Hitodama-valves-board"]
+	path = Hitodama-valves-board
+	url = https://github.com/autotel/Hitodama-valves-board
