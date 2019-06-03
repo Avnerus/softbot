@@ -10,3 +10,11 @@ console.log("Loading control");
 define('control-layout', ControlLayout);
 define('control-root', ControlRoot);
 define('sign-in', SignIn);
+
+if (module.hot) {
+    console.log("We have hot");
+    module.hot.accept('./control-root.js', function() {
+        define('control-root', ControlRoot);
+    })
+}
+

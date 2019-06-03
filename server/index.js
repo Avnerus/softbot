@@ -8,6 +8,8 @@ import speech from '@google-cloud/speech'
 import webpack from 'webpack'
 import webpackConfig from '../webpack.config'
 import WebpackMiddleware from 'webpack-dev-middleware'
+import WebpackHotMiddleware from 'webpack-hot-middleware'
+
 import opus from 'node-opus'
 import ogg from 'ogg'
 import wav from 'wav'
@@ -38,6 +40,7 @@ app.use(
         publicPath: webpackConfig.output.publicPath
     })
 );
+app.use(WebpackHotMiddleware(compiler));
 app.use(bodyParser.json());
 
 app.get('/api/google-speak',(req, res) => {

@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
         "avatar": "./client/avatar.js",
-        "control": "./client/control",
+        "control": ["./client/control","webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000"],
         "admin": "./client/admin.js"
   },
   output: {
@@ -16,7 +16,8 @@ module.exports = {
   devServer: {
       contentBase: path.join(__dirname, "public"),
       compress: true,
-      port: 9000
+      port: 9000,
+      hot: true
   },
   plugins: [
      new webpack.HotModuleReplacementPlugin()
