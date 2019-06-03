@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+    <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <title>Test</title>
+    </head>
+    <body>
+        <div id="container">
+        </div>
+
+        <script>
+        function blobToArrayBuffer(blob) {
+            const fileReader = new FileReader();
+
+            return new Promise((resolve, reject) => {
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = reject;
+
+                fileReader.readAsArrayBuffer(blob);
+            });
+        };
+
+        window.onload = function() {
+
+                const audio = new (window.AudioContext || window.webkitAudioContext)();
+                let uri  = '/api/ms-speak';
+                console.log("Ms speak");
+                let urlParams = new URLSearchParams(window.location.search);
+                let text = urlParams.get('text')
+                uri += "?text=" + text;
+                if (urlParams.has('target')) {
+                    uri += "&target=" + urlParams.get('target');
+                }
+                const pitchShifter = new PitchShifter(1.5, 0.5, 512);
+                const pitchShiftNode = audio.createScriptProcessor(512, 1, 1);
+                pitchShiftNode.onaudioprocess = (e) => pitchShifter.onaudioprocess(e);
+                pitchShiftNode.connect(audio.destination);
+
+                fetch(uri)
+                .then(res => res.blob())
+                .then(blob => blobToArrayBuffer(blob))
+                .then((arraybuffer) => {
+                    console.log("ArrayBuffer", arraybuffer);
+                    let source  = audio.createBufferSource();
+                    console.log("Decoding");
+                    audio.decodeAudioData(arraybuffer, (buffer) => {
+                        source.buffer = buffer;
+                        //source.connect(this.pitchShiftNode);
+                        source.connect(pitchShiftNode);
+                        console.log("Decoded", source);
+                        source.start();
+                      },
+                      function(e){ console.log("Error with decoding audio data" + e.err); 
+                    });
+
+                })
+        };
+        class PitchShifter {
+            constructor(pitchRatio, overlapRatio, grainSize) {
+                this.pitchRatio = pitchRatio;
+                this.overlapRatio = overlapRatio;
+                this.grainSize = grainSize;
+
+                this.buffer = new Float32Array(grainSize * 2);
+                this.grainWindow = hannWindow(grainSize);
+            }
+            onaudioprocess(event) {
+                // console.log("Audio process!!");
+                let inputData = event.inputBuffer.getChannelData(0);
+                let outputData = event.outputBuffer.getChannelData(0);
+                if (inputData.length > 0) {
+                    for (let i = 0; i < inputData.length; i++) {
+
+                        // Apply the window to the input buffer
+                        inputData[i] *= this.grainWindow[i];
+
+                        // Shift half of the buffer
+                        this.buffer[i] = this.buffer[i + this.grainSize];
+
+                        // Empty the buffer tail
+                        this.buffer[i + this.grainSize] = 0.0;
+                    }
+
+                    // Calculate the pitch shifted grain re-sampling and looping the input
+                    let grainData = new Float32Array(this.grainSize * 2);
+                    for (let i = 0, j = 0.0;
+                         i < this.grainSize;
+                         i++, j += this.pitchRatio) {
+
+                        let index = Math.floor(j) % this.grainSize;
+                        let a = inputData[index];
+                        let b = inputData[(index + 1) % this.grainSize];
+                        grainData[i] += linearInterpolation(a, b, j % 1.0) * this.grainWindow[i];
+                    }
+
+                    // Copy the grain multiple times overlapping it
+                    for (let i = 0; i < this.grainSize; i += Math.round(this.grainSize * (1 - this.overlapRatio))) {
+                        for (let j = 0; j <= this.grainSize; j++) {
+                            this.buffer[i + j] += grainData[j];
+                        }
+                    }
+
+                    // Output the first half of the buffer
+                    for (let i = 0; i < this.grainSize; i++) {
+                        outputData[i] = this.buffer[i];
+                    }
+                }
+
+            }
+
+        }
+
+        function hannWindow (length) {
+                let window = new Float32Array(length);
+                for (var i = 0; i < length; i++) {
+                    window[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / (length - 1)));
+                }
+                return window;
+        };
+
+        function linearInterpolation (a, b, t) {
+                return a + (b - a) * t;
+        };
+
+        </script>
+    </body>
+</html>

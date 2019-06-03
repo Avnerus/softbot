@@ -16,5 +16,11 @@ if (module.hot) {
     module.hot.accept('./control-root.js', function() {
         define('control-root', ControlRoot);
     })
+    module.hot.accept('./sign-in.js', function() {
+        define('sign-in', SignIn);
+    })
+    module.hot.accept('./control-layout.js', function() {
+        define('control-layout', ControlLayout);
+    })
 }
 
