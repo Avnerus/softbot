@@ -16,7 +16,7 @@ bool calibrated = false;
 bool pushed = false;
 float stdDev = 0;
 
-const int SPI_PORT = 28;
+const int SPI_PORT = 52;
 
 
 void setup() {
@@ -31,7 +31,7 @@ void setup() {
   actionStats.clear();
   bool worked = false;
   sensor.beginSPI(SPI_PORT);
-/*
+  /*
   if (sensor.beginSPI(SPI_PORT) == false) { //Begin communication over SPI. Use pin 10 as CS.
     // Freeze
       while (!worked) {
@@ -40,11 +40,10 @@ void setup() {
       }
   } else {
     Serial.println("BME280 Sensor initalized succesfully.");
-    /*
 
-      sensor.setTempOverSample(0); //0 to 16 are valid. 0 disables temp sensing. See table 24.
-      sensor.setPressureOverSample(1); //0 to 16 are valid. 0 disables pressure sensing. See table 23.
-      sensor.setHumidityOverSample(0); //0 to 16 are valid. 0 disables humidity sensing. See table 19.
+  //    sensor.setTempOverSample(0); //0 to 16 are valid. 0 disables temp sensing. See table 24.
+    //  sensor.setPressureOverSample(1); //0 to 16 are valid. 0 disables pressure sensing. See table 23.
+     // sensor.setHumidityOverSample(0); //0 to 16 are valid. 0 disables humidity sensing. See table 19 
     
 
     //sensor.setMode(MODE_NORMAL); //MODE_SLEEP, MODE_FORCED, MODE_NORMAL is valid. See 3.3

@@ -1,9 +1,9 @@
 //import SimpleWebRTC from 'simplewebrtc'
-console.log("Loading Control...");
+console.log("Loading Admin...");
 let main = null;
 let startTime = null;
 
-import ('./control/main')
+import ('./admin/main')
 .then((Main) => {
 
     main = new Main.default();

@@ -4,7 +4,7 @@ void setup() {
 }
 
 void loop() {
-    int pressure = analogRead(A20);
+    int pressure = analogRead(A15);
     Serial.println(pressure);
-    delay(50);
+    delay(100);
 }

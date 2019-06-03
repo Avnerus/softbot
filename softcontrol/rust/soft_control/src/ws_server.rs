@@ -17,10 +17,14 @@ use soft_error::SoftError;
 use Config;
 use game;
 
+const CONTROL_ROLE : usize = 0;
+const AVATAR_ROLE : usize = 1;
+const ADMIN_ROLE : usize = 2;
+
 struct ServerState {
+    soft_admin: Option<Sender>,
     soft_controller: Option<Sender>,
     soft_avatar: Option<Sender>,
-    broadcaster: Option<Sender>,
     tokens: HashMap<Token, u8>,
     game: Option<JoinHandle<()>>,
     game_tx: Option<mpsc::Sender<Vec<u8>>>,
@@ -55,21 +59,29 @@ fn handle_message(
     if command == 'R' {
         let role = data[1];
         println!("Register command role {}", role);
-        if (role as usize <= 1) {
-            let targets = [&mut state.soft_controller,&mut state.soft_avatar];
-            if let Some(soft_target) = targets[role as usize] {
-                return Err(SoftError::new("Cannot register - user already connected!"));
-            } else {
-                *(targets[role as usize]) =  Some(server.ws.clone());
-                 state.tokens.insert(server.ws.token(), role);
-                 println!("Registration successful");
-                 if role == 1 {
-                     if let Some(sc) = targets[0] {
-                         println!("Notifying controller");
-                         sc.send("IAvatar connected!").unwrap();
-                     }
+        match role {
+            0 ..= 2 => {
+                let targets = [
+                    &mut state.soft_controller,
+                    &mut state.soft_avatar,
+                    &mut state.soft_admin
+                ];
+                if let Some(soft_target) = targets[role as usize] {
+                    return Err(SoftError::new("Cannot register - user already connected!"));
+                } else {
+                    *(targets[role as usize]) =  Some(server.ws.clone());
+                     state.tokens.insert(server.ws.token(), role);
+                     println!("Registration successful");
+                     if role == 1 {
+                         if let Some(sc) = targets[0] {
+                             println!("Notifying controller");
+                             sc.send("IAvatar connected!").unwrap();
+                         }
+                    }
                 }
             }
+
+            _ => return Err(SoftError::new("Unknown role"))
         }
     }
     else {
@@ -206,8 +218,8 @@ pub fn start(
 
     let state = Arc::new(Mutex::new(ServerState {
         soft_controller: None,
+        soft_admin: None,
         soft_avatar: None,
-        broadcaster: None,
         tokens: HashMap::new(),
         game: None,
         game_tx: None,
@@ -215,29 +227,6 @@ pub fn start(
     }));
 
     let comm_state = state.clone();
-
-    /*
-    let comm_thread = thread::spawn(move || {
-        while let Ok(mut msg) = comm_in.recv() {
-            let role = msg[0];
-            println!("Comm message! to {}",role);
-            let mut state = &mut comm_state.lock().unwrap();
-            let handle = match role {
-                0 => & state.soft_controller,
-                1 => & state.soft_avatar,
-                2 => & state.broadcaster,
-                _ => & none
-            };
-            if let Some(soft_target) = handle {
-               println!("Sending!");
-               msg.remove(0);
-               soft_target.send(msg).unwrap();
-            } else {
-               println!("ERROR, Invalid comm target");
-            }
-        }
-    }); */
-
 
     let sensing_state = state.clone();
 

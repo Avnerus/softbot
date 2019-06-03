@@ -48,7 +48,7 @@ export default class  {
         this.expression.init();
 
 
-        this.youtubePlayer = new YoutubePlayer(this.socketController, 'player');
+        this.youtubePlayer = new YoutubePlayer(this.socketController, 'game');
         this.youtubePlayer.init();
 
         //window.audio = this.audio = new (window.AudioContext || window.webkitAudioContext)();

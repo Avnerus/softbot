@@ -4,7 +4,8 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
         "avatar": "./client/avatar.js",
-        "control": "./client/control.js",
+        "control": "./client/control",
+        "admin": "./client/admin.js"
   },
   output: {
     path: path.resolve(__dirname, "public"),
