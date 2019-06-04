@@ -37,12 +37,22 @@ module.exports = {
         },
        {
          test: /\.css$/,
-         use: ['style-loader', 'css-loader']
+         use: ['to-string-loader', 'css-loader']
        },
        {
           test: /\.scss$/,
           use: ['style-loader', 'css-loader', 'sass-loader']
-       }
+       },
+          {
+              test: /\.(svg)$/,
+              use: {
+                loader: 'url-loader',
+                options: {
+                  limit: 22000,
+                  name: 'assets/[name]-[hash].[ext]'
+                }
+              }
+          }
       ]
   }
 };

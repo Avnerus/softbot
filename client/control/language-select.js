@@ -1,25 +1,29 @@
-import { define, html } from 'hybrids';
-
-import ReactFlagsSelect from 'react-flags-select';
-//import css module
-//import 'react-flags-select/css/react-flags-select.css';
+import Element, { h, setProps } from '@skatejs/element-react';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function reactify(fn) {
-  return (host) => {
-    const Component = fn(host);
-    return (host, target) => ReactDOM.render(Component, target);
-  }
+import Select from 'react-select';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
+
+class LanguageSelect extends Element {
+    attachShadow() {
+      return this;
+    }
+    render() {
+        return (
+            <Select
+                options={options}
+            />
+        )
+    }
 }
 
-const LangaugeSelect =  {
-    render: reactify(({}) => 
-        <h1>hello</h1>
-    )
-}
-
-define('language-select', LangaugeSelect);
+customElements.define('language-select', LanguageSelect);
 
 
