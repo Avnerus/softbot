@@ -9,9 +9,9 @@ const signInClick = () => {
 } 
 
 export default {
-    render: render(({state}) => html`
+    render: ({state}) => html`
         <style>
-            sign-in {
+            :host {
                 width: 600px;
                 height: 600px;
                 background-color: orange;
@@ -29,10 +29,10 @@ export default {
             <h1>Welcome</h1>
         </div>
         <div class="language-select">
-            <language-select></language-select>
+            <language-select languages=${['us','ar']}></language-select>
         </div>
         <div>
             <button onclick=${signInClick}> Change phase </button>
         </div>
-     `, {shadowRoot: false})
+     `
 }

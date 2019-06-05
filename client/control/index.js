@@ -1,9 +1,7 @@
 import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
-import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
-
+//import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
 import { define } from 'hybrids';
-
 import ControlLayout from './control-layout'
 import ControlRoot from './control-root'
 import SignIn from './sign-in'

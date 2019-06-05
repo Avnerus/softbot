@@ -1,10 +1,10 @@
 import { html, render } from 'hybrids';
 
 export default {
-    render: render(({state}) => html`
+    render: ({state}) => html`
 
         <style>
-            control-layout {
+            :host {
                 width: 100vw;
                 height: 100vh;
                 position: absolute;
@@ -21,5 +21,5 @@ export default {
         </style>
         <slot name="content">
         </slot>
-     `, {shadowRoot: false})
+     `
 }

@@ -1,29 +1,44 @@
-import Element, { h, setProps } from '@skatejs/element-react';
+import { define, html, render } from 'hybrids'
+import HighSelect from 'high-select/lib/high-select.js'
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+const language = "us";
 
-import Select from 'react-select';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
 
-class LanguageSelect extends Element {
-    attachShadow() {
-      return this;
-    }
-    render() {
-        return (
-            <Select
-                options={options}
-            />
-        )
-    }
-}
+const LanguageSelect =  {
+    flags : {},
+    languages: {
+        connect: (host, key, invalidate) => {
+            console.log("Connect languages?", host, key, host[key]);
+        },
+        set: async (host, value, lastValue) => {
+          console.log("Set languages?", value);
+          const flags = {};
+          value.forEach(async (lang) => {
+              flags[lang] = (await import(`svg-country-flags/svg/${lang}.svg`)).default
+          })
+          console.log("Done", flags['us']);
+          host.flags = flags;
+          return value;
+        }
+    },
+    render: ({languages, flags}) => {
+        console.log("Render?");
+    return html`
+    <style>
+       img.flag-select { 
+           width: 50px;
+           height: 50px;
+       }
+    </style>
+    <high-select>
+        <high-option> 
+            <img src=${flags['us']}>
+        </high-option>
+    </high-select>
+   `
+}}
 
-customElements.define('language-select', LanguageSelect);
+define('language-select', LanguageSelect);
 
 
