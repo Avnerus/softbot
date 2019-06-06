@@ -1,43 +1,39 @@
 import { define, html, render } from 'hybrids'
-import HighSelect from 'high-select/lib/high-select.js'
-
-const language = "us";
-
-
+import 'high-select/lib/high-select.js'
 
 const LanguageSelect =  {
     flags : {},
     languages: {
-        connect: (host, key, invalidate) => {
-            console.log("Connect languages?", host, key, host[key]);
-        },
-        set: async (host, value, lastValue) => {
+        set: (host, value, lastValue) => {
           console.log("Set languages?", value);
           const flags = {};
           value.forEach(async (lang) => {
-              flags[lang] = (await import(`svg-country-flags/svg/${lang}.svg`)).default
+            flags[lang] = require(`svg-country-flags/svg/${lang}.svg`);
           })
-          console.log("Done", flags['us']);
           host.flags = flags;
           return value;
         }
     },
-    render: ({languages, flags}) => {
-        console.log("Render?");
-    return html`
+    render: ({languages, flags}) => html`
     <style>
        img.flag-select { 
-           width: 50px;
-           height: 50px;
+           width: var(--size, 50px);
+           height: var(--size, 50px);
+       }
+       high-select {
+           width: var(--size, 50px);
+           height: var(--size, 50px);
        }
     </style>
     <high-select>
-        <high-option> 
-            <img src=${flags['us']}>
-        </high-option>
+        ${Object.keys(flags).map(flag => html`
+            <high-option> 
+                <img class="flag-select" src=${flags[flag]}>
+            </high-option>`
+        )}
     </high-select>
    `
-}}
+}
 
 define('language-select', LanguageSelect);
 

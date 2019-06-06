@@ -24,6 +24,9 @@ export default {
             .language-select {
                 width: 300px;
             }
+            language-select {
+                --size: 100px;
+            }
         </style>
         <div>
             <h1>Welcome</h1>

@@ -3,7 +3,7 @@ import store, {connect, changePhase, PHASE} from './state'
 import SignIn from './sign-in'
 
 export default {
-    phase: /*PHASE.SIGN_IN,*/  connect(store, (state) => state.phase),
+    phase: connect(store, (state) => state.phase),
     render: render(({phase}) => 
         html`
         ${phase == PHASE.SIGN_IN && html`<sign-in></sign-in>`}

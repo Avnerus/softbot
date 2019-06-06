@@ -46,7 +46,7 @@ module.exports = {
           {
               test: /\.(svg)$/,
               use: {
-                loader: 'url-loader',
+                loader: 'file-loader',
                 options: {
                   limit: 22000,
                   name: 'assets/[name]-[hash].[ext]'
