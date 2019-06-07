@@ -1,12 +1,15 @@
 import { createStore } from 'redux';
 
+import SocketController from '../common/socket-controller'
+
 export const PHASE = {
     SIGN_IN: 1,
     HUD: 2
 }
 
 const reducer = (state = {
-    phase: PHASE.SIGN_IN
+    phase: PHASE.SIGN_IN,
+    socketController: null
 }, action) => {
   console.log("Reducer?", action);
   switch (action.type) {
@@ -28,6 +31,11 @@ export const changePhase = (value = 1) => ({
   type: 'CHANGE_PHASE',
   value,
 });
+
+export const connectToSocket = (host) => ({
+    type: 'CONNECT_SOCKET',
+    host
+})
 
 export const connect = (store, mapState) => ({
   get: mapState ? () => mapState(store.getState()) : () => store.getState(),

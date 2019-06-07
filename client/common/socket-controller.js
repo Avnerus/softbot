@@ -18,7 +18,9 @@ export default class SocketController {
     }
     onConnect() {
         console.log("Socket connected!");
-        events.emit("socket_connected", this.socket);
+        if (events) {
+            events.emit("socket_connected", this.socket);
+        }
     }
     emit(message, args) {
         console.log("Sending message ", message);

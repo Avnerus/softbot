@@ -153,10 +153,11 @@ export default {
                 height: auto;
             }
             .wait {
+                padding: 20px;
                 font-size: 100px;
                 position: absolute;
-                left: 100px;
-                top: 100px;
+                left: 25%;
+                top: 25%;
             }
         </style>
         <div id="video-container">
