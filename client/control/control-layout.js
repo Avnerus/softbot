@@ -16,10 +16,18 @@ export default {
                 align-items: center;
                 justify-content: center;
 
-                background-color: #3af8ffba;
+                background-color: #fdffff;
+
+				font-family: Roboto;
             }
+			::slotted(div) {
+				width: 90vw;
+				height: 95vh;
+				background-color: #f7dbff;
+				border-radius: 40px;
+			}
         </style>
-        <slot name="content">
-        </slot>
+		<slot name="content">
+		</slot>
      `
 }

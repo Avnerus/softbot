@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 
 export const PHASE = {
     SIGN_IN: 1,
-    CHOOSE_IMAGE: 2
+    HUD: 2
 }
 
 const reducer = (state = {

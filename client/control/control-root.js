@@ -6,7 +6,14 @@ export default {
     phase: connect(store, (state) => state.phase),
     render: render(({phase}) => 
         html`
-        ${phase == PHASE.SIGN_IN && html`<sign-in></sign-in>`}
-        ${phase == PHASE.CHOOSE_IMAGE && html`<h1>choose image!</h1>`}
+		<style>
+			:host {
+				display: inline-block;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+			${phase == PHASE.SIGN_IN && html`<sign-in></sign-in>`}
+			${phase == PHASE.HUD && html`<hitodama-hud></hitodama-hud>`}
      `, {shadowRoot :true})
 }
