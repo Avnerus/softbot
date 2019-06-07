@@ -5,13 +5,13 @@ import { define } from 'hybrids';
 import ControlLayout from './control-layout'
 import ControlRoot from './control-root'
 import SignIn from './sign-in'
-import Hud from './hud'
+import HitodamaHUD from './hitodama-hud'
 
 
 define('control-layout', ControlLayout);
 define('control-root', ControlRoot);
 define('sign-in', SignIn);
-define('hitodama-hud', Hud);
+define('hitodama-hud', HitodamaHUD);
 
 console.log("Loading control");
 
@@ -26,8 +26,8 @@ if (module.hot) {
     module.hot.accept('./control-layout.js', function() {
         define('control-layout', ControlLayout);
     })
-    module.hot.accept('./hud.js', function() {
-        define('hitodama-hud', SignIn);
+    module.hot.accept('./hitodama-hud.js', function() {
+        define('hitodama-hud', HitodamaHUD);
     })
 }
 

@@ -85,6 +85,7 @@
     "tone": "^13.4.9",
     "typed.js": "^2.0.2",
     "wav": "^1.0.2",
+    "webrtc-adapter": "^7.2.4",
     "x-tag": "^2.0.3-beta",
     "xmlbuilder": "^11.0.0",
     "youtube-iframe": "^1.0.3"

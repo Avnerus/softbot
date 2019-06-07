@@ -3,7 +3,8 @@ import store, {changePhase, PHASE} from './state'
 
 import './language-select'
 
-const signInClick = () => {
+const signInClick = (host, e) => {
+	e.preventDefault();
     store.dispatch(changePhase(PHASE.HUD))
 } 
 
@@ -64,10 +65,10 @@ export default {
 						<language-select languages=${['us','ar']}></language-select>
 					</span>
 				</div>
+				<div id="teleport-button">
+					<button type="submit" onclick=${signInClick}>💫</button>
+				</div>
             </form>
-        </div>
-        <div id="teleport-button">
-            <button onclick=${signInClick}>💫</button>
         </div>
      `
 }
