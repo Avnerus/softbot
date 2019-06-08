@@ -155,9 +155,9 @@ export default {
             .wait {
                 padding: 20px;
                 font-size: 100px;
-                position: absolute;
-                left: 25%;
-                top: 25%;
+                position: relative;
+                left: 40%;
+                top: 40%;
             }
         </style>
         <div id="video-container">

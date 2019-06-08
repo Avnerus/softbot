@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {changePhase, PHASE} from './state'
+import store, {connect, changePhase, PHASE} from './state'
 
 import './language-select'
 
@@ -9,7 +9,8 @@ const signInClick = (host, e) => {
 } 
 
 export default {
-    render: ({state}) => html`
+    socketController: connect(store, (state) => state.socketController),
+    render: ({socketController}) => html`
         <style>
             :host {
                 display: flex;
@@ -49,6 +50,11 @@ export default {
 				margin-left: 20vw;
 				background-color: rebeccapurple;
 			}
+            button:disabled {
+                background-color: #04040466;
+                color: #0000003d;
+                cursor: not-allowed;
+            }
 
         </style>
         <div>
@@ -66,7 +72,7 @@ export default {
 					</span>
 				</div>
 				<div id="teleport-button">
-					<button type="submit" onclick=${signInClick}>💫</button>
+					<button type="submit" onclick=${signInClick} disabled=${socketController ? '' : 'disabled'}>💫</button>
 				</div>
             </form>
         </div>

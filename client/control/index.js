@@ -1,11 +1,15 @@
 import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
 //import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
+import store, {setSocketController} from './state'
+
 import { define } from 'hybrids';
 import ControlLayout from './control-layout'
 import ControlRoot from './control-root'
 import SignIn from './sign-in'
 import HitodamaHUD from './hitodama-hud'
+
+import SocketController from '../common/socket-controller'
 
 
 define('control-layout', ControlLayout);
@@ -14,6 +18,8 @@ define('sign-in', SignIn);
 define('hitodama-hud', HitodamaHUD);
 
 console.log("Loading control");
+const socketController = new SocketController('ws://127.0.0.1:3012',() => store.dispatch(setSocketController(socketController)));
+socketController.init();
 
 if (module.hot) {
     console.log("We have hot");

@@ -15,6 +15,9 @@ const reducer = (state = {
   switch (action.type) {
     case 'CHANGE_PHASE':
       return { ...state, phase: action.value};
+    case 'SET_SOCKET_CONTROLLER': {
+        return {...state, socketController: action.socketController}
+    }
     default:
       return state;
   };
@@ -32,9 +35,9 @@ export const changePhase = (value = 1) => ({
   value,
 });
 
-export const connectToSocket = (host) => ({
-    type: 'CONNECT_SOCKET',
-    host
+export const setSocketController = (socketController) => ({
+    type: 'SET_SOCKET_CONTROLLER',
+    socketController
 })
 
 export const connect = (store, mapState) => ({

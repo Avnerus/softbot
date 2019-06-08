@@ -2,11 +2,12 @@
 import WebSocket from 'reconnecting-websocket'
 
 export default class SocketController {
-    constructor(host) {
+    constructor(host, onConnect = null) {
         console.log("Socket controller constructed!")
         this.host = host;
         this.prefixes = {};
         this.commands = {};
+        this.onConnect = onConnect;
     }
     init() {
         //let host = document.location.host;
@@ -20,6 +21,9 @@ export default class SocketController {
         console.log("Socket connected!");
         if (events) {
             events.emit("socket_connected", this.socket);
+        }
+        if (this.onConnect) {
+            onConnect();
         }
     }
     emit(message, args) {
