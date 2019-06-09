@@ -17,6 +17,7 @@ import wav from 'wav'
 import * as MSTTS from './ms-tts' 
 import * as GoogleTranslate from './google-translate'
 import * as Forms from './forms'
+import * as Unsplash from './unsplash'
 
 //import Signaling from './signaling'
 
@@ -184,6 +185,22 @@ app.post('/transcribe', async function(req, res) {
         res.status(500).send({status: "error", error: err.toString()})
     }
 })
+
+app.get('/api/random-image', async (req, res) => {
+    try {
+        if (!req.query.key) {
+            res.send(500,"Invalid request");
+            return;
+        }
+        let {bodyStream, headers} = await Unsplash.getRandomImage(req.query.key);
+        res.type(headers.get('content-type'));
+        bodyStream.pipe(res);
+    }
+    catch (e) {
+        console.log("Error", e);
+        res.send("Error " + e);
+    }
+});
 
 server.listen(3080, () => {
     console.log('listening on port 3080!');

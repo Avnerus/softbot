@@ -25,7 +25,7 @@ export default class Voice {
             if (data.translate) {
                 uri += '&target=' + data.translate;
             }
-            const player = new Tone.GrainPlayer({url: uri , detune: -250,  onload: () => {
+            const player = new Tone.GrainPlayer({url: uri , detune: -450,  onload: () => {
                 console.log("Buffer is loaded!");
                 player.start();
             }}).toMaster();

@@ -6,7 +6,7 @@ const TARGET_VOICES = {
     "he": "Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)",
     "ja" : "Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)",
     //"en" : "Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)",
-    "en" : "Microsoft Server Speech Text to Speech Voice (en-US, Guy24kRUS)",
+    "en" : "Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)",
     "ar" : "Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)",
     "ru": "Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)",
     "it": "Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)",

@@ -1,9 +1,22 @@
 import { html, render } from 'hybrids';
-import store, {connect} from './state'
+import store, {connect, addTranscript} from '../common/state'
 import './language-select'
 
 const speak = (host, event) => {
-
+    event.preventDefault();
+    const form = $(event.target).closest("form");
+    const text = form.find('input[name="text"]').val();
+    host.socketController.sendJSONCommand({
+        command: 'speech',
+        text: text,
+        translate: null
+            //event.currentTarget[1].value.length > 0 ? event.currentTarget[1].value : null
+    } );
+    store.dispatch(addTranscript({
+        from: "You",
+        text: text
+    }));
+    form.find('input[name="text"]').val("");
 };
 
 export default {
@@ -32,6 +45,7 @@ export default {
             #speech-language {
                 display: flex;
                 align-items: center;
+                padding-left: 5px;
             }
             #speech-language label {
                 margin-right: 20px;                

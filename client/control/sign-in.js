@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {connect, changePhase, PHASE} from './state'
+import store, {connect, changePhase, PHASE} from '../common/state'
 
 import './language-select'
 

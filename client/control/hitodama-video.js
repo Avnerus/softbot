@@ -1,7 +1,9 @@
 import { html, render } from 'hybrids';
-import store from './state'
+import store from '../common/state'
 import Janus from './janus'
 import adapter from 'webrtc-adapter';
+
+import CameraPlaceholder from './images/camera_placeholder.jpg'
 
 const getStream = (streaming) => {
     let body = { "request": "list"  };
@@ -159,6 +161,11 @@ export default {
                 left: 40%;
                 top: 40%;
             }
+            .placeholder {
+                width: 90%;
+                margin-left: 20px;
+                margin-top: 15px;
+            }
         </style>
         <div id="video-container">
             ${stream && html`
@@ -169,7 +176,8 @@ export default {
                 ></video>
               `}
              ${waiting && html`
-                <span class="wait">⌚️</span>
+                <img class="placeholder" src=${CameraPlaceholder}>    
+                <!--span class="wait">⌚️</span-->
              `}
         </div>
      `

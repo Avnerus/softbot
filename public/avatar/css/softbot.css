@@ -69,3 +69,7 @@ body {
 #button2.on {
     background-color: blue;
 }
+
+.pics-control {
+    height: 120px;
+}

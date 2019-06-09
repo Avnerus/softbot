@@ -10,7 +10,7 @@ export default class Display {
     }
     init() {
         this.playForm.find('#start-breakout').click(() => {
-            this.socketController.send("SBREAKOUT");
+            this.socketController.send("SBRK");
         });
 
         this.socketController.subscribeToPrefix('P', (data) => this.onMessage(data));

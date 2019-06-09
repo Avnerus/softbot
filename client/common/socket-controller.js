@@ -2,12 +2,12 @@
 import WebSocket from 'reconnecting-websocket'
 
 export default class SocketController {
-    constructor(host, onConnect = null) {
+    constructor(host, connectCallback = null) {
         console.log("Socket controller constructed!")
         this.host = host;
         this.prefixes = {};
         this.commands = {};
-        this.onConnect = onConnect;
+        this.connectCallback = connectCallback;
     }
     init() {
         //let host = document.location.host;
@@ -18,12 +18,11 @@ export default class SocketController {
         this.socket.addEventListener('message', (msg) => {this.onMessage(msg)});
     }
     onConnect() {
-        console.log("Socket connected!");
-        if (events) {
+        if (typeof(events) != 'undefined') {
             events.emit("socket_connected", this.socket);
         }
-        if (this.onConnect) {
-            onConnect();
+        if (this.connectCallback) {
+            this.connectCallback();
         }
     }
     emit(message, args) {
@@ -53,6 +52,18 @@ export default class SocketController {
                 let json = new TextDecoder("utf-16").decode(chars);
                 console.log(json);
                 let obj = JSON.parse(json);
+                if (this.commands[obj.command]) {
+                    for (let func of this.commands[obj.command]) {
+                        func(obj);
+                    }
+                }
+            }
+            if (prefix == 'U') {
+                // Parse it
+                let chars = new Uint8Array(msg.data, 1);
+                let json = new TextDecoder("utf-8").decode(chars);
+                let obj = JSON.parse(json);
+                console.log(obj);
                 if (this.commands[obj.command]) {
                     for (let func of this.commands[obj.command]) {
                         func(obj);

@@ -12,6 +12,7 @@ use std::rc::Rc;
 use std::io::{Error, ErrorKind};
 use std::collections::HashMap;
 use std::sync::mpsc::channel;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use soft_error::SoftError;
 use Config;
@@ -21,6 +22,13 @@ const CONTROL_ROLE : usize = 0;
 const AVATAR_ROLE : usize = 1;
 const ADMIN_ROLE : usize = 2;
 
+const  WAITING:u8 =  0;
+const  READY:u8 = 1;
+const  CHOSE_1:u8 = 2;
+const  CHOSE_2:u8 = 3;
+const  EXPLAINING:u8 = 4;
+
+
 struct ServerState {
     soft_admin: Option<Sender>,
     soft_controller: Option<Sender>,
@@ -28,8 +36,11 @@ struct ServerState {
     tokens: HashMap<Token, u8>,
     game: Option<JoinHandle<()>>,
     game_tx: Option<mpsc::Sender<Vec<u8>>>,
-    comm_tx: mpsc::Sender<Vec<u8>>
+    comm_tx: mpsc::Sender<Vec<u8>>,
+    pic_state: Vec<u8>,
+    pic_key: String
 }
+
 
 // WebSocket connection handler for the server connection
 struct Server {
@@ -43,6 +54,26 @@ struct Server {
 struct Foo {
     a: i32,
     b: i32
+}
+
+fn send_pic_state(state: &ServerState) {
+    println!("Sending pic state");
+    let json_command = format!("U{{
+        \"command\": \"pic-state\",
+        \"state\": {{
+            \"CONTROL\": {},
+            \"AVATAR\": {},
+            \"key\" : \"{}\"
+        }}
+    }}
+    ", state.pic_state[0], state.pic_state[1], state.pic_key);
+
+    if let Some(sc) = &state.soft_controller {
+        sc.send(json_command.as_bytes());
+    }
+    if let Some(sa) = &state.soft_avatar {
+        sa.send(json_command.as_bytes());
+    }
 }
 
 fn handle_message(
@@ -89,9 +120,9 @@ fn handle_message(
             match command {
                 'S' => {
                     // Start command
-                    let app = str::from_utf8(&data[1..]).unwrap();
+                    let app = str::from_utf8(&data[1..4]).unwrap();
                     println!("Start app {:?}", app);
-                    if app == "BREAKOUT" {
+                    if app == "BRK" {
                         println!("Start breakout!");
                         // Check that both players are here
                         if let (Some(sc), Some(sa)) = (&state.soft_controller, &state.soft_avatar) {
@@ -116,14 +147,20 @@ fn handle_message(
                             return Err(SoftError::new("Cannot play with just one player"))
                         }
                     }
-                     /*
-                    if app == "AVNER" {
-                        println!("Send to breakout!");
-                        match self.breakout_tx.as_ref() {
-                            Some(c) => c.send(vec![1,1,1]).unwrap(),
-                            None => {},
+                    if app == "PIC" {
+                        let pic_state = data[4];
+                        println!("PIC State! {}", pic_state);
+                        state.pic_state[*role as usize] = pic_state;
+                        if state.pic_state[CONTROL_ROLE] == READY &&
+                            state.pic_state[AVATAR_ROLE] == READY {
+                            // Generate a new pic key
+                            let start = SystemTime::now();
+                            let since_the_epoch = start.duration_since(UNIX_EPOCH).unwrap();
+                            state.pic_key = format!("{:?}", since_the_epoch.as_millis());
+                            
                         }
-                    }*/
+                        send_pic_state(state);
+                    }
                 }
                 'C' => {
                     println!("Comm message");
@@ -193,6 +230,7 @@ impl Handler for Server {
             let targets = [&mut state.soft_controller,&mut state.soft_avatar];
             if targets[*role as usize] != &mut None {
                 *(targets[*role as usize]) = None;                
+                state.pic_state[*role as usize] = 0;
                 println!("Disconnected from role {:}", role);
                 if *role == 1 {
                     if let Some(sc) = targets[0] {
@@ -216,6 +254,8 @@ pub fn start(
 
     let (comm_out, comm_in) = channel();
 
+    let mut pic_state = vec![0,0];
+
     let state = Arc::new(Mutex::new(ServerState {
         soft_controller: None,
         soft_admin: None,
@@ -223,7 +263,9 @@ pub fn start(
         tokens: HashMap::new(),
         game: None,
         game_tx: None,
-        comm_tx: comm_out.clone()
+        comm_tx: comm_out.clone(),
+        pic_state : pic_state,
+        pic_key : String::new()
     }));
 
     let comm_state = state.clone();
