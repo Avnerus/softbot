@@ -5,7 +5,7 @@ import './language-select'
 
 const signInClick = (host, e) => {
 	e.preventDefault();
-    store.dispatch(changePhase(PHASE.HUD))
+    store.dispatch(changePhase(PHASE.HUD_NOPICS))
 } 
 
 export default {

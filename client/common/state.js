@@ -4,7 +4,9 @@ import SocketController from '../common/socket-controller'
 
 export const PHASE = {
     SIGN_IN: 1,
-    HUD: 2
+    HUD_NOPICS: 2,
+    HUD_PICS: 3,
+    HUD_PICS_VIDEO: 4
 }
 
 export const PIC_STATE = {
@@ -15,10 +17,20 @@ export const PIC_STATE = {
     EXPLAINING: 4
 }
 
+export const ROLES = {
+    CONTROLLER: "CONTROL",
+    AVATAR: "AVATAR"
+}
+
 const reducer = (state = {
     phase: PHASE.SIGN_IN,
     socketController: null,
     transcript: [],
+    picState: {
+        [ROLES.CONTROLLER] : 0,
+        [ROLES.AVATAR]: 0,
+        key: ""
+    }
 }, action) => {
   switch (action.type) {
     case 'CHANGE_PHASE':
@@ -39,12 +51,28 @@ const reducer = (state = {
                 }));
             });
         }
+        action.socketController.on('pic-state', (data) => {
+            console.log("New pic state!", data.state);
+            store.dispatch(setPicState(data.state));
+        });
         return {...state, socketController: action.socketController}
     }
-
     case 'ADD_TRANSCRIPT' : {
         console.log("Add transcript line!", action.line);
         return {...state, transcript: [...state.transcript, action.line]}
+    }
+    case 'SET_PIC_STATE' : {
+        let phase;
+        if (action.value[ROLES.AVATAR] == PIC_STATE.WAITING ||
+            action.value[ROLES.CONTROLLER] == PIC_STATE.WAITING) {
+            phase = PHASE.HUD_NOPICS;            
+        } else if (action.value[ROLES.CONTROLLER] == PIC_STATE.READY) {
+            phase = PHASE.HUD_PICS;
+        } else {
+            phase = PHASE.HUD_PICS_VIDEO;
+        }
+        console.log("Phase is now " + phase, action.value)
+        return {...state, phase: phase, picState : action.value}
     }
     default:
       return state;
@@ -74,6 +102,11 @@ export const setSocketController = (socketController, manage) => ({
     type: 'SET_SOCKET_CONTROLLER',
     socketController,
     manage
+})
+
+export const setPicState = (value) => ({
+    type: 'SET_PIC_STATE',
+    value,
 })
 
 export const connect = (store, mapState) => ({

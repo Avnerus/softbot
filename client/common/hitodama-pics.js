@@ -9,7 +9,8 @@ const ready = (host, event) => {
 
 export default {
     socketController: connect(store, (state) => state.socketController),
-    render: ({socketController}) => { 
+    picState: connect(store, (state) => state.picState),
+    render: ({socketController, picState}) => { 
        return html`
         <style>
             :host {
@@ -19,45 +20,25 @@ export default {
                 justify-content: center;
 
             }
-            #control-container {
+            #pics-container {
                 background-color: #fbf5fb;
                 height: 90%;
                 width: 90%;:
                 display: flex;
                 align-items: center;
+                flex-direction: column;
             }
-            .control-button {
-                width: 70px;
-                height: 65px;
-                padding: 5px;
-                background-color: #dfdbfb;
-                border-style: solid;
-                border-width: 1px;
-                border-radius: 5px;
-                box-shadow: 2px 2px gray;
-                display:flex;
-                font-size: 70px;
-            }
-            .button-row {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-evenly;
-                align-items: center;
-                margin-top: 10px;
-                width: 100%;
-            }
-            #check-box {
-                fill: green;
+            .pic {
+                max-width: 100%;
+                height: 250px;
             }
         </style>
-        <div id="control-container">
-            <div class="button-row">
-                <label> READY FOR THE NEXT IMAGES ? </label>
-                <a onclick="${ready}" href="">
-                    <div class="control-button">
-                        <svg id="check-box" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg>
-                    </div>
-                </a>
+        <div id="pics-container">
+            <div>
+                <img class="pic" src="/api/random-image?key=${picState.key}-1&search=animal">
+            </div>
+            <div>
+                <img class="pic" src="/api/random-image?key=${picState.key}-2&search=person">
             </div>
         </div>
      `

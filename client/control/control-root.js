@@ -13,7 +13,6 @@ export default {
 				height: 100%;
 			}
 		</style>
-			${phase == PHASE.SIGN_IN && html`<sign-in></sign-in>`}
-			${phase == PHASE.HUD && html`<hitodama-hud></hitodama-hud>`}
+			${phase == PHASE.SIGN_IN ? html`<sign-in></sign-in>` : html`<hitodama-hud></hitodama-hud>`}
      `, {shadowRoot :true})
 }

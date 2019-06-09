@@ -192,7 +192,7 @@ app.get('/api/random-image', async (req, res) => {
             res.send(500,"Invalid request");
             return;
         }
-        let {bodyStream, headers} = await Unsplash.getRandomImage(req.query.key);
+        let {bodyStream, headers} = await Unsplash.getRandomImage(req.query.key, req.query.search);
         res.type(headers.get('content-type'));
         bodyStream.pipe(res);
     }

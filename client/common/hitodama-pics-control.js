@@ -21,10 +21,12 @@ export default {
             }
             #control-container {
                 background-color: #fbf5fb;
-                height: 90%;
+                height: 92%;
                 width: 90%;:
                 display: flex;
                 align-items: center;
+                position: relative;
+                bottom: 5px;
             }
             .control-button {
                 width: 70px;

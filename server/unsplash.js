@@ -6,7 +6,7 @@ import EventEmitter from 'events';
 const keys = {};
 const emitter = new EventEmitter();
 
-export async function getRandomImage(key) {
+export async function getRandomImage(key, search) {
 
     return Promise.resolve()
     .then(() => {
@@ -34,7 +34,7 @@ export async function getRandomImage(key) {
                 method: 'GET',
             }
             return fetch(
-                'https://source.unsplash.com/random',
+                'https://source.unsplash.com/random?' + search,
                 options
             )
             .then((res) => {
@@ -43,7 +43,7 @@ export async function getRandomImage(key) {
                 const stream = fs.createWriteStream(cache.file.name, {fd: cache.file.fd})
                 res.body.pipe(stream);
                 stream.on('finish', () => {
-                    console.log("Finished downloading!");
+                    console.log("Finished downloading " + key + "(" + search + ") to " + cache.file.name);
                     cache.ready = true;
                 })
                 return cache;

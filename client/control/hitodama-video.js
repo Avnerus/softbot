@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store from '../common/state'
+import store, {connect, PHASE} from '../common/state'
 import Janus from './janus'
 import adapter from 'webrtc-adapter';
 
@@ -137,7 +137,8 @@ export default {
     },
     stream: null,
     waiting: true,
-    render: ({state, stream, waiting}) => { 
+    phase: connect(store, (state) => state.phase),
+    render: ({state, stream, waiting, phase}) => { 
        console.log("Rendering HITODAMA Video!");
        return html`
         <style>
@@ -162,9 +163,7 @@ export default {
                 top: 40%;
             }
             .placeholder {
-                width: 90%;
-                margin-left: 20px;
-                margin-top: 15px;
+                ${phase == PHASE.HUD_PICS_VIDEO ? 'height: 100%;' : 'width: 95%;'}
             }
         </style>
         <div id="video-container">

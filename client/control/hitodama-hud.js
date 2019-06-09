@@ -1,19 +1,22 @@
 import { html, render,define } from 'hybrids';
-import store, {changePhase, PHASE} from '../common/state'
+import store, {connect, changePhase, PHASE, ROLES, PIC_STATE} from '../common/state'
 import HitodamaVideo from './hitodama-video'
 import HitodamaSpeech from './hitodama-speech'
 import HitodamaTranscript from './hitodama-transcript'
 import HitodamaControl from './hitodama-control'
 import HitodamaPicsControl from '../common/hitodama-pics-control'
+import HitodamaPics from '../common/hitodama-pics'
 
 define('hitodama-video', HitodamaVideo);
 define('hitodama-speech', HitodamaSpeech);
 define('hitodama-transcript', HitodamaTranscript);
 define('hitodama-control', HitodamaControl);
 define('hitodama-pics-control', HitodamaPicsControl);
+define('hitodama-pics', HitodamaPics);
 
 export default {
-    render: ({state}) => html`
+    phase: connect(store, (state) => state.phase),
+    render: ({phase}) => html`
         <style>
             :host {
                 width: 100%;
@@ -24,27 +27,49 @@ export default {
               height: 100%;
               padding: 20px;
               grid-template-columns:  50% 50% ;
-              grid-template-rows:  auto 210px 80px;
+              grid-template-rows: ${
+                phase == PHASE.HUD_PICS_VIDEO ? '200px auto 105px 105px 80px;' : 'auto 105px 105px 80px;'
+              } 
             }
             hitodama-transcript {
-                grid-row: 1;
+                grid-row: ${
+                  phase == PHASE.HUD_PICS_VIDEO ? '1 / 3;' : '1;'
+                } 
                 grid-column: 2;
             }
             hitodama-video {
                 grid-row: 1;
                 grid-column: 1;
+                display: ${
+                    phase == PHASE.HUD_PICS ? 'none;' : 'block;'
+                }
             }
             hitodama-speech {
-                grid-row: 3;
+                grid-row: ${
+                  phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
+                } 
                 grid-column: 2; 
             }
             hitodama-control {
-                grid-row: 2;
+                grid-row: ${
+                  phase == PHASE.HUD_PICS_VIDEO ? '3 / 5;' : '2 / 4;'
+                } 
                 grid-column: 2; 
             }
             hitodama-pics-control {
-                grid-row: 2;
+                grid-row: ${
+                  phase == PHASE.HUD_PICS_VIDEO ? '4;' : '3;'
+                } 
                 grid-column: 1; 
+            }
+            hitodama-pics {
+                grid-row: ${
+                    phase == PHASE.HUD_PICS_VIDEO ? '2;' : '1;'
+                }
+                grid-column: 1; 
+                display: ${
+                    phase == PHASE.HUD_NOPICS ? 'none;' : 'block;'
+                }
             }
         </style>
         <div id="hud-container">
@@ -52,6 +77,7 @@ export default {
                 streamURL="${'http://127.0.0.1:8088/janus'}"
               >
              </hitodama-video>
+            <hitodama-pics></hitodama-pics>
             <hitodama-transcript>
             </hitodama-transcript>
             <hitodama-pics-control></hitodama-pics-control>
@@ -76,5 +102,8 @@ if (module.hot) {
     })
     module.hot.accept('../common/hitodama-pics-control.js', function() {
         define('hitodama-pics-control', HitodamaPicsControl);
+    })
+    module.hot.accept('../common/hitodama-pics.js', function() {
+        define('hitodama-pics', HitodamaPics);
     })
 }
