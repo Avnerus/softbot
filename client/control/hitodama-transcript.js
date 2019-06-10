@@ -13,7 +13,7 @@ export default {
                 justify-content: center;
             }
             #transcript-container {
-                height: 95%;
+                height: 100%;
                 width: 100%;
                 background-color: #fffffff2;
                 padding: 0px 20px;

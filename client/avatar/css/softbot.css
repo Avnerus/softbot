@@ -73,3 +73,10 @@ body {
 .pics-control {
     height: 120px;
 }
+
+hitodama-pics {
+    --pic-direction: row;
+    --max-pic-height: 550px;
+
+}
+

@@ -62,17 +62,23 @@ const reducer = (state = {
         return {...state, transcript: [...state.transcript, action.line]}
     }
     case 'SET_PIC_STATE' : {
-        let phase;
-        if (action.value[ROLES.AVATAR] == PIC_STATE.WAITING ||
-            action.value[ROLES.CONTROLLER] == PIC_STATE.WAITING) {
-            phase = PHASE.HUD_NOPICS;            
-        } else if (action.value[ROLES.CONTROLLER] == PIC_STATE.READY) {
-            phase = PHASE.HUD_PICS;
+        if (state.phase != PHASE.SIGN_IN) {
+            let phase;
+            if (action.value[ROLES.AVATAR] == PIC_STATE.WAITING ||
+                action.value[ROLES.CONTROLLER] == PIC_STATE.WAITING) {
+                phase = PHASE.HUD_NOPICS;            
+            } else if (action.value[ROLES.CONTROLLER] == PIC_STATE.READY) {
+                phase = PHASE.HUD_PICS;
+            } else {
+                phase = PHASE.HUD_PICS_VIDEO;
+            }
+            console.log("Phase is now " + phase, action.value)
+            return {...state, phase: phase, picState : action.value}
         } else {
-            phase = PHASE.HUD_PICS_VIDEO;
+            return {...state, picState : action.value}
         }
-        console.log("Phase is now " + phase, action.value)
-        return {...state, phase: phase, picState : action.value}
+
+
     }
     default:
       return state;

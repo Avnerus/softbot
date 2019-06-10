@@ -18,6 +18,7 @@ import './css/voice-anim.scss'
 
 import store, {setSocketController} from '../common/state'
 import HitodamaPicsControl from '../common/hitodama-pics-control'
+import HitodamaPics from '../common/hitodama-pics'
 import { define } from 'hybrids'
 
 //import {greet} from '../common/breakout/breakout'
@@ -34,6 +35,7 @@ export default class  {
         global.events = this.emitter;
 
         define('hitodama-pics-control', HitodamaPicsControl);
+        define('hitodama-pics', HitodamaPics);
 
 
         /*
@@ -42,8 +44,8 @@ export default class  {
 
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
-        //this.socketController = new SocketController("ws://192.168.8.239:3012");
-        this.socketController = new SocketController("ws://127.0.0.1:3012");
+        this.socketController = new SocketController("ws://192.168.8.239:3012");
+        //this.socketController = new SocketController("ws://127.0.0.1:3012");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");
             store.dispatch(setSocketController(this.socketController, false));

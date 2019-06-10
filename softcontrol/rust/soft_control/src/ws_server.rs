@@ -92,24 +92,27 @@ fn handle_message(
         println!("Register command role {}", role);
         match role {
             0 ..= 2 => {
-                let targets = [
-                    &mut state.soft_controller,
-                    &mut state.soft_avatar,
-                    &mut state.soft_admin
-                ];
-                if let Some(soft_target) = targets[role as usize] {
-                    return Err(SoftError::new("Cannot register - user already connected!"));
-                } else {
-                    *(targets[role as usize]) =  Some(server.ws.clone());
-                     state.tokens.insert(server.ws.token(), role);
-                     println!("Registration successful");
-                     if role == 1 {
-                         if let Some(sc) = targets[0] {
-                             println!("Notifying controller");
-                             sc.send("IAvatar connected!").unwrap();
-                         }
+                {
+                    let targets = [
+                        &mut state.soft_controller,
+                        &mut state.soft_avatar,
+                        &mut state.soft_admin
+                    ];
+                    if let Some(soft_target) = targets[role as usize] {
+                        return Err(SoftError::new("Cannot register - user already connected!"));
+                    } else {
+                        *(targets[role as usize]) =  Some(server.ws.clone());
+                         state.tokens.insert(server.ws.token(), role);
+                         println!("Registration successful");
+                         if role == 1 {
+                             if let Some(sc) = targets[0] {
+                                 println!("Notifying controller");
+                                 sc.send("IAvatar connected!").unwrap();
+                             }
+                        }
                     }
                 }
+                send_pic_state(state);
             }
 
             _ => return Err(SoftError::new("Unknown role"))

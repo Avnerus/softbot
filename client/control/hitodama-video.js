@@ -148,17 +148,21 @@ export default {
                 height: 100%;
             }
             #video-container {
-                width: 100%;
+                width: 95%;
                 height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center
             }
             video {
                 width: 100%;
                 height: auto;
+                max-width: 500px;
             }
             .wait {
                 padding: 20px;
                 font-size: 100px;
-                position: relative;
+                position: absolute;
                 left: 40%;
                 top: 40%;
             }
@@ -175,8 +179,8 @@ export default {
                 ></video>
               `}
              ${waiting && html`
-                <img class="placeholder" src=${CameraPlaceholder}>    
-                <!--span class="wait">⌚️</span-->
+                <!--img class="placeholder" src=${CameraPlaceholder}-->    
+                <span class="wait">⌚️</span>
              `}
         </div>
      `

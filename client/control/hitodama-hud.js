@@ -58,13 +58,20 @@ export default {
             }
             hitodama-pics-control {
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO ? '4;' : '3;'
+                  phase == PHASE.HUD_PICS_VIDEO && '5;'
+                }
+                ${
+                  phase == PHASE.HUD_PICS && '4;'
                 } 
+                ${
+                  phase == PHASE.HUD_NOPICS && '3 / 5;'
+                } 
+
                 grid-column: 1; 
             }
             hitodama-pics {
                 grid-row: ${
-                    phase == PHASE.HUD_PICS_VIDEO ? '2;' : '1;'
+                    phase == PHASE.HUD_PICS_VIDEO ? '2;' : '1 / 4;'
                 }
                 grid-column: 1; 
                 display: ${
@@ -80,7 +87,7 @@ export default {
             <hitodama-pics></hitodama-pics>
             <hitodama-transcript>
             </hitodama-transcript>
-            <hitodama-pics-control></hitodama-pics-control>
+            <hitodama-pics-control identity=${'CONTROL'}></hitodama-pics-control>
             <hitodama-control></hitodama-control>
             <hitodama-speech></hitodama-speech>
         </div>

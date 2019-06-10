@@ -1,11 +1,24 @@
 import { html, render } from 'hybrids';
-import store, {connect, PIC_STATE} from './state'
+import store, {connect, setPicState, PIC_STATE} from './state'
 
 const ready = (host, event) => {
     event.preventDefault();
     console.log("Ready!");
     host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
 }
+
+const chooseImage = (host, event) => {
+    event.preventDefault();
+    console.log("Choose image!", event.target);
+    const chosenId = $(event.target).attr("data-image-id");
+    if (chosenId == '1') {
+        host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.CHOSE_1));
+    } else {
+        host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.CHOSE_2));
+    }
+
+}
+
 
 export default {
     socketController: connect(store, (state) => state.socketController),
@@ -22,24 +35,43 @@ export default {
             }
             #pics-container {
                 background-color: #fbf5fb;
-                height: 90%;
-                width: 90%;:
+                height: 100%;
+                width: 95%;
                 display: flex;
                 align-items: center;
-                flex-direction: column;
+                flex-direction: var(--pic-direction, column);
+                justify-content: space-evenly;
+            }
+            .image-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 10px;
+            }  
+            .image-container:hover {
+                border-type: solid;
+                box-shadow: 0px 0px 7px #f00;
             }
             .pic {
-                max-width: 100%;
-                height: 250px;
+                max-width: var(--max-pic-width, 100%);
+                max-height: var(--max-pic-height, 260px);
             }
         </style>
         <div id="pics-container">
-            <div>
-                <img class="pic" src="/api/random-image?key=${picState.key}-1&search=animal">
-            </div>
-            <div>
-                <img class="pic" src="/api/random-image?key=${picState.key}-2&search=person">
-            </div>
+            <a href=""  onclick=${chooseImage}>
+                <div class="image-container">
+                    ${picState.key.length > 0 && html`
+                        <img data-image-id="1"class="pic" src="/api/random-image?key=${picState.key}-1&search=animal">
+                    `}
+                </div>
+            </a>
+            <a href=""  onclick=${chooseImage}>
+                <div class="image-container">
+                    ${picState.key.length > 0 && html`
+                        <img data-image-id="2" class="pic" src="/api/random-image?key=${picState.key}-2&search=person">
+                    `}
+                </div>
+            </a>
         </div>
      `
    }
