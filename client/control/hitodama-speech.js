@@ -24,6 +24,9 @@ export default {
     render: ({socketController}) => { 
        return html`
         <style>
+            :host {
+                display: flex;
+            }
             language-select {
                 display: inline-block;
             }

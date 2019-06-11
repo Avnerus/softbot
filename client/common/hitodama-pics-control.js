@@ -21,19 +21,19 @@ export default {
        return html`
         <style>
             :host {
-                height: 100%;
                 display: flex;
                 align-items: center;
+                justify-content: center;
+                width: 97%;
+                height: 100%;
 
             }
             #control-container {
                 background-color: #fbf5fb;
-                height: 50%;
-                width: 95%;:
+                height: 90%;
+                width: 100%;
                 display: flex;
                 align-items: center;
-                position: relative;
-                bottom: 5px;
             }
             .control-button {
                 width: 70px;
@@ -52,7 +52,7 @@ export default {
                 flex-direction: row;
                 justify-content: space-evenly;
                 align-items: center;
-                margin-top: 10px;
+                height: 100%;
                 width: 100%;
             }
             #check-box {

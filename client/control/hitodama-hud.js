@@ -25,7 +25,7 @@ export default {
             #hud-container {
               display: grid;
               height: 100%;
-              padding: 20px;
+              padding: 0px 10px;
               grid-template-columns:  50% 50% ;
               grid-template-rows: ${
                 phase == PHASE.HUD_PICS_VIDEO ? '200px auto 105px 105px 80px;' : 'auto 105px 105px 80px;'
@@ -58,24 +58,27 @@ export default {
             }
             hitodama-pics-control {
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO && '5;'
+                  phase == PHASE.HUD_PICS_VIDEO && '4 ;'
                 }
                 ${
                   phase == PHASE.HUD_PICS && '4;'
                 } 
                 ${
-                  phase == PHASE.HUD_NOPICS && '3 / 5;'
+                  phase == PHASE.HUD_NOPICS && '3;'
                 } 
 
                 grid-column: 1; 
             }
             hitodama-pics {
                 grid-row: ${
-                    phase == PHASE.HUD_PICS_VIDEO ? '2;' : '1 / 4;'
+                    phase == PHASE.HUD_PICS_VIDEO ? '2 / 4;' : '1 / 4;'
                 }
                 grid-column: 1; 
                 display: ${
                     phase == PHASE.HUD_NOPICS ? 'none;' : 'block;'
+                }
+                --max-pic-width: ${
+                    phase == PHASE.HUD_PICS_VIDEO ? '30vh;' : '50vh;'
                 }
             }
         </style>

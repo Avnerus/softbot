@@ -156,7 +156,7 @@ export default {
             }
             video {
                 width: 100%;
-                height: auto;
+                height: 100%;
                 max-width: 500px;
             }
             .wait {
