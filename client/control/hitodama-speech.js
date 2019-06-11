@@ -74,7 +74,7 @@ export default {
                     </div>
                     <div id="speech-language">
                         <label>In: </label>
-                        <language-select languages=${['us','ar']}></language-select>
+                        <language-select languages=${['us','fi']}></language-select>
                     </div>
                     <div id="speak-button">
                         <button type="submit" onclick=${speak} disabled=${socketController ? '' : 'disabled'}>Say</button>
