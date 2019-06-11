@@ -76,7 +76,7 @@ body {
 
 hitodama-pics {
     --pic-direction: row;
-    --max-pic-height: 550px;
+    --max-pic-width: 100%;
 
 }
 

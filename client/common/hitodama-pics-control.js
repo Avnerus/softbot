@@ -1,15 +1,10 @@
 import { html, render } from 'hybrids';
-import store, {connect, PIC_STATE, PHASE} from './state'
+import store, {connect, PIC_STATE, PHASE, OTHER} from './state'
 
 const ready = (host, event) => {
     event.preventDefault();
     console.log("Ready!");
     host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
-}
-
-const OTHER = {
-    "CONTROL": "AVATAR",
-    "AVATAR": "CONTROL"
 }
 
 export default {
@@ -75,6 +70,9 @@ export default {
                   `}
                   ${picState[identity] == PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.READY && html` 
                       <label>Choose your favorite image!</label>
+                  `}
+                  ${picState[identity] > PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.READY && html` 
+                      <label>Waiting for partner to choose an image</label>
                   `}
             </div>
         </div>

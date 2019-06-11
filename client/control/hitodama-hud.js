@@ -87,7 +87,7 @@ export default {
                 streamURL="${'http://127.0.0.1:8088/janus'}"
               >
              </hitodama-video>
-            <hitodama-pics></hitodama-pics>
+            <hitodama-pics identity=${'CONTROL'}></hitodama-pics>
             <hitodama-transcript>
             </hitodama-transcript>
             <hitodama-pics-control identity=${'CONTROL'}></hitodama-pics-control>

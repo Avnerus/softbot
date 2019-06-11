@@ -1,0 +1,13 @@
+{
+    "version": "1.0",
+    "server": {
+        "port": 3012
+    },
+    "breakout": {
+        "name": "Avner"
+    },
+    "serial": {
+        "port": "/dev/ttyACM0",
+        "baud_rate": 9600
+    }
+}

@@ -163,8 +163,8 @@ export default {
                 padding: 20px;
                 font-size: 100px;
                 position: absolute;
-                left: 40%;
-                top: 40%;
+                left: 20%;
+                top: 20%;
             }
             .placeholder {
                 ${phase == PHASE.HUD_PICS_VIDEO ? 'height: 100%;' : 'width: 95%;'}

@@ -22,6 +22,11 @@ export const ROLES = {
     AVATAR: "AVATAR"
 }
 
+export const OTHER = {
+    "CONTROL": "AVATAR",
+    "AVATAR": "CONTROL"
+}
+
 const reducer = (state = {
     phase: PHASE.SIGN_IN,
     socketController: null,
