@@ -68,11 +68,18 @@ export default {
                  ${picState[identity] == PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.WAITING && html` 
                      <label>Waiting for your partner to be ready...</label>
                   `}
-                  ${picState[identity] == PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.READY && html` 
+                  ${picState[identity] == PIC_STATE.READY && picState[OTHER[identity]] >= PIC_STATE.READY && html` 
                       <label>Choose your favorite image!</label>
                   `}
                   ${picState[identity] > PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.READY && html` 
                       <label>Waiting for partner to choose an image</label>
+                  `}
+                  ${(
+                    picState[identity] == PIC_STATE.CHOSE_1 && picState[OTHER[identity]] == PIC_STATE.CHOSE_1 ||
+                    
+                    picState[identity] == PIC_STATE.CHOSE_2 && picState[OTHER[identity]] == PIC_STATE.CHOSE_2)
+                    && html` 
+                      <label>You chose the same image!</label>
                   `}
             </div>
         </div>

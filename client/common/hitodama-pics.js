@@ -23,6 +23,13 @@ const chooseImage = (host, event) => {
     }
 }
 
+const getPicClass = (picState, id, identity) => 
+    [  
+        'image-container',
+        picState[identity] == PIC_STATE.READY ? 'clickable' : ' ',
+        picState[identity] == PIC_STATE['CHOSE_' + id] ? 'chosen' : ' ',
+        picState[identity] != PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE['CHOSE_' + id] ? 'other' : ' '
+   ].filter( c => c != ' ')
 
 export default {
     socketController: connect(store, (state) => state.socketController),
@@ -75,12 +82,7 @@ export default {
             }
         </style>
         <div id="pics-container">
-            <div onclick=${chooseImage} class="image-container ${
-                picState[identity] == PIC_STATE.READY ? 'clickable' :
-                picState[identity] == PIC_STATE.CHOSE_1 ? 'chosen' : ''
-             } ${
-                 picState[identity] != PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.CHOSE_1 ? 'other' : ''
-             }">
+            <div onclick=${chooseImage} class="${getPicClass(picState, 1, identity)}">
                 ${picState.key.length > 0 && html`
                     <img 
                         data-image-id="1"
@@ -89,12 +91,7 @@ export default {
                      ></img>
                 `}
             </div>
-            <div onclick=${chooseImage} class="image-container ${
-                picState[identity] == PIC_STATE.READY ? 'clickable ' :
-                picState[identity] == PIC_STATE.CHOSE_2 ? 'chosen' : ''
-             } ${
-                 picState[identity] != PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.CHOSE_2 ? 'other' : ''
-             }">
+            <div onclick=${chooseImage} class="${getPicClass(picState, 2, identity)}">
             ${picState.key.length > 0 && html`
                 <img 
                     data-image-id="2"

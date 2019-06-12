@@ -14,7 +14,8 @@ export const PIC_STATE = {
     READY: 1,
     CHOSE_1: 2,
     CHOSE_2: 3,
-    EXPLAINING: 4
+    EXPLAIN_1: 4,
+    EXPLAIN_2: 5 
 }
 
 export const ROLES = {

@@ -26,7 +26,10 @@ const  WAITING:u8 =  0;
 const  READY:u8 = 1;
 const  CHOSE_1:u8 = 2;
 const  CHOSE_2:u8 = 3;
-const  EXPLAINING:u8 = 4;
+const  EXPLAIN_1:u8 = 4;
+const  EXPLAIN_2:u8 = 5;
+
+const LAST_EXPLAINED:usize = 2;
 
 
 struct ServerState {
@@ -162,6 +165,17 @@ fn handle_message(
                             state.pic_key = format!("{:?}", since_the_epoch.as_millis());
                             
                         }
+                        if
+                            state.pic_state[CONTROL_ROLE] >= CHOSE_1 &&
+                            state.pic_state[CONTROL_ROLE] <= CHOSE_2 && 
+                            state.pic_state[AVATAR_ROLE]  >= CHOSE_1 && 
+                            state.pic_state[AVATAR_ROLE] <= CHOSE_2 {
+                                
+                                state.pic_state[LAST_EXPLAINED] = 1 - state.pic_state[LAST_EXPLAINED];
+                                let explain_role = state.pic_state[LAST_EXPLAINED] as usize;
+                                state.pic_state[explain_role] += 2;
+                        }
+
                         send_pic_state(state);
                     }
                 }
@@ -257,7 +271,7 @@ pub fn start(
 
     let (comm_out, comm_in) = channel();
 
-    let mut pic_state = vec![0,0];
+    let mut pic_state = vec![0,0,0];
 
     let state = Arc::new(Mutex::new(ServerState {
         soft_controller: None,
