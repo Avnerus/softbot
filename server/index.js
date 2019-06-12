@@ -188,11 +188,11 @@ app.post('/transcribe', async function(req, res) {
 
 app.get('/api/random-image', async (req, res) => {
     try {
-        if (!req.query.key) {
+        if (!req.query.seed || !req.query.id) {
             res.send(500,"Invalid request");
             return;
         }
-        let {bodyStream, headers} = await Unsplash.getRandomImage(req.query.key, req.query.search);
+        let {bodyStream, headers} = await Unsplash.getRandomImage(req.query.seed, req.query.id);
         res.type(headers.get('content-type'));
         bodyStream.pipe(res);
     }

@@ -27,15 +27,36 @@ const getPicClass = (picState, id, identity) =>
     [  
         'image-container',
         picState[identity] == PIC_STATE.READY ? 'clickable' : ' ',
-        picState[identity] == PIC_STATE['CHOSE_' + id] ? 'chosen' : ' ',
-        picState[identity] != PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE['CHOSE_' + id] ? 'other' : ' '
+        picState[identity] == PIC_STATE['CHOSE_' + id] ||
+        picState[identity] == PIC_STATE['EXPLAIN_' + id] ||
+        picState[identity] == PIC_STATE['DONE_' + id] 
+            ? 'chosen' : ' ',
+        picState[identity] != PIC_STATE.READY &&
+            (picState[OTHER[identity]] == PIC_STATE['CHOSE_' + id] ||
+             picState[OTHER[identity]] == PIC_STATE['EXPLAIN_' + id]  ||
+            picState[OTHER[identity]] == PIC_STATE['DONE_' + id] 
+            )  ? 'other' : ' '
    ].filter( c => c != ' ')
+
+
+
+const imageLoaded = (host, event) => {
+    console.log("Image loaded!", host, event);
+    let imageFlex = "column";
+    $(host.shadowRoot).find("img").each((i, e) => {
+        if (e.naturalHeight != 0 && e.naturalHeight > e.naturalWidth) {
+            imageFlex = "row";
+        }
+    })
+    host.imageFlex = imageFlex;
+}
 
 export default {
     socketController: connect(store, (state) => state.socketController),
     picState: connect(store, (state) => state.picState),
     identity: "",
-    render: ({socketController, picState, identity}) => { 
+    imageFlex: "row",
+    render: ({socketController, picState, identity, imageFlex}) => { 
        return html`
         <style>
             :host {
@@ -51,7 +72,12 @@ export default {
                 width: 97%;
                 display: flex;
                 align-items: center;
-                flex-direction: var(--pic-direction, column);
+                ${imageFlex == "row" ?
+                    html`
+                    flex-direction: var(--pic-direction-row, row);
+                ` : html`
+                    flex-direction: var(--pic-direction-column, column);
+                `}
                 justify-content: space-evenly;
                 margin-top: 5px;
             }
@@ -77,30 +103,44 @@ export default {
                 border-type: solid;
                 box-shadow: 0px 0px 20px #00f;
             }
+            .image-container.other.chosen img {
+                border-type: solid;
+                box-shadow: 0px 0px 40px #a0a;
+            }
             .pic {
-                max-width: var(--max-pic-width, 50vh);
+                ${imageFlex == "row" ?
+                    html`
+                    max-width: var(--max-pic-width-row, 50vh);
+                ` : html`
+                    max-width: var(--max-pic-width-column, 50vh);
+                `}
             }
         </style>
-        <div id="pics-container">
-            <div onclick=${chooseImage} class="${getPicClass(picState, 1, identity)}">
+        ${picState[identity] > PIC_STATE.WAITING && picState[OTHER[identity]] > PIC_STATE.WAITING && html`
+            <div id="pics-container">
+                <div onclick=${chooseImage} class="${getPicClass(picState, 1, identity)}">
+                    ${picState.key.length > 0 && html`
+                        <img 
+                            data-image-id="1"
+                            onload="${imageLoaded}"
+                            class="pic" 
+                            src="/api/random-image?seed=${picState.key}&id=1"
+                         ></img>
+                    `}
+                </div>
+                <div onclick=${chooseImage} class="${getPicClass(picState, 2, identity)}">
                 ${picState.key.length > 0 && html`
                     <img 
-                        data-image-id="1"
+                        data-image-id="2"
+                        onload="${imageLoaded}"
                         class="pic" 
-                        src="/api/random-image?key=${picState.key}-1&search=animal"
-                     ></img>
+                        src="/api/random-image?seed=${picState.key}&id=2"
+                     >
                 `}
+                </div>
             </div>
-            <div onclick=${chooseImage} class="${getPicClass(picState, 2, identity)}">
-            ${picState.key.length > 0 && html`
-                <img 
-                    data-image-id="2"
-                    class="pic" 
-                    src="/api/random-image?key=${picState.key}-2&search=person"
-                 >
-            `}
-            </div>
-        </div>
+
+        `}
      `
    }
 }

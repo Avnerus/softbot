@@ -75,8 +75,10 @@ body {
 }
 
 hitodama-pics {
-    --pic-direction: row;
-    --max-pic-width: 100%;
+    --pic-direction-row: row;
+    --pic-direction-column: row;
+    --max-pic-width-row: 50vh;
+    --max-pic-width-column: 100%;
 
 }
 

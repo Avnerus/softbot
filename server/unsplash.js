@@ -5,15 +5,40 @@ import EventEmitter from 'events';
 
 const keys = {};
 const emitter = new EventEmitter();
+let LAST_SEED = "";
 
-export async function getRandomImage(key, search) {
+const KEYWORDS = [
+    "animal",
+    "person",
+    "culture",
+    "fashion",
+    "game",
+    "war",
+    "love",
+    "toy",
+    "robot",
+    "music"
+]
 
+export async function getRandomImage(seed, id) {
+    const key = seed + "-" + id;
     return Promise.resolve()
     .then(() => {
+        if (seed != LAST_SEED) {
+            ["-1", "-2"].forEach((suffix) => {
+                if (keys[LAST_SEED + suffix]) {
+                    console.log("Deleting " + keys[LAST_SEED + suffix].file.name)
+                     fs.unlinkSync(keys[LAST_SEED + suffix].file.name);
+                }
+            })
+            LAST_SEED = seed;
+        }
         if (keys[key]) { 
             return keys[key]
         } else {
             console.log("Downloading " + key + "....");
+            let keyword = KEYWORDS[Math.floor(Math.random() * KEYWORDS.length)];
+
             const cache = new Proxy( {
                 ready: false,
                 file: tmp.fileSync(),
@@ -33,8 +58,10 @@ export async function getRandomImage(key, search) {
             let options = {
                 method: 'GET',
             }
+            const url = 'https://source.unsplash.com/random?' + keyword;
+            console.log("URL: ", url);
             return fetch(
-                'https://source.unsplash.com/random?' + search,
+                url,
                 options
             )
             .then((res) => {
@@ -43,7 +70,7 @@ export async function getRandomImage(key, search) {
                 const stream = fs.createWriteStream(cache.file.name, {fd: cache.file.fd})
                 res.body.pipe(stream);
                 stream.on('finish', () => {
-                    console.log("Finished downloading " + key + "(" + search + ") to " + cache.file.name);
+                    console.log("Finished downloading " + key + " to " + cache.file.name);
                     cache.ready = true;
                 })
                 return cache;

@@ -77,7 +77,10 @@ export default {
                 display: ${
                     phase == PHASE.HUD_NOPICS ? 'none;' : 'block;'
                 }
-                --max-pic-width: ${
+                --max-pic-width-row: ${
+                    phase == PHASE.HUD_PICS_VIDEO ? '20vh;' : '34vh;'
+                }
+                --max-pic-width-column: ${
                     phase == PHASE.HUD_PICS_VIDEO ? '30vh;' : '50vh;'
                 }
             }

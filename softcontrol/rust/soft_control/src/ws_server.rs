@@ -28,6 +28,8 @@ const  CHOSE_1:u8 = 2;
 const  CHOSE_2:u8 = 3;
 const  EXPLAIN_1:u8 = 4;
 const  EXPLAIN_2:u8 = 5;
+const  DONE_1:u8 = 6;
+const  DONE_2:u8 = 7;
 
 const LAST_EXPLAINED:usize = 2;
 
@@ -157,6 +159,8 @@ fn handle_message(
                         let pic_state = data[4];
                         println!("PIC State! {}", pic_state);
                         state.pic_state[*role as usize] = pic_state;
+                        let mut explain_role = state.pic_state[LAST_EXPLAINED] as usize;
+
                         if state.pic_state[CONTROL_ROLE] == READY &&
                             state.pic_state[AVATAR_ROLE] == READY {
                             // Generate a new pic key
@@ -172,10 +176,19 @@ fn handle_message(
                             state.pic_state[AVATAR_ROLE] <= CHOSE_2 {
                                 
                                 state.pic_state[LAST_EXPLAINED] = 1 - state.pic_state[LAST_EXPLAINED];
-                                let explain_role = state.pic_state[LAST_EXPLAINED] as usize;
+                                explain_role = state.pic_state[LAST_EXPLAINED] as usize;
                                 state.pic_state[explain_role] += 2;
                         }
-
+                        if state.pic_state[*role as usize] >= DONE_1 {
+                            let other_role = (1 - *role as usize);
+                            if state.pic_state[other_role] < DONE_1 {
+                                state.pic_state[other_role] += 2;
+                            } else {
+                                // Reset!
+                                state.pic_state[other_role] = WAITING;
+                                state.pic_state[*role as usize] = WAITING;
+                            }
+                        }
                         send_pic_state(state);
                     }
                 }
