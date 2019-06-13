@@ -42,21 +42,30 @@ const getPicClass = (picState, id, identity) =>
 
 const imageLoaded = (host, event) => {
     console.log("Image loaded!", host, event);
-    let imageFlex = "column";
+	const container = $(host.shadowRoot).find("#pics-container");
+	container.removeClass("tall");
+	container.addClass("wide");
+
     $(host.shadowRoot).find("img").each((i, e) => {
         if (e.naturalHeight != 0 && e.naturalHeight > e.naturalWidth) {
-            imageFlex = "row";
+            $(e).removeClass("wide");
+            $(e).addClass("tall");
+
+			container.removeClass("wide");
+			container.addClass("tall");
+			
+        } else {
+			$(e).removeClass("tall");
+			$(e).addClass("wide");
         }
     })
-    host.imageFlex = imageFlex;
 }
 
 export default {
     socketController: connect(store, (state) => state.socketController),
     picState: connect(store, (state) => state.picState),
     identity: "",
-    imageFlex: "row",
-    render: ({socketController, picState, identity, imageFlex}) => { 
+    render: ({socketController, picState, identity}) => { 
        return html`
         <style>
             :host {
@@ -72,15 +81,15 @@ export default {
                 width: 97%;
                 display: flex;
                 align-items: center;
-                ${imageFlex == "row" ?
-                    html`
-                    flex-direction: var(--pic-direction-row, row);
-                ` : html`
-                    flex-direction: var(--pic-direction-column, column);
-                `}
                 justify-content: space-evenly;
                 margin-top: 5px;
             }
+			#pics-container.tall {
+				flex-direction: var(--pic-direction-tall, row);
+			}
+			#pics-container.wide {
+				flex-direction: var(--pic-direction-wide, column);
+			}
             .image-container {
                 display: flex;
                 justify-content: center;
@@ -107,14 +116,15 @@ export default {
                 border-type: solid;
                 box-shadow: 0px 0px 40px #a0a;
             }
-            .pic {
-                ${imageFlex == "row" ?
-                    html`
-                    max-width: var(--max-pic-width-row, 50vh);
-                ` : html`
-                    max-width: var(--max-pic-width-column, 50vh);
-                `}
+			.pic {
+				max-width: var(--max-pic-width-wide, 50vh);
+			}
+            .pic.wide {
+				max-width: var(--max-pic-width-wide, 50vh);
             }
+			.pic.tall {
+				max-width: var(--max-pic-width-tall, 34hh);
+			}
         </style>
         ${picState[identity] > PIC_STATE.WAITING && picState[OTHER[identity]] > PIC_STATE.WAITING && html`
             <div id="pics-container">

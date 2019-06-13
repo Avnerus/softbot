@@ -280,7 +280,7 @@ pub fn start(
     motor_tx: mpsc::Sender<Vec<u8>>
 
 ) {
-    println!("Spawning server on port {}", config.server.port);
+    println!("\nSpawning server on port {}", config.server.port);
 
     let (comm_out, comm_in) = channel();
 
