@@ -38,11 +38,14 @@ const reducer = (state = {
         [ROLES.CONTROLLER] : 0,
         [ROLES.AVATAR]: 0,
         key: ""
-    }
+    },
+    transcribeTarget: "en"
 }, action) => {
   switch (action.type) {
     case 'CHANGE_PHASE':
       return { ...state, phase: action.value};
+    case 'SET_TRANSCRIBE_TARGET':
+      return { ...state, transcribeTarget: action.value};
     case 'SET_SOCKET_CONTROLLER': {
         if (action.manage) {
             action.socketController.sendValueCommand("R",0);
@@ -120,6 +123,11 @@ export const setSocketController = (socketController, manage) => ({
 
 export const setPicState = (value) => ({
     type: 'SET_PIC_STATE',
+    value,
+})
+
+export const setTranscribeTarget = (value) => ({
+    type: 'SET_TRANSCRIBE_TARGET',
     value,
 })
 

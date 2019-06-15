@@ -1,10 +1,13 @@
 import { html, render } from 'hybrids';
-import store, {connect, changePhase, PHASE} from '../common/state'
+import store, {connect, changePhase, setTranscribeTarget, PHASE} from '../common/state'
 
 import './language-select'
 
 const signInClick = (host, e) => {
 	e.preventDefault();
+    const transcribeTarget = e.target.closest("form").querySelector("language-select").value;
+    console.log("Sign in with transcribe target " + transcribeTarget);
+    store.dispatch(setTranscribeTarget(transcribeTarget));
     store.dispatch(changePhase(PHASE.HUD_NOPICS))
 } 
 
@@ -68,7 +71,13 @@ export default {
 				<div class="language-field">
 					<label> Preferred Language:  </label>
 					<span class="language-select">
-						<language-select languages=${['us','ar']}></language-select>
+                        <language-select languages=${
+                            [
+                                {value: 'en', title: 'English', flag: 'us'},
+                                {value: 'fi', title: 'Finnish', flag: 'fi'},
+                                {value: 'ar', title: 'Arabic', flag: 'arx'}
+                            ]
+                        }></language-select>
 					</span>
 				</div>
 				<div id="teleport-button">

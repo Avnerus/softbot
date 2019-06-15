@@ -4,19 +4,20 @@ import './language-select'
 
 const speak = (host, event) => {
     event.preventDefault();
-    const form = $(event.target).closest("form");
-    const text = form.find('input[name="text"]').val();
+    const form = event.target.closest("form");
+    const text = form.querySelector('input[name="text"]').value;
+    const target = form.querySelector('language-select').value;
+    console.log("Speak!", text, target);
     host.socketController.sendJSONCommand({
         command: 'speech',
         text: text,
-        translate: null
-            //event.currentTarget[1].value.length > 0 ? event.currentTarget[1].value : null
+        translate: target
     } );
     store.dispatch(addTranscript({
         from: "You",
         text: text
     }));
-    form.find('input[name="text"]').val("");
+    form.querySelector('input[name="text"]').value = "";
 };
 
 export default {
@@ -74,7 +75,13 @@ export default {
                     </div>
                     <div id="speech-language">
                         <label>In: </label>
-                        <language-select languages=${['us','fi']}></language-select>
+                        <language-select languages=${
+                            [
+                                {value: 'en', title: 'English', flag: 'us'},
+                                {value: 'fi', title: 'Finnish', flag: 'fi'},
+                                {value: 'ar', title: 'Arabic', flag: 'arx'}
+                            ]
+                        }></language-select>
                     </div>
                     <div id="speak-button">
                         <button type="submit" onclick=${speak} disabled=${socketController ? '' : 'disabled'}>Say</button>
