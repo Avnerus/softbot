@@ -1,10 +1,13 @@
 #include "valve.h"
 
-Valve* valve1 = new Valve(4,9,5,25,255); // CHAMBER A-1
-Valve* valve2 = new Valve(4,26,5,25,255); // CHAMBER A-2
+//Valve* valve1 = new Valve(4,9,5,25,255); // CHAMBER A-1
+//Valve* valve2 = new Valve(4,26,5,25,255); // CHAMBER A-2
+
+Valve* valve1 = new Valve(27,28,6,25,255); // CHAMBER B-1
+Valve* valve2 = new Valve(27,31,6,25,255); // CHAMBER B-2
 
 //Valve* valve = new Valve(14,5,7,2,255); // CHAMBER D
-// Valve* valve = new Valve(14,5,30,2,255); // CHAMBER G
+//Valve* valve = new Valve(14,5,30,2,255); // CHAMBER G
 
 void setup() {
   Serial.begin(9600); 
