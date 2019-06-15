@@ -39,6 +39,11 @@ const reducer = (state = {
         [ROLES.AVATAR]: 0,
         key: ""
     },
+    softbotState: {
+        [ROLES.CONTROLLER] : 0,
+        [ROLES.AVATAR]: 0,
+        softControllerName: ""
+    },
     transcribeTarget: "en"
 }, action) => {
   switch (action.type) {
@@ -48,7 +53,6 @@ const reducer = (state = {
       return { ...state, transcribeTarget: action.value};
     case 'SET_SOCKET_CONTROLLER': {
         if (action.manage) {
-            action.socketController.sendValueCommand("R",0);
             action.socketController.subscribeToPrefix('E', (msg) => {
                 store.dispatch(addTranscript({
                     from: "Error",
@@ -65,6 +69,10 @@ const reducer = (state = {
         action.socketController.on('pic-state', (data) => {
             console.log("New pic state!", data.state);
             store.dispatch(setPicState(data.state));
+        });
+        action.socketController.on('softbot-state', (data) => {
+            console.log("New softbot state!", data.state);
+            store.dispatch(setSoftbotState(data.state));
         });
         return {...state, socketController: action.socketController}
     }
@@ -88,8 +96,9 @@ const reducer = (state = {
         } else {
             return {...state, picState : action.value}
         }
-
-
+    }
+    case 'SET_SOFTBOT_STATE' : {
+        return {...state, softbotState : action.value}
     }
     default:
       return state;
@@ -123,6 +132,11 @@ export const setSocketController = (socketController, manage) => ({
 
 export const setPicState = (value) => ({
     type: 'SET_PIC_STATE',
+    value,
+})
+
+export const setSoftbotState = (value) => ({
+    type: 'SET_SOFTBOT_STATE',
     value,
 })
 

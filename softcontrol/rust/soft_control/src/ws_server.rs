@@ -43,7 +43,8 @@ struct ServerState {
     game_tx: Option<mpsc::Sender<Vec<u8>>>,
     comm_tx: mpsc::Sender<Vec<u8>>,
     pic_state: Vec<u8>,
-    pic_key: String
+    pic_key: String,
+    soft_controller_name: Option<String>
 }
 
 
@@ -81,6 +82,34 @@ fn send_pic_state(state: &ServerState) {
     }
 }
 
+fn send_softbot_state(state: &ServerState) {
+    println!("Sending softbot state");
+    let controller_name = match state.soft_controller_name {
+        Some(ref name) => name,
+        None => ""
+    };
+    let json_command = format!("U{{
+        \"command\": \"softbot-state\",
+        \"state\": {{
+            \"CONTROL\": {},
+            \"AVATAR\": {},
+            \"softControllerName\" : \"{}\"
+        }}
+    }}
+    ", 
+    if state.soft_controller.is_some() { '1' } else { '0' },
+    if state.soft_avatar.is_some() { '1' } else { '0' },
+    controller_name
+    );
+
+    if let Some(sc) = &state.soft_controller {
+        sc.send(json_command.as_bytes());
+    }
+    if let Some(sa) = &state.soft_avatar {
+        sa.send(json_command.as_bytes());
+    }
+}
+
 fn handle_message(
     server: &mut Server,
     msg: Message
@@ -109,15 +138,19 @@ fn handle_message(
                         *(targets[role as usize]) =  Some(server.ws.clone());
                          state.tokens.insert(server.ws.token(), role);
                          println!("Registration successful");
-                         if role == 1 {
+                         if role as usize == AVATAR_ROLE {
                              if let Some(sc) = targets[0] {
                                  println!("Notifying controller");
                                  sc.send("IAvatar connected!").unwrap();
                              }
-                        }
+                        } 
+                         else if role as usize == CONTROL_ROLE {
+                             state.soft_controller_name = Some(str::from_utf8(&data[2..]).unwrap().to_string());
+                         }
                     }
                 }
                 send_pic_state(state);
+                send_softbot_state(state);
             }
 
             _ => return Err(SoftError::new("Unknown role"))
@@ -262,14 +295,17 @@ impl Handler for Server {
                 *(targets[*role as usize]) = None;                
                 state.pic_state[*role as usize] = 0;
                 println!("Disconnected from role {:}", role);
-                if *role == 1 {
+                if *role as usize == AVATAR_ROLE {
                     if let Some(sc) = targets[0] {
                         println!("Notifying controller");
                         sc.send("IAvatar disconnected.").unwrap();
                     }
-               }
+                } else if *role as usize == CONTROL_ROLE {
+                    state.soft_controller_name = None;                    
+                }
             } 
         }
+        send_softbot_state(state);
         state.tokens.remove(&self.ws.token());
     }
 }
@@ -295,7 +331,8 @@ pub fn start(
         game_tx: None,
         comm_tx: comm_out.clone(),
         pic_state : pic_state,
-        pic_key : String::new()
+        pic_key : String::new(),
+        soft_controller_name : None
     }));
 
     let comm_state = state.clone();

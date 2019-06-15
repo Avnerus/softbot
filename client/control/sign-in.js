@@ -6,7 +6,11 @@ import './language-select'
 const signInClick = (host, e) => {
 	e.preventDefault();
     const transcribeTarget = e.target.closest("form").querySelector("language-select").value;
-    console.log("Sign in with transcribe target " + transcribeTarget);
+    const name = e.target.closest("form").querySelector('input[name="name"]').value;
+    console.log("Sign in with transcribe target " + transcribeTarget + " and name " + name);
+
+    host.socketController.send("R" + String.fromCharCode(0) + name);
+
     store.dispatch(setTranscribeTarget(transcribeTarget));
     store.dispatch(changePhase(PHASE.HUD_NOPICS))
 } 

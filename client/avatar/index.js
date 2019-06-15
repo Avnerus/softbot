@@ -19,6 +19,7 @@ import './css/voice-anim.scss'
 import store, {setSocketController} from '../common/state'
 import HitodamaPicsControl from '../common/hitodama-pics-control'
 import HitodamaPics from '../common/hitodama-pics'
+import HitodamaAvatar from './hitodama-avatar'
 import { define } from 'hybrids'
 
 //import {greet} from '../common/breakout/breakout'
@@ -36,6 +37,7 @@ export default class  {
 
         define('hitodama-pics-control', HitodamaPicsControl);
         define('hitodama-pics', HitodamaPics);
+        define('hitodama-avatar', HitodamaAvatar);
 
 
         /*

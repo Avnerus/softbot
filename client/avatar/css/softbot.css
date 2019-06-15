@@ -81,3 +81,9 @@ hitodama-pics {
     --max-pic-width-tall: 45vw;
 }
 
+.avatar-control {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
