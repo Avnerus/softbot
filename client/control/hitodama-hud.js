@@ -87,7 +87,7 @@ export default {
         </style>
         <div id="hud-container">
             <hitodama-video
-                streamURL="${'http://127.0.0.1:8088/janus'}"
+                streamURL="${'http://13.48.101.56:8088/janus'}"
               >
              </hitodama-video>
             <hitodama-pics identity=${'CONTROL'}></hitodama-pics>

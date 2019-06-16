@@ -112,7 +112,6 @@ export default {
                   adapter: adapter
           });
           Janus.init({debug: "none", dependencies: janusDeps, callback: () => {
-              console.log("HMMMM",window.RTCPeerConnection, navigator.getUserMedia);
               if(!Janus.isWebrtcSupported()) {
                   throw "WebRTC Not supported!";
               }
@@ -125,6 +124,7 @@ export default {
                       },
                       error: (error) => {
                           //Janus.error(error);
+                          console.log("Janus Error!", error);
                           throw "Janus Error " + error;
                       },
                       destroyed: () => {

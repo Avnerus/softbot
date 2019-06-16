@@ -36,7 +36,7 @@ export default class Main {
         events.on('socket_connected', () => {
             console.log("Socket connected registering control");
             events.emit("transcript", {from: "System", text: "Socket connected"});
-            this.socketController.sendValueCommand("R",0);
+            this.socketController.sendValueCommand("R",2);
         })
         this.socketController.init();
 
@@ -61,7 +61,7 @@ export default class Main {
         this.youtubeRemote = new YoutubeRemote(this.socketController, $('#youtube-form'));
         this.youtubeRemote.init();
 
-        this.janusConnection = new JanusConnection('http://127.0.0.1:8088/janus');
+        this.janusConnection = new JanusConnection('http://13.48.101.56:8088/janus');
         this.janusConnection.init();
 
         this.transcript = new Transcript(this.socketController, $('#transcript'));

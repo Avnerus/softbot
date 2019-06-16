@@ -59,7 +59,7 @@ export default class Streamer {
                         Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
                         if (this.recorder) {
-                            //    this.recorder.initWithStream(stream);
+                            this.recorder.initWithStream(this.streaming, stream);
                         }
                     },
                     error: (error) => {

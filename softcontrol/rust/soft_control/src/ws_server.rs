@@ -290,7 +290,7 @@ impl Handler for Server {
         println!("Client disconnected! ({:?}, {})",code,reason);
         let state = &mut *self.state.lock().unwrap();
         if let Some(role) = state.tokens.get(&self.ws.token()) {
-            let targets = [&mut state.soft_controller,&mut state.soft_avatar];
+            let targets = [&mut state.soft_controller,&mut state.soft_avatar, &mut state.soft_admin];
             if targets[*role as usize] != &mut None {
                 *(targets[*role as usize]) = None;                
                 state.pic_state[*role as usize] = 0;

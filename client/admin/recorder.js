@@ -6,15 +6,18 @@ export default class Recorder {
         console.log("Recorder constructed with container", container);
         this.container = container;
     }
-    initWithStream(stream) {
-        console.log("Recorder init with stream", stream);
-        this.recorder = new RecordRTC(stream, {type: 'video'});
+    initWithStream(streaming, stream) {
+        console.log("Recorder init with streaming", streaming);
+        this.stream = stream;
+        this.streaming = streaming;
+
+        //this.recorder = new RecordRTC(stream, {type: 'video'});
 
         this.container.find('#record-button').click(() => {
-            this.startRecording();
+            this.startRecordingJanus();
         });
         this.container.find('#stop-button').click(() => {
-            this.stopRecording();
+            this.stopRecordingJanus();
         });
     }
 
@@ -31,5 +34,32 @@ export default class Recorder {
             let url = URL.createObjectURL(blob);
             console.log(url);
         })
+    }
+
+    startRecordingJanus() {
+        console.log("Start recording Janus!", this.streaming);
+        const now = Date.now();
+        var body = {
+            "request": "recording",
+            "action" : "start",
+            "id" : 1,
+            "video" : "/home/ubuntu/recordings/" + now + "_video",
+            "audio" : "/home/ubuntu/recordings/" + now + "_audio",
+            "secret": "PewDiePie"
+        };
+        this.streaming.send({"message": body});
+    }
+
+    stopRecordingJanus() {
+        console.log("Stop recording Janus!", this.streaming);
+        var body = {
+            "request": "recording",
+            "action" : "stop",
+            "id" : 1,
+            "video" : true,
+            "audio" : true,
+            "secret": "PewDiePie"
+        };
+        this.streaming.send({"message": body});
     }
 }
