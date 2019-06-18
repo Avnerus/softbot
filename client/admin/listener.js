@@ -17,10 +17,10 @@ export default class Listener {
             this.stopRecognizing();
         });
         this.container.find('#start-recognize-button').click((event) => {
-            this.startRecognizing();
+            this.startRecognizingButton();
         });
         this.container.find('#stop-recognize-button').click(() => {
-            this.stopRecognizing();
+            this.stopRecognizingButton();
         });
     }
 
@@ -54,7 +54,12 @@ export default class Listener {
 
         //this.socketMessenger.emit("recognize", {stop: true});
     }
+    startRecognizingButton() {
 
+    }
+    stopRecognizingButton() {
+
+    }
     dataAvailable(e) {
         console.log("Recorder data available!", e);
         let query = this.container.find("form").serialize();

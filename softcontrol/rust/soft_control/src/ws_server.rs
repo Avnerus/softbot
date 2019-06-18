@@ -143,6 +143,10 @@ fn handle_message(
                                  println!("Notifying controller");
                                  sc.send("IAvatar connected!").unwrap();
                              }
+                            if let Some(sa) = targets[2] {
+                                println!("Notifying admin");
+                                sa.send("IAvatar connected!").unwrap();
+                            }
                         } 
                          else if role as usize == CONTROL_ROLE {
                              state.soft_controller_name = Some(str::from_utf8(&data[2..]).unwrap().to_string());
@@ -229,7 +233,7 @@ fn handle_message(
                     println!("Comm message");
                     // Just send it to the avatar
                     match role {
-                        0 => {
+                        0 | 2 => {
                             if let Some(sa) = &state.soft_avatar {
                                 sa.send(data);
                             } else {
