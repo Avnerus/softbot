@@ -3,8 +3,8 @@
 /*
    Left neck 
 */
-Valve* release = new Valve(2,3,5,25,1023);
-Valve* entry   = new Valve(2,26,5,25,1023);
+Valve* entry = new Valve(27,28,6,25,255); // CHAMBER B-1
+Valve* release = new Valve(27,31,6,25,255); // CHAMBER B-2
 
 /* Right neck  
 Valve* release = new Valve(6,7,9,25, 1023);
@@ -23,7 +23,7 @@ Valve* entry  = new Valve(20,18,38,25);
 Valve* release = new Valve(20,19,38,25);
 */
 
-PumpNg* pump = new PumpNg(22,21,23,25, 1023);
+PumpNg* pump = new PumpNg(42,55,17,25,255); // Pump
 
 int stage;
 int clock;
@@ -33,7 +33,7 @@ void setup() {
   Serial.begin(9600); 
   delay(3000);
   Serial.println("Valve test");
-  analogWriteResolution(10);
+  //analogWriteResolution(10);
 
   entry->init();
   release->init();
@@ -41,9 +41,10 @@ void setup() {
   pump->setSpeed(0.0);
   Serial.println("Deflate completely");
 
-  //entry->close();
-  //release->open();
-  delay(2000);
+  /*
+  entry->close();
+  release->open();
+  delay(2000);*/
 
   clock = millis();
   stage = 0;
@@ -51,15 +52,15 @@ void setup() {
 
 void loop() {
     int timer = millis() - clock;
-    //inflateDeflate(timer);
-    openClose(timer);
+    inflateDeflate(timer);
+    //openClose(timer);
 }
 
 void openClose(int timer) {
     if (timer >= 0 && stage == 0) {
         Serial.println("Open");
+        entry->close();
         release->open();
-        entry->open();
         stage = 1;
     }
     else if (timer >= 2000 && stage == 1) {
@@ -77,12 +78,14 @@ void openClose(int timer) {
 void inflateDeflate(int timer) {
     if (timer >= 0 && stage == 0) {
         Serial.println("Inflate");
+        pump->inflate();
         release->close();
         entry->open();
         stage = 1;
     }
     else if (timer >= 2000 && stage == 1) {
         entry->close();
+        pump->stop();
         stage = 2;
     }
     else if (timer >= 4000 && stage == 2) {

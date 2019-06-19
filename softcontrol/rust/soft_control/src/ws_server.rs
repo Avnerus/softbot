@@ -359,8 +359,8 @@ pub fn start(
                         }
                         'P' => {
                         //    println!("Pressure sensing message!");
-                            if let Some(sc) = & state.soft_controller {
-                               sc.send(msg).unwrap();
+                            if let Some(sa) = & state.soft_admin {
+                               sa.send(msg).unwrap();
                             }
                         }
                         _ => {
@@ -371,8 +371,8 @@ pub fn start(
                 'D' => {
                     let state = & sensing_state.lock().unwrap();
                     println!("Debug message!");
-                    if let Some(sc) = & state.soft_controller {
-                       sc.send(msg).unwrap();
+                    if let Some(sa) = & state.soft_admin {
+                       sa.send(msg).unwrap();
                     }
                 }
                 _ => {

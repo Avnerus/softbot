@@ -21,66 +21,98 @@ int   valueCounter = 0;
 byte   currentLength = 0;
 
 INPUT_STATE currentState;
-String VALID_COMMANDS = "XPSEMCWRL";
+String VALID_COMMANDS = "XPSEMCWRLH";
 
-PumpNg pump(22,21,4,25);
+PumpNg pump(42,55,17,25); // Pump
 
-Chamber chambers[4] = {
-    Chamber("LeftArm",
-            new Valve(20,18,38,25),
-            new Valve(20,19,38,25),
-            &pump,
-            A0,
-            120, 
-            200
-    ),
-    Chamber("RightArm",
-            new Valve(17,15,37,25),
-            new Valve(17,16,37,25),
-            &pump,
-            A15,
-            100, 
-            200
-    ),
+Chamber chambers[5] = {
     Chamber("LeftNeck",
-            new Valve(2,26,5,25),
-            new Valve(2,3,5,25),
+            new Valve(4,9,5,25), // CHAMBER A-1
+            new Valve(4,26,5,25), // CHAMBER A-2
             &pump,
-            A16, 
-            90, 
+            A10, 
+            80, 
             250,
             0.5
            // 0.220
     ),
     Chamber("RightNeck",
-            new Valve(6,8,9,25),
-            new Valve(6,7,9,25),
+            new Valve(27,28,6,25), // CHAMBER B-1
+            new Valve(27,31,6,25), // CHAMBER B-2
             &pump,
             A20,
-            90,
+            80,
             250,
             0.5
          //   0.29
+    ),
+    Chamber("DownNeck",
+            new Valve(32,40,2,25), // CHAMBER C-1
+            new Valve(32,47,2,25), // CHAMBER C-2
+            &pump,
+            A19,
+            80,
+            250,
+            0.5
+         //   0.29
+    ),
+    Chamber("Eyes",
+            new Valve(48,23,7,25), // CHAMBER D-1
+            new Valve(48,22,7,25), // CHAMBER D-2
+            &pump,
+            A18,
+            40,
+            130,
+            0.5
+             //   0.29
+    ),
+    Chamber("Cheeks",
+            new Valve(21,20,8,25), // CHAMBER E-1
+            new Valve(21,19,8,25), // CHAMBER E-2
+            &pump,
+            A17,
+            40,
+            150,
+            0.5
+             //   0.29
     )
-    // //Chamber("Right", 32,24,A0, 0, 700),
-  //  Chamber("Down",  26,28,A1, 0, 700),
-  //  Chamber("Eyes", 25,23,A3, 0, 200),
-  //  Chamber("Mouth", 29,27,A4, 0, 520), // 190, 290)
-   // Chamber("Cheeks", 31 ,33, A5, 0, 200) 
+        /*
+        Chamber("LeftArm",
+                new Valve(20,18,38,25),
+                new Valve(20,19,38,25),
+                &pump,
+                A0,
+                120, 
+                200
+        ),
+        Chamber("RightArm",
+                new Valve(17,15,37,25),
+                new Valve(17,16,37,25),
+                &pump,
+                A15,
+                100, 
+                200
+        ),*/
 };
 
 Arm* rightArmSensor = new Arm(1, 10, 60, true);
 Arm* leftArmSensor = new Arm(2, 28, 60, false);
 
 enum CHAMBER_INDEX {
-    LEFT_ARM_CHAMBER  = 0,
-    RIGHT_ARM_CHAMBER  = 1,
-    LEFT_CHAMBER  = 2,
-    RIGHT_CHAMBER   = 3,
-    DOWN_CHAMBER   = 4,
-    EYE_CHAMBERS   = 5,
-    MOUTH_CHAMBER  = 6,
-    CHEEK_CHAMBERS = 7
+    LEFT_NECK_CHAMBER  = 0,
+    RIGHT_NECK_CHAMBER   = 1 ,
+    DOWN_NECK_CHAMBER   = 2,
+    EYE_CHAMBERS   = 3,
+    CHEEK_CHAMBERS = 4,
+    RIGHT_ARM_CHAMBER  = 5,
+    LEFT_ARM_CHAMBER  = 6,
+    MOUTH_CHAMBER  = 7,
+};
+
+enum CHAMBER_STATES {
+    STOP_STATE = 0,
+    INFLATE_STATE = 1,
+    DEFLATE_STATE = 2
 };
 
 const int killPin = 39;
@@ -109,8 +141,9 @@ void setup() {
      chambers[i].init();
      delay(10);
   }
+  /*
   rightArmSensor->init();
-  leftArmSensor->init();
+  leftArmSensor->init();*/
 
 
   //getChamber(RIGHT_CHAMBER)->oscillate(241,245);
@@ -131,8 +164,9 @@ void loop() {
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update(now);
     }
+    /*
     rightArmSensor->update(now);
-    leftArmSensor->update(now);
+    leftArmSensor->update(now);*/
 
     // Kill switch
     /*
@@ -285,6 +319,35 @@ void processCommand() {
             Logger::Printf("Write %d to pin %d", pin, value);
             break;
         }
+        case 'H': {
+            int chamberIndex = (int)currentValue[0];
+            int chamberState = (int)currentValue[1];
+            Logger::Printf("Chamber index %d to state %d", chamberIndex, chamberState);
+            Chamber* chamber = getChamber(chamberIndex);
+            if (chamber) {
+                switch (chamberState) {
+                    case STOP_STATE: {
+                        chamber->stop();
+                        break;
+                    }
+                    case INFLATE_STATE: {
+                        chamber->inflateMax(1.0);
+                        break;
+                    }
+                    case DEFLATE_STATE: {
+                        chamber->deflateMax();
+                        break;
+                    }
+                    default: {
+                        Logger::Printf("No such state %d", chamberState);
+                    }
+                }
+
+            } else {
+                Logger::Printf("No such chamber %d", chamberIndex);
+            }
+            break;
+        }
         default: {
             break;
         }
@@ -321,8 +384,8 @@ void updateChambers(int x, int y) {
 
 void left(float speed) {
     Logger::Printf("Go left at %f", speed);
-    Chamber* leftNeck = getChamber(LEFT_CHAMBER);
-    Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
+    Chamber* leftNeck = getChamber(LEFT_NECK_CHAMBER);
+    Chamber* rightNeck = getChamber(RIGHT_NECK_CHAMBER);
 
     if (rightNeck && rightNeck->isInflated()) {
         rightNeck->deflateMax();
@@ -333,8 +396,8 @@ void left(float speed) {
     
 }
 void right(float speed) {
-    Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
-    Chamber* leftNeck = getChamber(LEFT_CHAMBER);
+    Chamber* rightNeck = getChamber(RIGHT_NECK_CHAMBER);
+    Chamber* leftNeck = getChamber(LEFT_NECK_CHAMBER);
 
     if (leftNeck && leftNeck->isInflated()) {
         leftNeck->deflateMax();
@@ -344,9 +407,9 @@ void right(float speed) {
     }
 }
 void down(float speed) {
-    Chamber* downNeck = getChamber(DOWN_CHAMBER);
-    Chamber* rightNeck = getChamber(RIGHT_CHAMBER);
-    Chamber* leftNeck = getChamber(LEFT_CHAMBER);
+    Chamber* downNeck = getChamber(DOWN_NECK_CHAMBER);
+    Chamber* rightNeck = getChamber(RIGHT_NECK_CHAMBER);
+    Chamber* leftNeck = getChamber(LEFT_NECK_CHAMBER);
     if (downNeck && downNeck->isInflated()) {
         downNeck->deflateMax();
     }
@@ -360,7 +423,7 @@ void up(float speed) {
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
         chambers[DOWN_CHAMBER].inflateMax(speed);
     }*/
-    Chamber* downNeck = getChamber(DOWN_CHAMBER);
+    Chamber* downNeck = getChamber(DOWN_NECK_CHAMBER);
     if (downNeck) {
         downNeck->inflateMax(speed);
     }

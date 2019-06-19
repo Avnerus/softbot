@@ -63,10 +63,17 @@ export default class Console {
         this.consoleContainer.find("#pump-checkbox").change((e) => {
             console.log("Pump ?");
             if($(e.target).prop('checked')) {
-                this.socketController.sendSerialCommand('P', 100);
+                this.socketController.sendSerialCommand('P', 200);
             } else {
                 this.socketController.sendSerialCommand('P', 0);
             }
+        });
+
+        this.consoleContainer.find(".chamber-button").click((e) => {
+            const chamberIndex = parseInt(this.consoleContainer.find('select[name="chambers"]').val());
+            const chamberState = parseInt($(e.currentTarget).attr("data-state-id"))
+            console.log("Change chamber " + chamberIndex + " to state " + chamberState + "!!");
+            this.socketController.sendSerialCommand('H',chamberIndex, chamberState);
         });
 
         this.socketController.subscribeToPrefix('S', (msg) => {

@@ -210,7 +210,7 @@ body {
 
 }
 .console-slider {
-    width: 400px;
+    width: 200px;
     margin-left: 20px;
     position: relative;
     top: 5px;
@@ -234,7 +234,7 @@ body {
     border: 1px solid white;
     width: 200px;
 }
-#pressure-sensing .title {
+.title {
     text-align: center;
     text-decoration: underline;
 }
@@ -257,4 +257,32 @@ body {
 }
 #button2.on {
     background-color: blue;
+}
+
+#console-form input {
+    width: 100px;
+}
+
+#joystick {
+    height: auto;
+}
+#chambers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    border-right-style: solid;
+    border-width: 1px;
+}
+
+#chambers select {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 80%;
+}
+
+#chambers button {
+    margin: 5px;
+    width: 50%;
+    height: 25px;
 }

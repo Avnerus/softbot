@@ -50,10 +50,7 @@ void Chamber::init() {
 
     Logger::Printf("%s chamber initialized - Initial pressure: %d",_name, _pressure);
 
-    deflateMax(1.0);
-    delay(2500);
     _pressure = readPressure();
-    stop();
 }
 
 void Chamber::update(unsigned long now) {
@@ -111,7 +108,7 @@ void Chamber::update(unsigned long now) {
 void Chamber::inflateMax(float speed) {
     _destinationPressure = _maxPressure;
     Logger::Printf("%s InflatMax pressure %d at speed %f",_name, _destinationPressure, speed );
-    inflate(0.5);
+    inflate(speed);
 }
   
 void Chamber::inflateTo(float max, float speed) {

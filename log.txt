@@ -1,0 +1,63 @@
+13:46:01 DPump set speed to 0.784314
+13:46:01 DPump setting motor speed to 802
+13:46:01 DPump starting
+13:46:04 DChamber index 4 to state 1
+13:46:04 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:04 DCheeks inflating at speed 1.000000
+13:46:05 DChamber index 4 to state 0
+13:46:05 DCheeks stopping at 119
+13:46:08 DChamber index 4 to state 2
+13:46:08 DCheeks Deflating at 0.500000 to 40
+13:46:09 DChamber index 4 to state 1
+13:46:09 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:09 DCheeks inflating at speed 1.000000
+13:46:11 DChamber index 4 to state 0
+13:46:11 DCheeks stopping at 120
+13:46:13 DChamber index 4 to state 1
+13:46:13 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:13 DCheeks inflating at speed 1.000000
+13:46:13 DCheeks stopping at 156
+13:46:16 DChamber index 4 to state 2
+13:46:16 DCheeks Deflating at 0.500000 to 40
+13:46:18 DChamber index 4 to state 1
+13:46:18 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:18 DCheeks inflating at speed 1.000000
+13:46:22 DChamber index 4 to state 2
+13:46:22 DCheeks Deflating at 0.500000 to 40
+13:46:24 DChamber index 4 to state 1
+13:46:24 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:24 DCheeks inflating at speed 1.000000
+13:46:26 DChamber index 4 to state 0
+13:46:26 DCheeks stopping at 116
+13:46:27 DChamber index 4 to state 2
+13:46:27 DCheeks Deflating at 0.500000 to 40
+13:46:29 DChamber index 4 to state 1
+13:46:29 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:29 DCheeks inflating at speed 1.000000
+13:46:31 DChamber index 4 to state 0
+13:46:31 DCheeks stopping at 116
+13:46:32 DChamber index 4 to state 2
+13:46:32 DCheeks Deflating at 0.500000 to 40
+13:46:39 DChamber index 4 to state 1
+13:46:39 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:39 DCheeks inflating at speed 1.000000
+13:46:41 DChamber index 4 to state 0
+13:46:41 DCheeks stopping at 115
+13:46:42 DChamber index 4 to state 2
+13:46:42 DCheeks Deflating at 0.500000 to 40
+13:46:43 DChamber index 4 to state 1
+13:46:43 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:43 DCheeks inflating at speed 1.000000
+13:46:44 DChamber index 4 to state 0
+13:46:44 DCheeks stopping at 115
+13:46:45 DChamber index 4 to state 1
+13:46:45 DCheeks InflatMax pressure 150 at speed 1.000000
+13:46:45 DCheeks inflating at speed 1.000000
+13:46:46 DChamber index 4 to state 2
+13:46:46 DCheeks Deflating at 0.500000 to 40
+13:46:48 DChamber index 4 to state 0
+13:46:48 DCheeks stopping at 85
+13:46:49 DPump set speed to 0.000000
+13:46:49 DPump setting motor speed to 0
+13:46:49 DPump set speed to 0.000000
+13:46:49 DPump setting motor speed to 0
