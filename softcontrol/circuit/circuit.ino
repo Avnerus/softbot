@@ -25,7 +25,7 @@ String VALID_COMMANDS = "XPSEMCWRLH";
 
 PumpNg pump(42,55,17,25); // Pump
 
-Chamber chambers[5] = {
+Chamber chambers[6] = {
     Chamber("LeftNeck",
             new Valve(4,9,5,25), // CHAMBER A-1
             new Valve(4,26,5,25), // CHAMBER A-2
@@ -75,6 +75,14 @@ Chamber chambers[5] = {
             150,
             0.5
              //   0.29
+    ),
+    Chamber("Arms",
+            new Valve(18,16,29,25), // CHAMBER F-1
+            new Valve(18,15,29,25), // CHAMBER F-2
+            &pump,
+            A16,
+            120, 
+            200
     )
         /*
         Chamber("LeftArm",
@@ -104,9 +112,8 @@ enum CHAMBER_INDEX {
     DOWN_NECK_CHAMBER   = 2,
     EYE_CHAMBERS   = 3,
     CHEEK_CHAMBERS = 4,
-    RIGHT_ARM_CHAMBER  = 5,
-    LEFT_ARM_CHAMBER  = 6,
-    MOUTH_CHAMBER  = 7,
+    ARMS_CHAMBRS = 5,
+    MOUTH_CHAMBER  = 6
 };
 
 enum CHAMBER_STATES {
@@ -297,7 +304,7 @@ void processCommand() {
             break;
         }
         case 'R': {
-            Chamber* rightArm = getChamber(RIGHT_ARM_CHAMBER);
+            Chamber* rightArm = getChamber(ARMS_CHAMBRS);
             if (rightArm){ 
                 int value = (int)currentValue[0];
                 rightArm->inflateTo((float)value / 255.0f, 1.0);
@@ -305,7 +312,7 @@ void processCommand() {
             break;
         }
         case 'L': {
-            Chamber* leftArm = getChamber(LEFT_ARM_CHAMBER);
+            Chamber* leftArm = getChamber(ARMS_CHAMBRS);
             if (leftArm){ 
                 int value = (int)currentValue[0];
                 leftArm->inflateTo((float)value / 255.0f, 1.0);
