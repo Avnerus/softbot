@@ -31,7 +31,6 @@ void setup() {
   actionStats.clear();
   bool worked = false;
   sensor.beginSPI(SPI_PORT);
-  /*
   if (sensor.beginSPI(SPI_PORT) == false) { //Begin communication over SPI. Use pin 10 as CS.
     // Freeze
       while (!worked) {
@@ -47,7 +46,7 @@ void setup() {
     
 
     //sensor.setMode(MODE_NORMAL); //MODE_SLEEP, MODE_FORCED, MODE_NORMAL is valid. See 3.3
-  } */
+  } 
 }
 
 void loop() {

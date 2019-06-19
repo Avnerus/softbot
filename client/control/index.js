@@ -18,7 +18,8 @@ define('sign-in', SignIn);
 define('hitodama-hud', HitodamaHUD);
 
 console.log("Loading control");
-const socketController = new SocketController('ws://127.0.0.1:3012',() => store.dispatch(setSocketController(socketController, true)));
+//const socketController = new SocketController('ws://127.0.0.1:3012',() => store.dispatch(setSocketController(socketController, true)));
+const socketController = new SocketController('ws://10.100.40.170:3012',() => store.dispatch(setSocketController(socketController, true)));
 //const socketController = new SocketController('ws://192.168.8.213:3012',() => store.dispatch(setSocketController(socketController, true)));
 socketController.init();
 

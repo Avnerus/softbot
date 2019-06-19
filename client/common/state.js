@@ -2,6 +2,17 @@ import {createStore} from 'redux';
 
 import SocketController from '../common/socket-controller'
 
+
+export const CHAMBERS = {
+    LEFT_NECK: 0,
+    RIGHT_NECK: 1,
+    DOWN_NECK: 2,
+    EYES: 3,
+    CHEEKs: 4,
+    ARMS: 5,
+    MOUTH: 6
+}
+
 export const PHASE = {
     SIGN_IN: 1,
     HUD_NOPICS: 2,

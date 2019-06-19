@@ -4,6 +4,7 @@ import HitodamaVideo from './hitodama-video'
 import HitodamaSpeech from './hitodama-speech'
 import HitodamaTranscript from './hitodama-transcript'
 import HitodamaControl from './hitodama-control'
+import HitodamaVisionControl from './hitodama-vision-control'
 import HitodamaPicsControl from '../common/hitodama-pics-control'
 import HitodamaPics from '../common/hitodama-pics'
 
@@ -11,6 +12,7 @@ define('hitodama-video', HitodamaVideo);
 define('hitodama-speech', HitodamaSpeech);
 define('hitodama-transcript', HitodamaTranscript);
 define('hitodama-control', HitodamaControl);
+define('hitodama-vision-control', HitodamaVisionControl);
 define('hitodama-pics-control', HitodamaPicsControl);
 define('hitodama-pics', HitodamaPics);
 
@@ -56,6 +58,12 @@ export default {
                 } 
                 grid-column: 2; 
             }
+            hitodama-vision-control {
+                grid-row: ${
+                  phase == PHASE.HUD_PICS_VIDEO ? '3;' : '2;'
+                } 
+                grid-column: 1; 
+            }
             hitodama-pics-control {
                 grid-row: ${
                   phase == PHASE.HUD_PICS_VIDEO && '4 ;'
@@ -90,6 +98,7 @@ export default {
                 streamURL="${'http://13.48.101.56:8088/janus'}"
               >
              </hitodama-video>
+            <hitodama-vision-control></hitodama-vision-control>
             <hitodama-pics identity=${'CONTROL'}></hitodama-pics>
             <hitodama-transcript>
             </hitodama-transcript>

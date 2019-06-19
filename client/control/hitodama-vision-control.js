@@ -14,43 +14,28 @@ import * as Hitodama from '../common/hitodama'
 const look = (host, event) => {
     event.preventDefault();
     const direction = $(event.target).attr("data-direction");
+    $(event.target).addClass("active");
     console.log("Look " + direction);
-    if (direction == "right") {
-        Hitodama.deflate(
-            host.socketController,
-            CHAMBERS.RIGHT_NECK
-        )
+    if (direction == "up") {
         Hitodama.inflateTo(
             host.socketController,
-            CHAMBERS.LEFT_NECK,
+            CHAMBERS.DOWN_NECK,
             0.8
         )
-    } else if (direction == "left") {
+    } else if (direction == "down") {
         Hitodama.deflate(
             host.socketController,
-            CHAMBERS.LEFT_NECK
+            CHAMBERS.DOWN_NECK
         )
-        Hitodama.inflateTo(
-            host.socketController,
-            CHAMBERS.RIGHT_NECK,
-            0.8
-        )
-    } else if (direction == "center") {
-        Hitodama.deflate(
-            host.socketController,
-            CHAMBERS.LEFT_NECK
-        )
-        Hitodama.deflate(
-            host.socketController,
-            CHAMBERS.RIGHT_NECK
-        )
-    }
+    } 
 }
-const express = (host, event) => {
+const stop = (host, event) => {
     event.preventDefault();
-    const emotion = $(event.target).attr("data-emotion");
-    console.log("Express " + emotion);
+    console.log("Stop!");
+    $(event.target).removeClass("active");
+    Hitodama.stop(host.socketController, CHAMBERS.DOWN_NECK);
 }
+const click = (host, event) => event.preventDefault();
 
 export default {
     socketController: connect(store, (state) => state.socketController),
@@ -80,6 +65,13 @@ export default {
                 box-shadow: 2px 2px gray;
                 display:flex;
                 font-size: 70px;
+                text-decoration: none;
+                align-items: center;
+                justify-content: center;
+                color: #f46161;
+            }
+            .control-button.active {
+                background-color: red;
             }
             .button-row {
                 display: flex;
@@ -90,25 +82,25 @@ export default {
         </style>
         <div id="control-container">
             <div class="button-row">
-                <a onclick="${look}" href="">
-                    <img data-direction="left" class="control-button" src=${LookLeft}>
+                <a 
+                    data-direction="down" 
+                    class="control-button"
+                    onmousedown="${look}"
+                    onmouseup="${stop}"
+                    onclick="${click}"
+                    href=""
+                >
+                        ⬇️
                 </a>
-                <a onclick="${look}" href="">
-                    <img data-direction="center" class="control-button" src=${LookStraight}>
-                </a>
-                <a onclick="${look}" href="">
-                    <img data-direction="right"class="control-button" src=${LookRight}>
-                </a>
-            </div>
-            <div class="button-row">
-                <a onclick="${express}" href="">
-                    <img data-emotion="happy" class="control-button" src=${EmojiHappy}>
-                </a>
-                <a onclick="${express}" href="">
-                    <img data-emotion="astonished" class="control-button" src=${EmojiAstonished}>
-                </a>
-                <a onclick="${express}" href="">
-                    <img data-emotion="angry" class="control-button" src=${EmojiAngry}>
+                <a 
+                    data-direction="up" 
+                    class="control-button"
+                    onmousedown="${look}"
+                    onmouseup="${stop}"
+                    onclick="${click}"
+                    href=""
+                >
+                    ⬆️
                 </a>
             </div>
         </div>

@@ -25,7 +25,7 @@ String VALID_COMMANDS = "XPSEMCWRLH";
 
 PumpNg pump(42,55,17,25); // Pump
 
-Chamber chambers[6] = {
+Chamber chambers[7] = {
     Chamber("LeftNeck",
             new Valve(4,9,5,25), // CHAMBER A-1
             new Valve(4,26,5,25), // CHAMBER A-2
@@ -81,8 +81,16 @@ Chamber chambers[6] = {
             new Valve(18,15,29,25), // CHAMBER F-2
             &pump,
             A16,
-            120, 
+            110, 
             200
+    ),
+    Chamber("Mouth",
+            new Valve(45,44,3,25), // CHAMBER H-1
+            new Valve(45,43,3,25), // CHAMBER H-2
+            &pump,
+            A14,
+            40, 
+            150
     )
         /*
         Chamber("LeftArm",
@@ -253,9 +261,14 @@ void processCommand() {
             break;
         }
         case 'S': {
-            Logger::Write("Stop Command");
-            dispatchStop();
-           // pump.stop();
+            int chamberIndex = (int)currentValue[0];
+            Chamber* chamber = getChamber(chamberIndex);
+            if (chamber) {
+                Logger::Printf("Stop chamber index %d", chamberIndex);
+                chamber->stop();
+            } else {
+                Logger::Printf("No such chamber %d", chamberIndex);
+            }
             break;
         }
         case 'E': {
@@ -289,7 +302,7 @@ void processCommand() {
            }
            break;
         }
-        case 'C': {
+        case 'K': {
             Chamber* cheeks = getChamber(CHEEK_CHAMBERS);
             if (cheeks) {
                 if (currentLength == 2) {
@@ -350,6 +363,19 @@ void processCommand() {
                     }
                 }
 
+            } else {
+                Logger::Printf("No such chamber %d", chamberIndex);
+            }
+            break;
+        }
+        case 'C': {
+            int chamberIndex = (int)currentValue[0];
+            int value = (int)currentValue[1];
+            float inflate = (float)value / 255.0f;
+            Chamber* chamber = getChamber(chamberIndex);
+            if (chamber) {
+                Logger::Printf("Inflate chamber index %d to reach %d (%f)", chamberIndex, value, inflate);
+                chamber->inflateTo(inflate, 1.0);
             } else {
                 Logger::Printf("No such chamber %d", chamberIndex);
             }

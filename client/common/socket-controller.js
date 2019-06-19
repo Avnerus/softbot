@@ -86,7 +86,7 @@ export default class SocketController {
     }
 
     sendSerialCommand(command, ...values) {
-        console.log("Sending Serial command: ", command);
+        console.log("Sending Serial command: ", command, values);
         let buffer = new ArrayBuffer(3 + values.length);
         let z = new Uint8Array(buffer);
         z[0] = ">".charCodeAt(0);

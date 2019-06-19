@@ -58,7 +58,7 @@ export default {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 97%;
+                width: 100%;
                 height: 100%;
 
             }
@@ -82,6 +82,7 @@ export default {
                 box-shadow: 2px 2px gray;
                 display:flex;
                 font-size: 70px;
+                color: #f46161;
             }
             .text-container {
                 display: flex;
