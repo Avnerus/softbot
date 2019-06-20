@@ -61,7 +61,7 @@ Chamber chambers[7] = {
             new Valve(48,22,7,25), // CHAMBER D-2
             &pump,
             A18,
-            90,
+            85,
             120,
             1.0 
              //   0.29
