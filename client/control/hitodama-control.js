@@ -50,6 +50,62 @@ const express = (host, event) => {
     event.preventDefault();
     const emotion = $(event.target).attr("data-emotion");
     console.log("Express " + emotion);
+    if (emotion == "angry") {
+        Hitodama.inflateTo(
+            host.socketController,
+            CHAMBERS.EYES,
+            0.8,
+            1500
+        )
+        .then(() => {
+            Hitodama.deflate(
+                host.socketController,
+                CHAMBERS.EYES
+            )
+        });
+
+    }
+    else if (emotion == "happy") {
+        Hitodama.inflateTo(
+            host.socketController,
+            CHAMBERS.CHEEKS,
+            0.75,
+            2500
+        )
+        .then(() => {
+            Hitodama.deflate(
+                host.socketController,
+                CHAMBERS.CHEEKS
+            )
+        });
+    } 
+    else if (emotion == "astonished") {
+        /*
+        Hitodama.inflateTo(
+            host.socketController,
+            CHAMBERS.CHEEKS,
+            0.75,
+            2000
+        )
+        .then(() => {
+            Hitodama.deflate(
+                host.socketController,
+                CHAMBERS.CHEEKS
+            )
+        });*/
+        Hitodama.inflateTo(
+            host.socketController,
+            CHAMBERS.MOUTH,
+            0.8,
+            2000
+        )
+        .then(() => {
+            Hitodama.deflate(
+                host.socketController,
+                CHAMBERS.MOUTH
+            )
+        });
+    } 
 }
 
 export default {

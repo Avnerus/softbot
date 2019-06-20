@@ -5,15 +5,15 @@ const int CHECK_INTERVAL = 20;
 const int CALIBRATION_SAMPLES = 20 ;
 const float CALIBRATION_DEVIATION = 5.0f;
 
-Arm::Arm(int id, int pin, int threshold, bool springy) {
+Arm::Arm(int id, int pin, float threshold, float releaseThreshold) {
     _id = id;
     _pin = pin;
     _active = false;
     _idlePressure = 0;
     _pushed = false;
     _threshold = threshold;
+    _releaseThreshold = releaseThreshold;
     _currentThreshold = threshold;
-    _springy = springy;
     _lastCheck = 0;
 
     _sensor = new BME280();
@@ -37,7 +37,6 @@ void Arm::init() {
     }*/
     _sensor->beginSPI(_pin);
      Logger::Printf("The Arm sensor at %d initialized! (threshold %d)",_pin,_threshold);
-     delay(1000);
     _active = true;
 }
 void Arm::update(unsigned long now) {
@@ -46,36 +45,33 @@ void Arm::update(unsigned long now) {
             _lastCheck = now;
             float pressure = (_sensor->readFloatPressure());
             _calibrationStats->add(pressure);
-            if (!(_pushed && _springy) && (_calibrationStats->count() >= CALIBRATION_SAMPLES)) {
+            if (_calibrationStats->count() >= CALIBRATION_SAMPLES) {
                 //float stdDev = _calibrationStats.pop_stdev();
                // if (stdDev < CALIBRATION_DEVIATION) {
                 _idlePressure = _calibrationStats->average();
               //  }
                 _calibrationStats->clear();
-                if (_pushed && !_springy) {
-                    _currentThreshold = _threshold * -1.0f;
-                } else {
-                    _currentThreshold = _threshold;
-                }
             } 
             if (_idlePressure != 0) {
                 float diff = pressure - _idlePressure;
                 /*
-                if (_id == 2) {
+                if (_id == 1) {
                     Serial.print(">SAD ");
                     Serial.print(pressure);
                     Serial.print(',');
                     Serial.print(_idlePressure);
+                    Serial.print(',');
+                    Serial.print(diff);
                     Serial.print("<");
                 }*/
 
-                if (_pushed && diff < _currentThreshold) {
+                if (_pushed && diff < _releaseThreshold) {
                     _pushed = false;
                     Serial.print(">SAR");
                     Serial.print(_id);
                     Serial.print("<");
                 }
-                if (!_pushed && diff > _currentThreshold) {
+                else if (!_pushed && diff > _threshold) {
                     _pushed = true;
                     Serial.print(">SAP");
                     Serial.print(_id);

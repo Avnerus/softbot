@@ -8,7 +8,7 @@ export const CHAMBERS = {
     RIGHT_NECK: 1,
     DOWN_NECK: 2,
     EYES: 3,
-    CHEEKs: 4,
+    CHEEKS: 4,
     ARMS: 5,
     MOUTH: 6
 }

@@ -148,7 +148,7 @@ export default {
                 height: 100%;
             }
             #video-container {
-                width: 95%;
+                width: 98%;
                 height: 100%;
                 display: flex;
                 align-items: center;

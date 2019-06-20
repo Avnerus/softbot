@@ -31,9 +31,9 @@ Chamber chambers[7] = {
             new Valve(4,26,5,25), // CHAMBER A-2
             &pump,
             A10, 
-            80, 
-            250,
-            0.5
+            90, 
+            200,
+            1.0
            // 0.220
     ),
     Chamber("RightNeck",
@@ -41,9 +41,9 @@ Chamber chambers[7] = {
             new Valve(27,31,6,25), // CHAMBER B-2
             &pump,
             A20,
-            80,
-            250,
-            0.5
+            90,
+            200,
+            1.0
          //   0.29
     ),
     Chamber("DownNeck",
@@ -51,9 +51,9 @@ Chamber chambers[7] = {
             new Valve(32,47,2,25), // CHAMBER C-2
             &pump,
             A19,
-            80,
-            250,
-            0.5
+            90,
+            200,
+            1.0
          //   0.29
     ),
     Chamber("Eyes",
@@ -61,9 +61,9 @@ Chamber chambers[7] = {
             new Valve(48,22,7,25), // CHAMBER D-2
             &pump,
             A18,
-            40,
-            130,
-            0.5
+            90,
+            120,
+            1.0 
              //   0.29
     ),
     Chamber("Cheeks",
@@ -71,9 +71,10 @@ Chamber chambers[7] = {
             new Valve(21,19,8,25), // CHAMBER E-2
             &pump,
             A17,
-            40,
-            150,
-            0.5
+            80,
+            100,
+            1.0
+            
              //   0.29
     ),
     Chamber("Arms",
@@ -82,15 +83,17 @@ Chamber chambers[7] = {
             &pump,
             A16,
             110, 
-            200
+            200,
+            1.0
     ),
     Chamber("Mouth",
             new Valve(45,44,3,25), // CHAMBER H-1
             new Valve(45,43,3,25), // CHAMBER H-2
             &pump,
             A14,
-            40, 
-            150
+            85, 
+            105,
+            1.0
     )
         /*
         Chamber("LeftArm",
@@ -111,8 +114,8 @@ Chamber chambers[7] = {
         ),*/
 };
 
-Arm* rightArmSensor = new Arm(1, 10, 60, true);
-Arm* leftArmSensor = new Arm(2, 28, 60, false);
+Arm* rightArmSensor = new Arm(1, 53, 25, -10);
+Arm* leftArmSensor = new Arm(2, 52, 60, -30);
 
 enum CHAMBER_INDEX {
     LEFT_NECK_CHAMBER  = 0,
@@ -156,9 +159,8 @@ void setup() {
      chambers[i].init();
      delay(10);
   }
-  /*
   rightArmSensor->init();
-  leftArmSensor->init();*/
+  leftArmSensor->init();
 
 
   //getChamber(RIGHT_CHAMBER)->oscillate(241,245);
@@ -179,9 +181,8 @@ void loop() {
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update(now);
     }
-    /*
     rightArmSensor->update(now);
-    leftArmSensor->update(now);*/
+    leftArmSensor->update(now);
 
     // Kill switch
     /*
@@ -342,9 +343,9 @@ void processCommand() {
         case 'H': {
             int chamberIndex = (int)currentValue[0];
             int chamberState = (int)currentValue[1];
-            Logger::Printf("Chamber index %d to state %d", chamberIndex, chamberState);
             Chamber* chamber = getChamber(chamberIndex);
             if (chamber) {
+                Logger::Printf("Chamber ", chamber->getName(), chamberState);
                 switch (chamberState) {
                     case STOP_STATE: {
                         chamber->stop();
@@ -374,7 +375,7 @@ void processCommand() {
             float inflate = (float)value / 255.0f;
             Chamber* chamber = getChamber(chamberIndex);
             if (chamber) {
-                Logger::Printf("Inflate chamber index %d to reach %d (%f)", chamberIndex, value, inflate);
+                Logger::Printf("Inflate ",chamber->getName()," to reach ", value);
                 chamber->inflateTo(inflate, 1.0);
             } else {
                 Logger::Printf("No such chamber %d", chamberIndex);

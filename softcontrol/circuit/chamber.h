@@ -53,6 +53,8 @@ class Chamber {
 
         CHAMBER_STATE getState();
 
+        const char* getName();
+
     private:
         void inflate(float speed);
 
@@ -77,6 +79,8 @@ class Chamber {
         bool _oscillating;
         int _oscillateMin;
         int _oscillateMax;
+
+        unsigned long _startedInflating;
 
         PumpNg* _pump;
 
