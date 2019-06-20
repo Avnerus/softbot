@@ -101,8 +101,16 @@ const attach = (host, janus) => {
 const metadataLoaded = (host, e) => {
     console.log("Video metadata loaded!");
     host.waiting = false;
+    host.pressPlay = true;
     e.target.play();
 }
+const pressedPlay = (host, event) => {
+    event.preventDefault();
+    const video = event.target.nextSibling.nextSibling.querySelector("video");
+    video.play();
+    host.pressPlay = false;
+}
+
 
 export default {
     streamURL: {
@@ -137,8 +145,9 @@ export default {
     },
     stream: null,
     waiting: true,
+    pressPlay: false,
     phase: connect(store, (state) => state.phase),
-    render: ({state, stream, waiting, phase}) => { 
+    render: ({state, stream, waiting, phase, pressPlay}) => { 
        console.log("Rendering HITODAMA Video!");
        return html`
         <style>
@@ -158,6 +167,7 @@ export default {
                 width: 100%;
                 height: 100%;
                 max-width: 500px;
+                display: ${pressPlay ? 'none' : 'block'};
             }
             .wait {
                 padding: 20px;
@@ -169,19 +179,42 @@ export default {
             .placeholder {
                 ${phase == PHASE.HUD_PICS_VIDEO ? 'height: 100%;' : 'width: 95%;'}
             }
+            .control-button {
+                width: 70px;
+                height: 65px;
+                padding: 5px;
+                background-color: #dfdbfb;
+                border-style: solid;
+                border-width: 1px;
+                border-radius: 5px;
+                box-shadow: 2px 2px gray;
+                font-size: 70px;
+                justify-content: center;
+                align-items: center;
+                text-decoration: none;
+                display: ${pressPlay ? 'flex' : 'none'};
+                position: relative;
+                left: 40%;
+                top: 40%;
+            }
         </style>
+        <a onclick="${pressedPlay}" href="" class="control-button">
+            ▶️ 
+        </a>
         <div id="video-container">
             ${stream && html`
                 <video 
                     srcObject=${stream} 
                     id="hitodama-video"
                     onloadedmetadata=${metadataLoaded}
+                    autoplay="false"
                 ></video>
               `}
              ${waiting && html`
                 <!--img class="placeholder" src=${CameraPlaceholder}-->    
                 <span class="wait">⌚️</span>
              `}
+               <!--img class="placeholder" src=${CameraPlaceholder}-->    
         </div>
      `
    }
