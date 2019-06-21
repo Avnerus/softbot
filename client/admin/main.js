@@ -62,7 +62,7 @@ export default class Main {
         this.youtubeRemote = new YoutubeRemote(this.socketController, $('#youtube-form'));
         this.youtubeRemote.init();
 
-        this.janusConnection = new JanusConnection('http://13.48.101.56:8088/janus');
+        this.janusConnection = new JanusConnection('https://hitodama.online:8089/janus');
         this.janusConnection.init();
 
         this.transcript = new Transcript(this.socketController, $('#transcript'));

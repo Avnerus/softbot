@@ -16,7 +16,7 @@ bool calibrated = false;
 bool pushed = false;
 float stdDev = 0;
 
-const int SPI_PORT = 53;
+const int SPI_PORT = 52;
 
 
 void setup() {
