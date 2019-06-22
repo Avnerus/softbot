@@ -7,12 +7,15 @@ const ready = (host, event) => {
     host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
 }
 
-const chooseImage = (host, event) => {
+const imageClick = (host, event) => {
     event.preventDefault();
+    const chosenId = parseInt($(event.target).attr("data-image-id"));
+    chooseImage(host, chosenId);
+}
+
+const chooseImage = (host, id) => {
     if (host.picState[host.identity] == PIC_STATE.READY) {
-        console.log("Choose image!", event.target);
-        const chosenId = $(event.target).attr("data-image-id");
-        if (chosenId == '1') {
+        if (id == 1) {
             host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.CHOSE_1));
         } else {
             host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.CHOSE_2));
@@ -65,6 +68,18 @@ export default {
     socketController: connect(store, (state) => state.socketController),
     picState: connect(store, (state) => state.picState),
     identity: "",
+    externalEvents: {
+        set: (host, value, lastValue) => {
+            console.log("Listen to external events", value);
+            value.on('arm-release', ({id}) => {
+                console.log("Pics Arm release!", id);
+                if (host.picState[host.identity] == PIC_STATE.READY) {
+                    chooseImage(host, id);
+                }
+            });
+            
+        }
+    },
     render: ({socketController, picState, identity}) => { 
        return html`
         <style>
@@ -128,7 +143,7 @@ export default {
         </style>
         ${picState[identity] > PIC_STATE.WAITING && picState[OTHER[identity]] > PIC_STATE.WAITING && html`
             <div id="pics-container">
-                <div onclick=${chooseImage} class="${getPicClass(picState, 1, identity)}">
+                <div onclick=${imageClick} class="${getPicClass(picState, 1, identity)}">
                     ${picState.key.length > 0 && html`
                         <img 
                             data-image-id="1"
@@ -138,7 +153,7 @@ export default {
                          ></img>
                     `}
                 </div>
-                <div onclick=${chooseImage} class="${getPicClass(picState, 2, identity)}">
+                <div onclick=${imageClick} class="${getPicClass(picState, 2, identity)}">
                 ${picState.key.length > 0 && html`
                     <img 
                         data-image-id="2"

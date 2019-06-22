@@ -69,21 +69,3 @@ body {
 #button2.on {
     background-color: blue;
 }
-
-.pics-control {
-    height: 120px;
-}
-
-hitodama-pics {
-    --pic-direction-wide: row;
-    --pic-direction-tall: row;
-    --max-pic-width-wide: 45vw;
-    --max-pic-width-tall: 45vw;
-}
-
-.avatar-control {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-

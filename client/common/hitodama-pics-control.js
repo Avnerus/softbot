@@ -1,12 +1,19 @@
 import { html, render } from 'hybrids';
 import store, {connect, PIC_STATE, PHASE, OTHER} from './state'
 
-const ready = (host, event) => {
+const readyClick = (host, event) => {
     event.preventDefault();
+    ready(host);
+}
+
+const ready = (host) => {
     console.log("Ready!");
     if (host.picState[host.identity] == PIC_STATE.WAITING) {
         host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
-    } else {
+    } else if (
+        host.picState[host.identity] >= PIC_STATE.EXPLAIN_1 &&
+        host.picState[host.identity] <= PIC_STATE.EXPLAIN_2
+    ) {
         host.socketController.send("SPIC" + String.fromCharCode(host.picState[host.identity] + 2));
     }
 }
@@ -51,6 +58,18 @@ export default {
     identity : "",
     picState: connect(store, (state) => state.picState),
     phase: connect(store, (state) => state.phase),
+    externalEvents: {
+        set: (host, value, lastValue) => {
+            console.log("Listen to external events", value);
+            value.on('arm-release', ({id}) => {
+                console.log("Arm release!", id);
+                if (id == 2) {
+                    ready(host);
+                }
+            });
+            
+        }
+    },
     render: ({socketController, identity, picState, phase}) => { 
        return html`
         <style>
@@ -109,7 +128,7 @@ export default {
                 ` : 
                 key == 'readyButton' && value == true ? html`
                     <div>
-                        <a onclick="${ready}" href="">
+                        <a onclick="${readyClick}" href="">
                             <div class="control-button">
                             ${identity == "CONTROL" && html`
                                 <svg id="hand-shake" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg>

@@ -17,9 +17,7 @@ import './css/softbot.css'
 import './css/voice-anim.scss'
 
 import store, {setSocketController} from '../common/state'
-import HitodamaPicsControl from '../common/hitodama-pics-control'
-import HitodamaPics from '../common/hitodama-pics'
-import HitodamaAvatar from './hitodama-avatar'
+import AvatarRoot from './avatar-root'
 import { define } from 'hybrids'
 
 //import {greet} from '../common/breakout/breakout'
@@ -35,9 +33,7 @@ export default class  {
         this.emitter = new CustomEmitter();
         global.events = this.emitter;
 
-        define('hitodama-pics-control', HitodamaPicsControl);
-        define('hitodama-pics', HitodamaPics);
-        define('hitodama-avatar', HitodamaAvatar);
+        define('avatar-root', AvatarRoot);
 
 
         /*
