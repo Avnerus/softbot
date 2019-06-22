@@ -48,7 +48,7 @@ export default class  {
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
         //this.socketController = new SocketController("ws://192.168.8.239:3012");
         //this.socketController = new SocketController("ws://127.0.0.1:3012");
-        this.socketController = new SocketController("ws://10.100.40.170:3012");
+        this.socketController = new SocketController("ws://incarnation.hitodama.online");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");
             store.dispatch(setSocketController(this.socketController, false));
