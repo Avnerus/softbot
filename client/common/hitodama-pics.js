@@ -121,11 +121,11 @@ export default {
             }
             .image-container.chosen img {
                 border-type: solid;
-                box-shadow: 0px 0px 20px #0f0;
+                box-shadow: 0px 0px 40px #f00;
             }
             .image-container.other img {
                 border-type: solid;
-                box-shadow: 0px 0px 20px #00f;
+                box-shadow: 0px 0px 40px #00f;
             }
             .image-container.other.chosen img {
                 border-type: solid;
