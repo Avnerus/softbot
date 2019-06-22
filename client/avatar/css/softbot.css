@@ -69,3 +69,12 @@ body {
 #button2.on {
     background-color: blue;
 }
+#timer {
+    height: 10px;
+    width: 86%;
+    background-color: blue;
+    position: absolute;
+    bottom: 2px;
+    left: 7%;
+    border-radius: 15px;
+}

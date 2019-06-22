@@ -115,7 +115,7 @@ Chamber chambers[7] = {
 };
 
 Arm* rightArmSensor = new Arm(1, 53, 25, -10);
-Arm* leftArmSensor = new Arm(2, 52, 300, -200);
+Arm* leftArmSensor = new Arm(2, 52, 200, -150);
 
 enum CHAMBER_INDEX {
     LEFT_NECK_CHAMBER  = 0,

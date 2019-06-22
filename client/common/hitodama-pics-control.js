@@ -7,14 +7,16 @@ const readyClick = (host, event) => {
 }
 
 const ready = (host) => {
-    console.log("Ready!");
-    if (host.picState[host.identity] == PIC_STATE.WAITING) {
-        host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
-    } else if (
-        host.picState[host.identity] >= PIC_STATE.EXPLAIN_1 &&
-        host.picState[host.identity] <= PIC_STATE.EXPLAIN_2
-    ) {
-        host.socketController.send("SPIC" + String.fromCharCode(host.picState[host.identity] + 2));
+    if (host.softbotState[OTHER[host.identity]]) {
+        console.log("Ready!");
+        if (host.picState[host.identity] == PIC_STATE.WAITING) {
+            host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
+        } else if (
+            host.picState[host.identity] >= PIC_STATE.EXPLAIN_1 &&
+            host.picState[host.identity] <= PIC_STATE.EXPLAIN_2
+        ) {
+            host.socketController.send("SPIC" + String.fromCharCode(host.picState[host.identity] + 2));
+        }
     }
 }
 
@@ -57,6 +59,7 @@ export default {
     socketController: connect(store, (state) => state.socketController),
     identity : "",
     picState: connect(store, (state) => state.picState),
+    softbotState: connect(store, (state) => state.softbotState),
     phase: connect(store, (state) => state.phase),
     externalEvents: {
         set: (host, value, lastValue) => {
@@ -70,7 +73,7 @@ export default {
             
         }
     },
-    render: ({socketController, identity, picState, phase}) => { 
+    render: ({socketController, identity, picState, softbotState, phase}) => { 
        return html`
         <style>
             :host {
@@ -120,7 +123,7 @@ export default {
             }
         </style>
         <div id="control-container">
-            ${ Object.entries(getGuidelines(picState, identity)).map(([key, value]) => 
+            ${softbotState[OTHER[identity]] ? Object.entries(getGuidelines(picState, identity)).map(([key, value]) => 
                 key == 'guidelines' ? html `
                     <div class="text-container">
                         ${value.map( line => html`<label>${line}</label>`)}
@@ -197,7 +200,10 @@ export default {
                     </div>
                 ` : ''
                 )
-            }
+            :''}
+            ${!softbotState[OTHER[identity]] && html`
+                    <span>Waiting for partner</span>
+            `}
         </div>
      `
    }

@@ -1,4 +1,5 @@
 const LONG_PRESS_THRESHOLD = 800;
+const LONG_PRESS_WAIT = 5000;
 
 export default class Arms {
     constructor(socketController) {
@@ -10,25 +11,32 @@ export default class Arms {
         this.longPressTime = 0;
         this.longPressing = false;
         this.longPassedThreshold = false;
+        this.timeSinceLongPress = 0;
 
         this.socketController.subscribeToPrefix('S', (data) => {
             //console.log("Arm sense message!", data);
             let text = new TextDecoder("utf-8").decode(new Uint8Array(data,2))
             const armId = parseInt(text[1]);
             if (text[0] == 'P') {
-                events.emit("arm-press", {id: armId})
+                console.log("Press " + armId);
+                if (!this.longPassedThreshold) {
+                    events.emit("arm-press", {id: armId})
+                }
                 this.ARMS[armId - 1] = 1;
             } else if (text[0] == 'R') {
-                events.emit("arm-release", {id: armId})
+                console.log("Release " + armId);
+                if (!this.longPassedThreshold) {
+                    events.emit("arm-release", {id: armId})
+                }
                 this.ARMS[armId - 1] = 0;
             }
 
             this.longPressing =  (this.ARMS[0] && this.ARMS[1]);
             if (!this.longPressing) {
+                /*
                 if (this.longPassedThreshold) {
                     events.emit("arm-long-release");
-                    this.longPassedThreshold = false;
-                }
+                }*/
                 this.longPressTime = 0;
             }
         })
@@ -42,6 +50,13 @@ export default class Arms {
                 events.emit("arm-long-press");
             }
         } 
+        if (this.longPassedThreshold) {
+            this.timeSinceLongPress += dt;
+            if (this.timeSinceLongPress  > LONG_PRESS_WAIT) {
+                this.longPassedThreshold = false;
+                this.timeSinceLongPress = 0;
+            }
+        }
     }
 
 }

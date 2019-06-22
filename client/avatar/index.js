@@ -173,6 +173,7 @@ export default class  {
     }
     animate(dt) {
         this.arms.update(dt);
+        this.recognizer.update(dt);
     }
 
 }
