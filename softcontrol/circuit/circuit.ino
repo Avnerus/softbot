@@ -115,7 +115,7 @@ Chamber chambers[7] = {
 };
 
 Arm* rightArmSensor = new Arm(1, 53, 25, -10);
-Arm* leftArmSensor = new Arm(2, 52, 60, -30);
+Arm* leftArmSensor = new Arm(2, 52, 300, -200);
 
 enum CHAMBER_INDEX {
     LEFT_NECK_CHAMBER  = 0,
@@ -140,7 +140,7 @@ int numOfChambers = sizeof(chambers) / sizeof(chambers[0]);
 void setup() {
   Serial.begin(9600); 
 
-  Logger::Write("Softbot starting");
+  //Logger::Write("Softbot starting");
 
   analogWriteResolution(10);
 
@@ -157,7 +157,6 @@ void setup() {
 
   for (int i = 0; i < numOfChambers; i++) {
      chambers[i].init();
-     delay(10);
   }
   rightArmSensor->init();
   leftArmSensor->init();
@@ -165,7 +164,7 @@ void setup() {
 
   //getChamber(RIGHT_CHAMBER)->oscillate(241,245);
 
-  pinMode(killPin, INPUT);
+  //pinMode(killPin, INPUT);
 }
 
 Chamber* getChamber(int id) {
@@ -179,7 +178,7 @@ Chamber* getChamber(int id) {
 void loop() {
     unsigned long now = millis();
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
-        chambers[i].update(now);
+       // chambers[i].update(now);
     }
     rightArmSensor->update(now);
     leftArmSensor->update(now);
@@ -265,10 +264,10 @@ void processCommand() {
             int chamberIndex = (int)currentValue[0];
             Chamber* chamber = getChamber(chamberIndex);
             if (chamber) {
-                Logger::Printf("Stop chamber index %d", chamberIndex);
+                Logger::Printf("Stop chamber ",chamber->getName(), chamberIndex);
                 chamber->stop();
             } else {
-                Logger::Printf("No such chamber %d", chamberIndex);
+                Logger::Printf("No such chamber ", chamberIndex);
             }
             break;
         }
@@ -337,7 +336,7 @@ void processCommand() {
             int pin = (int)currentValue[0];
             int value = (int)currentValue[1] == 0 ? LOW : HIGH;
             digitalWrite(pin, value);
-            Logger::Printf("Write %d to pin %d", pin, value);
+            Logger::Printf("Write ", value, " to pin ", pin);
             break;
         }
         case 'H': {
@@ -397,7 +396,7 @@ void dispatchStop() {
 
 void updateChambers(int x, int y) {
 
-    Logger::Printf("Movement (%d,%d)", x,y);
+    //Logger::Printf("Movement (%d,%d)", x,y);
 
     int maxPower = max(abs(x), abs(y));
     float speed = (float)maxPower / MAX_POSITION;
@@ -417,7 +416,7 @@ void updateChambers(int x, int y) {
 }
 
 void left(float speed) {
-    Logger::Printf("Go left at %f", speed);
+   // Logger::Printf("Go left at %f", speed);
     Chamber* leftNeck = getChamber(LEFT_NECK_CHAMBER);
     Chamber* rightNeck = getChamber(RIGHT_NECK_CHAMBER);
 

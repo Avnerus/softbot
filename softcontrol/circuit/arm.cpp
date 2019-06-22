@@ -36,7 +36,7 @@ void Arm::init() {
         _lastCheck = millis();
     }*/
     _sensor->beginSPI(_pin);
-     Logger::Printf("The Arm sensor at %d initialized! (threshold %d)",_pin,_threshold);
+     Logger::Printf("The Arm sensor at ", _pin, " initialized! threshold",_threshold);
     _active = true;
 }
 void Arm::update(unsigned long now) {
@@ -55,7 +55,7 @@ void Arm::update(unsigned long now) {
             if (_idlePressure != 0) {
                 float diff = pressure - _idlePressure;
                 /*
-                if (_id == 1) {
+                if (_id == 2) {
                     Serial.print(">SAD ");
                     Serial.print(pressure);
                     Serial.print(',');

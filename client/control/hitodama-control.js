@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {connect, CHAMBERS} from '../common/state'
+import store, {connect, CHAMBERS, addTranscript} from '../common/state'
 
 import LookLeft from './images/look-left.png'
 import LookRight from './images/look-right.png'
@@ -45,6 +45,11 @@ const look = (host, event) => {
             CHAMBERS.RIGHT_NECK
         )
     }
+    store.dispatch(addTranscript({
+        from: "You",
+        text: "look at the person to the " + direction,
+        class: "gaze"
+    }));
 }
 const express = (host, event) => {
     event.preventDefault();
@@ -106,6 +111,11 @@ const express = (host, event) => {
             )
         });
     } 
+    store.dispatch(addTranscript({
+        from: "You",
+        text: "*" + emotion + " face*",
+        class: "expression"
+    }));
 }
 
 export default {
