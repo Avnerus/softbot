@@ -1,6 +1,7 @@
 import {createStore} from 'redux';
 
 import SocketController from '../common/socket-controller'
+import Listener from '../control/listener'
 
 
 export const CHAMBERS = {
@@ -55,7 +56,9 @@ const reducer = (state = {
         [ROLES.AVATAR]: 0,
         softControllerName: ""
     },
-    transcribeTarget: "en"
+    transcribeTarget: "en",
+    transcribeSource: "en",
+    cameraStream: null
 }, action) => {
   switch (action.type) {
     case 'CHANGE_PHASE':
@@ -75,6 +78,16 @@ const reducer = (state = {
                     from: "System",
                     text: msg.slice(1)
                 }));
+            });
+
+            const listener = new Listener();
+            action.socketController.on('start-recognizing',() => {
+                if (state.stream) {
+                    listener.startRecognizing(stream);
+                }
+            });
+            action.socketController.on('stop-recognizing',() => {
+                listener.stopRecognizing();
             });
         }
         action.socketController.on('pic-state', (data) => {
@@ -110,6 +123,12 @@ const reducer = (state = {
     }
     case 'SET_SOFTBOT_STATE' : {
         return {...state, softbotState : action.value}
+    }
+    case 'SET_TRANSCRIBE_SOURCE' : {
+        return {...state, transcribeSource : action.value}
+    }
+    case 'SET_CAMERA_STREAM' : {
+        return {...state, cameraStream : action.value}
     }
     default:
       return state;
@@ -151,8 +170,18 @@ export const setSoftbotState = (value) => ({
     value,
 })
 
+export const setTranscribSource = (value) => ({
+    type: 'SET_TRANSCRIBE_SOURCE',
+    value,
+})
+
 export const setTranscribeTarget = (value) => ({
     type: 'SET_TRANSCRIBE_TARGET',
+    value,
+})
+
+export const setCameraStream = (value) => ({
+    type: 'SET_CAMERA_STREAM',
     value,
 })
 

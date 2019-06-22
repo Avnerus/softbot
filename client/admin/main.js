@@ -68,8 +68,9 @@ export default class Main {
         this.transcript = new Transcript(this.socketController, $('#transcript'));
         this.transcript.init();
 
+        /*
         this.listener = new Listener(this.socketController, $('#listen-container'), this.streamer);
-        this.listener.init();
+        this.listener.init();*/
 
         this.expression = new Expression(this.socketController);
         this.expression.init();

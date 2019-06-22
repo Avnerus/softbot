@@ -3,10 +3,10 @@ import store, {connect, changePhase, setTranscribeTarget, PHASE} from '../common
 
 import './language-select'
 
-const signInClick = (host, e) => {
-	e.preventDefault();
-    const transcribeTarget = e.target.closest("form").querySelector("language-select").value;
-    const name = e.target.closest("form").querySelector('input[name="name"]').value;
+const signIn = (host, e) => {
+    e.preventDefault();
+    const transcribeTarget = e.target.querySelector("language-select").value;
+    const name = e.target.querySelector('input[name="name"]').value;
     console.log("Sign in with transcribe target " + transcribeTarget + " and name " + name);
 
     host.socketController.send("R" + String.fromCharCode(0) + name);
@@ -67,10 +67,10 @@ export default {
         <div>
             <h1>Teleport to HITODAMA</h1>
             <div>
-            <form>
+            <form onsubmit="${signIn}">
 				<div>
 					<label>Name: </label>
-					<input type="text" name="name">
+					<input required type="text" name="name">
 				</div>
 				<div class="language-field">
 					<label> Preferred Language:  </label>
@@ -85,7 +85,7 @@ export default {
 					</span>
 				</div>
 				<div id="teleport-button">
-					<button type="submit" onclick=${signInClick} disabled=${socketController ? '' : 'disabled'}>💫</button>
+					<button type="submit" disabled=${socketController ? '' : 'disabled'}>💫</button>
 				</div>
             </form>
         </div>

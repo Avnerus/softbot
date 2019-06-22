@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {connect, PHASE} from '../common/state'
+import store, {connect, PHASE, setCameraStream} from '../common/state'
 import Janus from './janus'
 import adapter from 'webrtc-adapter';
 
@@ -72,8 +72,7 @@ const attach = (host, janus) => {
             onremotestream: (stream) => {
                 console.log("Got remote stream!", stream);
                 console.log("Vision acquired!");
-                host.stream = stream;
-
+                setCameraStream(stream);
                 //Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
                 /*
@@ -143,7 +142,7 @@ export default {
           return value;
         }
     },
-    stream: null,
+    stream: connect(store, (state) => state.cameraStream),
     waiting: true,
     pressPlay: false,
     phase: connect(store, (state) => state.phase),
