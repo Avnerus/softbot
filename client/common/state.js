@@ -1,8 +1,6 @@
 import {createStore} from 'redux';
 
 import SocketController from '../common/socket-controller'
-import Listener from '../control/listener'
-
 
 export const CHAMBERS = {
     LEFT_NECK: 0,
@@ -45,6 +43,7 @@ export const OTHER = {
 const reducer = (state = {
     phase: PHASE.SIGN_IN,
     socketController: null,
+    listener: null,
     transcript: [],
     picState: {
         [ROLES.CONTROLLER] : 0,
@@ -80,14 +79,11 @@ const reducer = (state = {
                 }));
             });
 
-            const listener = new Listener();
-            action.socketController.on('start-recognizing',() => {
-                if (state.stream) {
-                    listener.startRecognizing(stream);
-                }
+            action.socketController.on('start-recognizing',(data) => {
+                store.dispatch(startRecognizing(data.source));
             });
             action.socketController.on('stop-recognizing',() => {
-                listener.stopRecognizing();
+                store.dispatch(stopRecognizing());
             });
         }
         action.socketController.on('pic-state', (data) => {
@@ -128,7 +124,30 @@ const reducer = (state = {
         return {...state, transcribeSource : action.value}
     }
     case 'SET_CAMERA_STREAM' : {
+        console.log("Set camera stream", action.value);
         return {...state, cameraStream : action.value}
+    }
+    case 'SET_LISTENER' : {
+        console.log("Set listener", action.value);
+        return {...state, listener : action.value}
+    }
+    case 'START_RECOGNIZING' : {
+        console.log("Start recognizing?", state.listener, state.cameraStream);
+        if (state.listener && state.cameraStream) {
+            state.listener.startRecognizing({
+                stream: state.cameraStream,
+                model: action.source,
+                translate: state.transcribeTarget
+            });
+        }
+        return state;
+    }
+    case 'STOP_RECOGNIZING' : {
+        console.log("Stop recognizing?", state.listener);
+        if (state.listener) {
+            state.listener.stopRecognizing();
+        }
+        return state;
     }
     default:
       return state;
@@ -182,6 +201,20 @@ export const setTranscribeTarget = (value) => ({
 
 export const setCameraStream = (value) => ({
     type: 'SET_CAMERA_STREAM',
+    value,
+})
+
+export const startRecognizing = (source) => ({
+    type: 'START_RECOGNIZING',
+    source
+})
+
+export const stopRecognizing = () => ({
+    type: 'STOP_RECOGNIZING'
+})
+
+export const setListener = (value) => ({
+    type: 'SET_LISTENER',
     value,
 })
 

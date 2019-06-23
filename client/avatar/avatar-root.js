@@ -21,6 +21,7 @@ export default {
 			}
             .pics-control {
                 height: 100px;
+                font-size: 20px;
             }
 
             hitodama-pics {
@@ -43,7 +44,7 @@ export default {
             <hitodama-pics externalEvents="${events}" identity="AVATAR"></hitodama-pics>
         </div>
         <div class="avatar-control">
-            <hitodama-avatar></hitodama-avatar>
+            <hitodama-avatar externalEvents="${events}"></hitodama-avatar>
         </div>
      `
 }

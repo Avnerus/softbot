@@ -1,7 +1,7 @@
 import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
 //import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
-import store, {setSocketController} from '../common/state'
+import store, {setSocketController, setListener} from '../common/state'
 
 import { define } from 'hybrids';
 import ControlLayout from './control-layout'
@@ -10,6 +10,7 @@ import SignIn from './sign-in'
 import HitodamaHUD from './hitodama-hud'
 
 import SocketController from '../common/socket-controller'
+import Listener from './listener'
 
 
 define('control-layout', ControlLayout);
@@ -22,6 +23,10 @@ console.log("Loading control");
 const socketController = new SocketController('wss://incarnation.hitodama.online',() => store.dispatch(setSocketController(socketController, true)));
 //const socketController = new SocketController('ws://192.168.8.213:3012',() => store.dispatch(setSocketController(socketController, true)));
 socketController.init();
+
+const listener = new Listener();
+store.dispatch(setListener(listener));
+
 
 if (module.hot) {
     console.log("We have hot");

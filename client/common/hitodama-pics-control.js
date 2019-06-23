@@ -63,9 +63,8 @@ export default {
     phase: connect(store, (state) => state.phase),
     externalEvents: {
         set: (host, value, lastValue) => {
-            console.log("Listen to external events", value);
+            console.log("Listen right arm release", value);
             value.on('arm-release', ({id}) => {
-                console.log("Arm release!", id);
                 if (id == 2) {
                     ready(host);
                 }

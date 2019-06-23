@@ -70,10 +70,9 @@ export default {
     identity: "",
     externalEvents: {
         set: (host, value, lastValue) => {
-            console.log("Listen to external events", value);
             value.on('arm-release', ({id}) => {
-                console.log("Pics Arm release!", id);
                 if (host.picState[host.identity] == PIC_STATE.READY) {
+                    console.log("Pics Arm release!", id);
                     chooseImage(host, id);
                 }
             });

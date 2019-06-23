@@ -72,7 +72,7 @@ const attach = (host, janus) => {
             onremotestream: (stream) => {
                 console.log("Got remote stream!", stream);
                 console.log("Vision acquired!");
-                setCameraStream(stream);
+                store.dispatch(setCameraStream(stream));
                 //Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
                 /*
@@ -142,11 +142,11 @@ export default {
           return value;
         }
     },
-    stream: connect(store, (state) => state.cameraStream),
+    cameraStream: connect(store, (state) => state.cameraStream),
     waiting: true,
     pressPlay: false,
     phase: connect(store, (state) => state.phase),
-    render: ({state, stream, waiting, phase, pressPlay}) => { 
+    render: ({state, cameraStream, waiting, phase, pressPlay}) => { 
        console.log("Rendering HITODAMA Video!");
        return html`
         <style>
@@ -201,9 +201,9 @@ export default {
             ▶️ 
         </a>
         <div id="video-container">
-            ${stream && html`
+            ${cameraStream && html`
                 <video 
-                    srcObject=${stream} 
+                    srcObject=${cameraStream} 
                     id="hitodama-video"
                     onloadedmetadata=${metadataLoaded}
                     autoplay="false"

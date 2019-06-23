@@ -33,7 +33,6 @@ export default class  {
         this.emitter = new CustomEmitter();
         global.events = this.emitter;
 
-        define('avatar-root', AvatarRoot);
 
 
         /*
@@ -109,6 +108,7 @@ export default class  {
         })
 
         
+        define('avatar-root', AvatarRoot);
 
        //greet("Bitch");
 

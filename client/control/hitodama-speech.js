@@ -1,6 +1,6 @@
 import { html, render } from 'hybrids';
 import store, {connect, addTranscript} from '../common/state'
-import './language-select'
+import '../common//language-select'
 
 const speak = (host, event) => {
     event.preventDefault();

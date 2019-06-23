@@ -18,13 +18,13 @@ export default class Arms {
             let text = new TextDecoder("utf-8").decode(new Uint8Array(data,2))
             const armId = parseInt(text[1]);
             if (text[0] == 'P') {
-                console.log("Press " + armId);
+                //console.log("Press " + armId);
                 if (!this.longPassedThreshold) {
                     events.emit("arm-press", {id: armId})
                 }
                 this.ARMS[armId - 1] = 1;
             } else if (text[0] == 'R') {
-                console.log("Release " + armId);
+                //console.log("Release " + armId);
                 if (!this.longPassedThreshold) {
                     events.emit("arm-release", {id: armId})
                 }

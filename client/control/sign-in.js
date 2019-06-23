@@ -1,7 +1,7 @@
 import { html, render } from 'hybrids';
 import store, {connect, changePhase, setTranscribeTarget, PHASE} from '../common/state'
 
-import './language-select'
+import '../common/language-select'
 
 const signIn = (host, e) => {
     e.preventDefault();

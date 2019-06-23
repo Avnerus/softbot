@@ -1,14 +1,24 @@
-import { define, html, render } from 'hybrids'
+import { define, html, render, dispatch } from 'hybrids'
 import 'high-select/lib/high-select.js'
 
 const languageChanged = (host, event) => {
     console.log("Language changed!", event.target.value);
     host.value = event.target.value;
+    dispatch(host, 'change', { detail: host.value });
 }
 
 const LanguageSelect =  {
     flags : {},
-    value: "",
+    selected: {
+        set: (host, value, lastValue) => {
+          console.log("Set selected langauge to ", value);
+          host.value = value;
+          const highSelect = host.shadowRoot.querySelector("high-select");
+          highSelect.value = value;
+          dispatch(host, 'change', { detail: host.value });
+          return value;
+        }
+    },
     languages: {
         set: (host, value, lastValue) => {
           const flags = {};

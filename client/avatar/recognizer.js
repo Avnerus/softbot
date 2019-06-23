@@ -12,20 +12,17 @@ export default class Recognizer {
     }
     init() {
         console.log("Init recognizer", this.container);
-        events.on('arm-long-press', () => {
-            console.log("Long press!");
-            this.start();
-        })
-        events.on('arm-long-release', () => {
-            console.log("Long release!");
-            //  this.stop();
+        events.on('start-recognizing', (data) => {
+            console.log("Start recognizing!", data);
+            this.start(data.source);
         })
     }
 
-    start() {
+    start(source) {
         console.log("Start recognizing!");
         this.socketController.sendJSONCommand({
-            command: 'start-recognizing'
+            command: 'start-recognizing',
+            source: source
         });
         this.showAnimation();
         this.synth.recordSound();
@@ -60,7 +57,6 @@ export default class Recognizer {
     update(dt) {
         if (this.wasStarted) {
             this.timer += dt;
-            console.log(this.timer);
             if (this.timer < ANIMATION_TIME) {
                 const newWidth = ((ANIMATION_TIME - this.timer) / ANIMATION_TIME) * 87;
                 this.container.find('#timer').css("width",newWidth + '%');

@@ -2,9 +2,10 @@ import Util from '../common/util'
 import store, {addTranscript} from '../common/state'
 
 export default class Listener {
-    startRecognizing(stream) {
-        console.log("Start recognizing!", stream)
-        const audioStream = new MediaStream(stream.getAudioTracks());
+    startRecognizing(data) {
+        this.data = data;
+        console.log("Start recognizing!", data)
+        const audioStream = new MediaStream(data.stream.getAudioTracks());
         let options = {mimeType: 'audio/ogg; codecs=opus'}
         this.recorder = new MediaRecorder(audioStream);
         this.recorder.start();
@@ -21,12 +22,14 @@ export default class Listener {
 
     stopRecognizing() {
         console.log("Stop recognizing!");
-        this.recorder.stop();
+        if (this.recorder) {
+            this.recorder.stop();
+        }
     }
     dataAvailable(e) {
         console.log("Recorder data available!", e);
-        let query = this.container.find("form").serialize();
-        console.log("Query", query);
+        const query = "model=" + this.data.model + "&translate=" + this.data.translate;
+        console.log("Query:",query);
         // Post the blob
         Util.postBlob(e.data, '/transcribe?' + query, 'audio')
         .then((response) => {
@@ -38,14 +41,17 @@ export default class Listener {
             else {
                 text = response.transcription;
             }
-            events.emit("transcript", {
+            store.dispatch(addTranscript({
                 from: "Speaker",
                 text: text
-            })
+            }));
         })
         .catch((err) => {
             console.log("Error posting blob", err);
-            events.emit("transcript", {from: "Error", text: err.error});
+            store.dispatch(addTranscript({
+                from: "Error",
+                text: err.error
+            }));
         })
     }
 }
