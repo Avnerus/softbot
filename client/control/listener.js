@@ -2,6 +2,9 @@ import Util from '../common/util'
 import store, {addTranscript} from '../common/state'
 
 export default class Listener {
+    constructor(socketController) {
+        this.socketController = socketController;
+    }
     startRecognizing(data) {
         this.data = data;
         console.log("Start recognizing!", data)
@@ -45,6 +48,11 @@ export default class Listener {
                 from: "Speaker",
                 text: text
             }));
+            this.socketController.sendJSONCommand({
+                command: "transcription-result",
+                transcription: response.transcription,
+                translation: response.translation
+            })
         })
         .catch((err) => {
             console.log("Error posting blob", err);

@@ -57,6 +57,7 @@ const reducer = (state = {
     },
     transcribeTarget: "en",
     transcribeSource: "en",
+    transcriptionResult: null,
     cameraStream: null
 }, action) => {
   switch (action.type) {
@@ -93,6 +94,13 @@ const reducer = (state = {
         action.socketController.on('softbot-state', (data) => {
             console.log("New softbot state!", data.state);
             store.dispatch(setSoftbotState(data.state));
+        });
+        action.socketController.on('transcription-result', (data) => {
+            console.log("Transcription result!", data);
+            store.dispatch(setTranscriptionResult(data));
+            setTimeout(() => {
+                store.dispatch(setTranscriptionResult(null));
+            },2000)
         });
         return {...state, socketController: action.socketController}
     }
@@ -148,6 +156,9 @@ const reducer = (state = {
             state.listener.stopRecognizing();
         }
         return state;
+    }
+    case 'SET_TRANSCRIPTION_RESULT' : {
+        return {...state, transcriptionResult : action.value}
     }
     default:
       return state;
@@ -215,7 +226,12 @@ export const stopRecognizing = () => ({
 
 export const setListener = (value) => ({
     type: 'SET_LISTENER',
-    value,
+    value
+})
+
+export const setTranscriptionResult = (value) => ({
+    type: 'SET_TRANSCRIPTION_RESULT',
+    value
 })
 
 export const connect = (store, mapState) => ({

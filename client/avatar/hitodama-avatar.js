@@ -19,6 +19,7 @@ export default {
     softbotState: connect(store, (state) => state.softbotState),
     picState: connect(store, (state) => state.picState),
     recognizer: null,
+    transcriptionResult: connect(store, (state) => state.transcriptionResult),
     externalEvents: {
         set: (host, value, lastValue) => {
             console.log("Listen to left arm release", value);
@@ -45,7 +46,7 @@ export default {
             })
         }
     },
-    render: ({softbotState}) => { 
+    render: ({softbotState, transcriptionResult}) => { 
        return html`
         <style>
             :host {
@@ -78,20 +79,36 @@ export default {
             language-select {
                 --size: 70px;
             }
+            #transcription {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: yellow;
+                font-weight: bold;
+                font-size: 32px;
+            }
         </style>
         <div id="avatar-container">
-            <div id="speech-language">
-                <label>I speak: </label>
-                <language-select onchange="${langaugeChanged}" languages=${languages}>
-                </language-select>
-            </div>
-            <div>
-            ${softbotState.softControllerName.length > 0 ? html`
-                    <span>Connected to:</span> <span class="controller-name">${softbotState.softControllerName}</span>
+            ${transcriptionResult ? html`
+                <div id="transcription">
+                    ${transcriptionResult.transcription}
+                </div>
             ` : html`
-                <span>Waiting for controller..</span>.
+                <div id="speech-language">
+                    <label>I speak: </label>
+                    <language-select onchange="${langaugeChanged}" languages=${languages}>
+                    </language-select>
+                </div>
+                <div>
+                ${softbotState.softControllerName.length > 0 ? html`
+                        <span>Connected to:</span> <span class="controller-name">${softbotState.softControllerName}</span>
+                ` : html`
+                    <span>Waiting for controller..</span>.
+                `}
+                </div>
             `}
-            </div>
         </div>
      `
    }

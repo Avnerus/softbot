@@ -24,7 +24,7 @@ const socketController = new SocketController('wss://incarnation.hitodama.online
 //const socketController = new SocketController('ws://192.168.8.213:3012',() => store.dispatch(setSocketController(socketController, true)));
 socketController.init();
 
-const listener = new Listener();
+const listener = new Listener(socketController);
 store.dispatch(setListener(listener));
 
 
