@@ -62,7 +62,7 @@ export default class SocketController {
                 // Parse it
                 let chars = new Uint8Array(msg.data, 1);
                 let json = new TextDecoder("utf-8").decode(chars);
-                console.log(json);
+                //console.log(json);
                 let obj = JSON.parse(json);
                 console.log(obj);
                 if (this.commands[obj.command]) {

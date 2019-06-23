@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {connect, PIC_STATE, setTranscribSource} from '../common/state'
+import store, {connect, PIC_STATE, setTranscribSource, ROLES} from '../common/state'
 
 import '../common/language-select'
 
@@ -24,7 +24,7 @@ export default {
         set: (host, value, lastValue) => {
             console.log("Listen to left arm release", value);
             value.on('arm-release', ({id}) => {
-                if (id == 1  && host.picState[host.identity] != PIC_STATE.READY) {
+                if (id == 1  && host.picState[ROLES.AVATAR] != PIC_STATE.READY) {
                     console.log("Cycle language!");
                     const langaugeSelect = host.shadowRoot.querySelector("language-select");
                     const currentIndex = languages.findIndex((e) => e.value == langaugeSelect.value);

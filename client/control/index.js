@@ -1,7 +1,7 @@
 import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
 //import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
-import store, {setSocketController, setListener} from '../common/state'
+import store, {setSocketController, setListener, setIdentity, ROLES} from '../common/state'
 
 import { define } from 'hybrids';
 import ControlLayout from './control-layout'
@@ -23,6 +23,8 @@ console.log("Loading control");
 const socketController = new SocketController('wss://incarnation.hitodama.online',() => store.dispatch(setSocketController(socketController, true)));
 //const socketController = new SocketController('ws://192.168.8.213:3012',() => store.dispatch(setSocketController(socketController, true)));
 socketController.init();
+
+store.dispatch(setIdentity(ROLES.CONTROLLER));
 
 const listener = new Listener(socketController);
 store.dispatch(setListener(listener));

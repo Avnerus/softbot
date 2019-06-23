@@ -16,7 +16,7 @@ import Arms from './arms'
 import './css/softbot.css'
 import './css/voice-anim.scss'
 
-import store, {setSocketController} from '../common/state'
+import store, {setSocketController, setIdentity, ROLES} from '../common/state'
 import AvatarRoot from './avatar-root'
 import { define } from 'hybrids'
 
@@ -43,6 +43,9 @@ export default class  {
         //this.socketController = new SocketController("ws://84.248.66.46:3012");
         //this.socketController = new SocketController("ws://192.168.8.239:3012");
         //this.socketController = new SocketController("ws://127.0.0.1:3012");
+        //
+    
+        store.dispatch(setIdentity(ROLES.AVATAR));
         this.socketController = new SocketController("wss://incarnation.hitodama.online");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");

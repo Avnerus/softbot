@@ -31,7 +31,7 @@ Chamber chambers[7] = {
             new Valve(4,26,5,25), // CHAMBER A-2
             &pump,
             A10, 
-            90, 
+            80, 
             230,
             1.0
            // 0.220
@@ -82,7 +82,7 @@ Chamber chambers[7] = {
             new Valve(18,15,29,25), // CHAMBER F-2
             &pump,
             A16,
-            110, 
+            100, 
             200,
             1.0
     ),
@@ -178,7 +178,7 @@ Chamber* getChamber(int id) {
 void loop() {
     unsigned long now = millis();
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
-       // chambers[i].update(now);
+        chambers[i].update(now);
     }
     rightArmSensor->update(now);
     leftArmSensor->update(now);

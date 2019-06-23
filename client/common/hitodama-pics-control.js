@@ -1,5 +1,6 @@
 import { html, render } from 'hybrids';
-import store, {connect, PIC_STATE, PHASE, OTHER} from './state'
+import store, {connect, PIC_STATE, PHASE, OTHER, ROLES, CHAMBERS} from './state'
+import * as Hitodama from '../common/hitodama'
 
 const readyClick = (host, event) => {
     event.preventDefault();
@@ -8,15 +9,23 @@ const readyClick = (host, event) => {
 
 const ready = (host) => {
     if (host.softbotState[OTHER[host.identity]]) {
-        console.log("Ready!");
+        console.log("Ready!", host.identity);
         if (host.picState[host.identity] == PIC_STATE.WAITING) {
             host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
+            if (host.identity == ROLES.CONTROLLER) {
+                console.log("Open arms!");
+                Hitodama.deflate(
+                    host.socketController,
+                    CHAMBERS.ARMS
+                )
+            }
         } else if (
             host.picState[host.identity] >= PIC_STATE.EXPLAIN_1 &&
             host.picState[host.identity] <= PIC_STATE.EXPLAIN_2
         ) {
             host.socketController.send("SPIC" + String.fromCharCode(host.picState[host.identity] + 2));
         }
+
     }
 }
 
@@ -69,7 +78,6 @@ export default {
                     ready(host);
                 }
             });
-            
         }
     },
     render: ({socketController, identity, picState, softbotState, phase}) => { 

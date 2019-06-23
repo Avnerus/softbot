@@ -1,6 +1,7 @@
 import {createStore} from 'redux';
 
 import SocketController from '../common/socket-controller'
+import * as Hitodama from '../common/hitodama'
 
 export const CHAMBERS = {
     LEFT_NECK: 0,
@@ -41,6 +42,7 @@ export const OTHER = {
 }
 
 const reducer = (state = {
+    identity: null,
     phase: PHASE.SIGN_IN,
     socketController: null,
     listener: null,
@@ -109,6 +111,15 @@ const reducer = (state = {
         return {...state, transcript: [...state.transcript, action.line]}
     }
     case 'SET_PIC_STATE' : {
+        if (state.identity == ROLES.CONTROLLER && action.value[ROLES.CONTROLLER] == PIC_STATE.WAITING) {
+            console.log("Close arms!");
+            Hitodama.inflateTo(
+                state.socketController,
+                CHAMBERS.ARMS,
+                1.0 
+            )
+        }
+
         if (state.phase != PHASE.SIGN_IN) {
             let phase;
             if (action.value[ROLES.AVATAR] == PIC_STATE.WAITING ||
@@ -120,6 +131,8 @@ const reducer = (state = {
                 phase = PHASE.HUD_PICS_VIDEO;
             }
             console.log("Phase is now " + phase, action.value)
+
+
             return {...state, phase: phase, picState : action.value}
         } else {
             return {...state, picState : action.value}
@@ -159,6 +172,9 @@ const reducer = (state = {
     }
     case 'SET_TRANSCRIPTION_RESULT' : {
         return {...state, transcriptionResult : action.value}
+    }
+    case 'SET_IDENTITY' : {
+        return {...state, identity : action.value}
     }
     default:
       return state;
@@ -231,6 +247,11 @@ export const setListener = (value) => ({
 
 export const setTranscriptionResult = (value) => ({
     type: 'SET_TRANSCRIPTION_RESULT',
+    value
+})
+
+export const setIdentity = (value) => ({
+    type: 'SET_IDENTITY',
     value
 })
 
