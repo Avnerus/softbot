@@ -33,7 +33,7 @@ export default class Main {
         //this.socketController.init();
         
         //this.socketController = new SocketController("ws://10.100.40.170:3012");
-        this.socketController = new SocketController("ws://127.0.0.1:3012");
+        this.socketController = new SocketController("wss://incarnation.hitodama.online");
         events.on('socket_connected', () => {
             console.log("Socket connected registering control");
             events.emit("transcript", {from: "System", text: "Socket connected"});

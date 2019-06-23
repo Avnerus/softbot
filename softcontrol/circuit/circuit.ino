@@ -114,7 +114,7 @@ Chamber chambers[7] = {
         ),*/
 };
 
-Arm* rightArmSensor = new Arm(1, 53, 20, -10);
+//Arm* rightArmSensor = new Arm(1, 53, 15, -10);
 Arm* leftArmSensor = new Arm(2, 52, 150, -150);
 
 enum CHAMBER_INDEX {
@@ -158,7 +158,7 @@ void setup() {
   for (int i = 0; i < numOfChambers; i++) {
      chambers[i].init();
   }
-  rightArmSensor->init();
+  //rightArmSensor->init();
   leftArmSensor->init();
 
 
@@ -180,7 +180,7 @@ void loop() {
     for (unsigned int i = 0; i < sizeof(chambers) / sizeof(chambers[0]); i++) {
         chambers[i].update(now);
     }
-    rightArmSensor->update(now);
+    //rightArmSensor->update(now);
     leftArmSensor->update(now);
 
     // Kill switch
