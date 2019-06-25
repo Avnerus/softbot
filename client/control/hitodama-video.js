@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {connect, PHASE, setCameraStream} from '../common/state'
+import store, {connect, PHASE, PIC_STATE, ROLES, setCameraStream} from '../common/state'
 import Janus from './janus'
 import adapter from 'webrtc-adapter';
 
@@ -143,10 +143,11 @@ export default {
         }
     },
     cameraStream: connect(store, (state) => state.cameraStream),
+    picState: connect(store, (state) => state.picState),
     waiting: true,
     pressPlay: false,
     phase: connect(store, (state) => state.phase),
-    render: ({state, cameraStream, waiting, phase, pressPlay}) => { 
+    render: ({state, cameraStream, waiting, phase, pressPlay, picState}) => { 
        console.log("Rendering HITODAMA Video!");
        return html`
         <style>
@@ -166,7 +167,7 @@ export default {
                 width: 100%;
                 height: 100%;
                 max-width: 500px;
-                display: ${pressPlay && phase < PHASE.CHOSE_1 ? 'none' : 'block'};
+                display: ${pressPlay && picState[ROLES.CONTROLLER] < PIC_STATE.CHOSE_1 ? 'none' : 'block'};
             }
             .wait {
                 padding: 20px;
@@ -191,7 +192,7 @@ export default {
                 justify-content: center;
                 align-items: center;
                 text-decoration: none;
-                display: ${pressPlay  && phase < PHASE.CHOSE_1 ? 'flex' : 'none'};
+                display: ${pressPlay && picState[ROLES.CONTROLLER] < PIC_STATE.CHOSE_1 ? 'flex' : 'none'};
                 position: relative;
                 left: 40%;
                 top: 40%;
