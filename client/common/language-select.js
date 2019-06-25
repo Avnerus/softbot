@@ -25,6 +25,9 @@ const LanguageSelect =  {
           value.forEach(async (lang) => {
             if (lang.flag == 'arx') {
                 flags[lang.flag] = require(`./images/arx.svg`);
+            }
+            else if (lang.flag == 'catalonia') {
+                flags[lang.flag] = require(`./images/catalonia.svg`);
             } else {
                 flags[lang.flag] = require(`svg-country-flags/svg/${lang.flag}.svg`);
             }

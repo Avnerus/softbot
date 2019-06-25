@@ -16,7 +16,7 @@ bool calibrated = false;
 bool pushed = false;
 float stdDev = 0;
 
-const int SPI_PORT = 53;
+const int SPI_PORT = 52;
 
 
 void setup() {
@@ -52,7 +52,11 @@ void setup() {
 void loop() {
 
   float pressure = sensor.readFloatPressure();
-  Serial.println(pressure);
+//  if (pressure <= 110000) {
+    Serial.println(pressure);
+//  } else {
+ //     Serial.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+ // }
 
  /*int bars = (int)pressure - 98000;
  //Serial.println(bars);/*

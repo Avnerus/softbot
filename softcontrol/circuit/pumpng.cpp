@@ -1,7 +1,7 @@
 #include "pumpng.h"
 #include "logger.h"
 
-const float INFLATION_SPEED = 1;
+const float INFLATION_SPEED = 0.7;
 
 PumpNg::PumpNg(int inPin1, int inPin2, int speedPin, int standByPin, int resolution) {
 
@@ -28,11 +28,10 @@ void PumpNg::init() {
 
 }
 void PumpNg::setSpeed(float speed) {
-    Logger::Printf("Pump set speed to %f", speed);
     if (speed >= 0.0 && speed <= 1.0) {
         _speed = speed;
         _motorSpeed = (int)(_resolution * speed);
-        Logger::Printf("Pump setting motor speed to %d", _motorSpeed);
+        Logger::Printf("Pump setting motor speed to ", _motorSpeed);
 
         analogWrite(_speedPin,_motorSpeed);
 
@@ -80,5 +79,20 @@ float PumpNg::getSpeed() {
 
 bool PumpNg::isOn() {
     return _on;
+}
+
+void PumpNg::grab() {
+    _useCount++;
+    if (_useCount > 0) {
+        this->inflate();
+    }
+}
+
+void PumpNg::release() {
+    _useCount--;
+    if (_useCount <= 0) {
+        _useCount = 0;
+        this->stop();
+    }
 }
 

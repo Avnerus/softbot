@@ -6,6 +6,7 @@ const int PRESSURE_SENSE_INTERVAL = 1000;
 const int PRESSURE_AVERAGE_COUNT = 100;
 const int PRESSURE_LEEWAY = 15;
 const int INFLATE_SHOCK_PERIOD = 700;
+const int DEFLATE_SHOCK_PERIOD = 700;
 
 Chamber::Chamber(
         const char name[10],
@@ -31,6 +32,7 @@ Chamber::Chamber(
     _pressureReadCount = 0;
     _pressureReadSum = 0;
     _startedInflating = 0;
+    _startedDeflating = 0;
 }
 Chamber::~Chamber() {
 
@@ -99,6 +101,7 @@ void Chamber::update(unsigned long now) {
                      inflate(1.0);
                 } 
                 else if (_state == DEFLATING && 
+                        now - _startedDeflating > DEFLATE_SHOCK_PERIOD &&
                         (_pressure <= _destinationPressure + PRESSURE_LEEWAY  || _pressure <= _minPressure + PRESSURE_LEEWAY )) {
                     if (_oscillating) {
                         _destinationPressure = _oscillateMax;
@@ -139,6 +142,9 @@ void Chamber::inflate(float speed) {
         if (_state != INFLATING) {
             //Logger::Printf("%s inflating at speed %f", _name, speed);
             _state = INFLATING;
+
+            _pump->grab();
+
             _startedInflating = millis();
             // Close before open because of shared PWM
             if (_releaseValve)  {
@@ -157,6 +163,10 @@ void Chamber::inflate(float speed) {
 void Chamber::deflate(float speed) {
     if (_state != DEFLATING) {
         Logger::Printf(_name, " deflating to ", _destinationPressure, " at speed ", speed);
+        if (_state == INFLATING) {
+            _pump->release();
+        }
+        _startedDeflating = millis();
         _state = DEFLATING;
         // Close before open because of the shared pins
         
@@ -185,6 +195,9 @@ void Chamber::deflateMax() {
 void Chamber::stop() {
     if (!_state == IDLE) {
         Logger::Printf(_name, " stopping at ", _pressure);
+        if (_state == INFLATING) {
+            _pump->release();
+        }
         if (_entryValve) {
             _entryValve->close();
         }

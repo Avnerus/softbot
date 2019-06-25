@@ -67,6 +67,7 @@ const imageLoaded = (host, event) => {
 export default {
     socketController: connect(store, (state) => state.socketController),
     picState: connect(store, (state) => state.picState),
+    softbotState: connect(store, (state) => state.softbotState),
     identity: "",
     externalEvents: {
         set: (host, value, lastValue) => {
@@ -79,7 +80,7 @@ export default {
             
         }
     },
-    render: ({socketController, picState, identity}) => { 
+    render: ({socketController, picState, identity, softbotState}) => { 
        return html`
         <style>
             :host {
@@ -140,7 +141,12 @@ export default {
 				max-width: var(--max-pic-width-tall, 34hh);
 			}
         </style>
-        ${picState[identity] > PIC_STATE.WAITING && picState[OTHER[identity]] > PIC_STATE.WAITING && html`
+        ${(
+            picState[identity] > PIC_STATE.WAITING && 
+            picState[OTHER[identity]] > PIC_STATE.WAITING &&
+            softbotState[OTHER[identity]]
+        ) && 
+        html`
             <div id="pics-container">
                 <div onclick=${imageClick} class="${getPicClass(picState, 1, identity)}">
                     ${picState.key.length > 0 && html`

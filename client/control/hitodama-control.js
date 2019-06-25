@@ -15,7 +15,7 @@ const look = (host, event) => {
     event.preventDefault();
     const direction = $(event.target).attr("data-direction");
     console.log("Look " + direction);
-    if (direction == "right") {
+    if (direction == "left") {
         Hitodama.deflate(
             host.socketController,
             CHAMBERS.RIGHT_NECK
@@ -25,7 +25,7 @@ const look = (host, event) => {
             CHAMBERS.LEFT_NECK,
             0.8
         )
-    } else if (direction == "left") {
+    } else if (direction == "right") {
         Hitodama.deflate(
             host.socketController,
             CHAMBERS.LEFT_NECK
@@ -74,7 +74,7 @@ const express = (host, event) => {
         Hitodama.inflateTo(
             host.socketController,
             CHAMBERS.CHEEKS,
-            0.75,
+            1.0,
             2500
         )
         .then(() => {
@@ -101,7 +101,7 @@ const express = (host, event) => {
         Hitodama.inflateTo(
             host.socketController,
             CHAMBERS.MOUTH,
-            0.8,
+            1.0,
             2000
         )
         .then(() => {

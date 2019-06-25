@@ -11,9 +11,22 @@ const languages =
     [
         {value: 'en-US', title: 'English', flag: 'us'},
         {value: 'fi-FI', title: 'Finnish', flag: 'fi'},
-        {value: 'ar-IQ', title: 'Arabic', flag: 'arx'}
+        {value: 'ar-IQ', title: 'Arabic', flag: 'arx'},
+        {value: 'he-IL', title: 'Hebrew', flag: 'il'}
     ]
 ;
+
+const refresh = (host, event) => {
+    event.preventDefault();
+    console.log("Refresh!");
+    window.location.reload();
+}
+const transcribe = (host, event) => {
+    event.preventDefault();
+    console.log("Transcribe!");
+    const languageSelect = host.shadowRoot.querySelector("language-select");
+    host.externalEvents.emit("start-recognizing", {source: languageSelect.value});
+}
 
 export default {
     softbotState: connect(store, (state) => state.softbotState),
@@ -44,6 +57,8 @@ export default {
                 const languageSelect = host.shadowRoot.querySelector("language-select");
                 value.emit("start-recognizing", {source: languageSelect.value});
             })
+
+            return value;
         }
     },
     render: ({softbotState, transcriptionResult}) => { 
@@ -79,6 +94,26 @@ export default {
             language-select {
                 --size: 70px;
             }
+            .control-button {
+                width: 70px;
+                height: 65px;
+                padding: 5px;
+                background-color: #dfdbfb;
+                border-style: solid;
+                border-width: 1px;
+                border-radius: 5px;
+                box-shadow: 2px 2px gray;
+                display:flex;
+                font-size: 65px;
+                color: #f46161;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+            }
+            .control-button span {
+                position: relative;
+                bottom: 3px;
+            }
             #transcription {
                 width: 100%;
                 height: 100%;
@@ -100,6 +135,16 @@ export default {
                     <label>I speak: </label>
                     <language-select onchange="${langaugeChanged}" languages=${languages}>
                     </language-select>
+                </div>
+                <div id="refresh">
+                    <a onclick="${refresh} "href="" class="control-button">
+                        <span>🔄</span>
+                    </a>
+                </div>
+                <div id="transcribe">
+                    <a onclick="${transcribe} "href="" class="control-button">
+                        <span>💬</span>
+                    </a>
                 </div>
                 <div>
                 ${softbotState.softControllerName.length > 0 ? html`

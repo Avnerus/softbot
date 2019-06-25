@@ -81,6 +81,7 @@ class Chamber {
         int _oscillateMax;
 
         unsigned long _startedInflating;
+        unsigned long _startedDeflating;
 
         PumpNg* _pump;
 

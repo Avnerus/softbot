@@ -32,7 +32,7 @@ Chamber chambers[7] = {
             &pump,
             A10, 
             80, 
-            230,
+            210,
             1.0
            // 0.220
     ),
@@ -42,7 +42,7 @@ Chamber chambers[7] = {
             &pump,
             A20,
             90,
-            230,
+            210,
             1.0
          //   0.29
     ),
@@ -114,7 +114,7 @@ Chamber chambers[7] = {
         ),*/
 };
 
-//Arm* rightArmSensor = new Arm(1, 53, 15, -10);
+Arm* rightArmSensor = new Arm(1, 54, 15, -10);
 Arm* leftArmSensor = new Arm(2, 52, 150, -150);
 
 enum CHAMBER_INDEX {
@@ -159,7 +159,7 @@ void setup() {
      chambers[i].init();
   }
   //rightArmSensor->init();
-  leftArmSensor->init();
+  //leftArmSensor->init();
 
 
   //getChamber(RIGHT_CHAMBER)->oscillate(241,245);
@@ -181,7 +181,7 @@ void loop() {
         chambers[i].update(now);
     }
     //rightArmSensor->update(now);
-    leftArmSensor->update(now);
+    //leftArmSensor->update(now);
 
     // Kill switch
     /*

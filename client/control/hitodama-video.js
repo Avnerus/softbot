@@ -166,7 +166,7 @@ export default {
                 width: 100%;
                 height: 100%;
                 max-width: 500px;
-                display: ${pressPlay ? 'none' : 'block'};
+                display: ${pressPlay && phase < PHASE.CHOSE_1 ? 'none' : 'block'};
             }
             .wait {
                 padding: 20px;
@@ -191,7 +191,7 @@ export default {
                 justify-content: center;
                 align-items: center;
                 text-decoration: none;
-                display: ${pressPlay ? 'flex' : 'none'};
+                display: ${pressPlay  && phase < PHASE.CHOSE_1 ? 'flex' : 'none'};
                 position: relative;
                 left: 40%;
                 top: 40%;

@@ -54,7 +54,7 @@ void Arm::update(unsigned long now) {
             } 
             if (_idlePressure != 0) {
                 float diff = pressure - _idlePressure;
-                if (_id == 1) {
+                if (_id == 2) {
                     Serial.print(">SAD ");
                     Serial.print(pressure);
                     Serial.print(',');
