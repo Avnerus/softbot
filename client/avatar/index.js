@@ -9,7 +9,7 @@ import Recognizer from './recognizer'
 import Expression from '../common/expression'
 import Idle from './idle'
 import Keyboard from '../common/keyboard'
-import GameController from './game-controller'
+//import GameController from './game-controller'
 import Synth from './synth'
 import Arms from './arms'
 
@@ -101,8 +101,8 @@ export default class  {
        this.arms = new Arms(this.socketController);
        this.arms.init();
 
-       this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
-       this.gameController.init();
+        //this.gameController = new GameController(this.socketController, $('#breakout'), this.keyboard);
+        //this.gameController.init();
 
         
         $("#audio-test").click((e) => {
