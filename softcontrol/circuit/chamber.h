@@ -25,6 +25,7 @@ class Chamber {
             uint16_t maxPressure,
             float deflationSpeed = 1.0
         );
+        Chamber();
         ~Chamber();
 
         void init();

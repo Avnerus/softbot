@@ -24,8 +24,6 @@ Arm::~Arm() {
 
 }
 void Arm::init() {
-    _sensor->settings.commInterface = SPI_MODE;
-    _sensor->settings.chipSelectPin = _pin;
     _calibrationStats->clear();
 /*
     if (_sensor.beginSPI(_pin) == false) { //Begin communication over SPI. Use pin 10 as CS. 
@@ -36,7 +34,7 @@ void Arm::init() {
         _lastCheck = millis();
     }*/
     _sensor->beginSPI(_pin);
-     Logger::Printf("The Arm sensor at ", _pin, " initialized! threshold",_threshold);
+     //Logger::Printf("The Arm sensor at ", _pin, " initialized! threshold",_threshold);
     _active = true;
 }
 void Arm::update(unsigned long now) {
@@ -54,6 +52,8 @@ void Arm::update(unsigned long now) {
             } 
             if (_idlePressure != 0) {
                 float diff = pressure - _idlePressure;
+                
+                /*
                 if (_id == 2) {
                     Serial.print(">SAD ");
                     Serial.print(pressure);
@@ -63,6 +63,7 @@ void Arm::update(unsigned long now) {
                     Serial.print(diff);
                     Serial.print("<");
                 }
+                */
 
                 if (_pushed && diff < _releaseThreshold) {
                     _pushed = false;

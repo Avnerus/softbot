@@ -6,7 +6,7 @@ const int PRESSURE_SENSE_INTERVAL = 1000;
 const int PRESSURE_AVERAGE_COUNT = 100;
 const int PRESSURE_LEEWAY = 15;
 const int INFLATE_SHOCK_PERIOD = 700;
-const int DEFLATE_SHOCK_PERIOD = 700;
+const int DEFLATE_SHOCK_PERIOD = 200;
 
 Chamber::Chamber(
         const char name[10],
@@ -34,6 +34,11 @@ Chamber::Chamber(
     _startedInflating = 0;
     _startedDeflating = 0;
 }
+
+Chamber::Chamber() {
+
+}
+
 Chamber::~Chamber() {
 
 }

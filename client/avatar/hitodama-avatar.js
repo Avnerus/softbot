@@ -138,12 +138,12 @@ export default {
                 </div>
                 <div id="refresh">
                     <a onclick="${refresh} "href="" class="control-button">
-                        <span>🔄</span>
+                        <span>R</span>
                     </a>
                 </div>
                 <div id="transcribe">
                     <a onclick="${transcribe} "href="" class="control-button">
-                        <span>💬</span>
+                        <span>T</span>
                     </a>
                 </div>
                 <div>
