@@ -27,7 +27,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             &pump,
             A20,
             90,
-            210,
+            200,
             1.0
          //   0.29
     ),
@@ -56,7 +56,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             new Valve(21,19,8,25), // CHAMBER E-2
             &pump,
             A17,
-            95,
+            90,
             105,
             1.0
             

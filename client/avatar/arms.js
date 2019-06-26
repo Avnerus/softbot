@@ -1,5 +1,5 @@
-const LONG_PRESS_THRESHOLD = 800;
-const LONG_PRESS_WAIT = 5000;
+const LONG_PRESS_THRESHOLD = 500;
+const LONG_PRESS_WAIT = 10000;
 
 export default class Arms {
     constructor(socketController) {
