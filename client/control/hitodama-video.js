@@ -166,7 +166,7 @@ export default {
             video {
                 width: 100%;
                 height: 100%;
-                max-width: 500px;
+                max-width: 800px;
                 display: ${pressPlay && picState[ROLES.CONTROLLER] < PIC_STATE.CHOSE_1 ? 'none' : 'block'};
             }
             .wait {
