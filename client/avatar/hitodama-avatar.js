@@ -33,6 +33,7 @@ export default {
     picState: connect(store, (state) => state.picState),
     recognizer: null,
     transcriptionResult: connect(store, (state) => state.transcriptionResult),
+    transcribeSource: connect(store, (state) => state.transcribeSource),
     externalEvents: {
         set: (host, value, lastValue) => {
             console.log("Listen to left arm release", value);
@@ -61,7 +62,7 @@ export default {
             return value;
         }
     },
-    render: ({softbotState, transcriptionResult}) => { 
+    render: ({softbotState, transcriptionResult, transcribeSource}) => { 
        return html`
         <style>
             :host {
@@ -133,7 +134,7 @@ export default {
             ` : html`
                 <div id="speech-language">
                     <label>I speak: </label>
-                    <language-select onchange="${langaugeChanged}" languages=${languages}>
+                    <language-select onchange="${langaugeChanged}" initial="${transcribeSource}" languages=${languages}>
                     </language-select>
                 </div>
                 <div id="refresh">

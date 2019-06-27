@@ -58,7 +58,7 @@ const reducer = (state = {
         softControllerName: ""
     },
     transcribeTarget: "en",
-    transcribeSource: "en",
+    transcribeSource: "en-US",
     transcriptionResult: null,
     cameraStream: null
 }, action) => {

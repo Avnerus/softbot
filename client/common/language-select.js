@@ -33,11 +33,16 @@ const LanguageSelect =  {
             }
           })
           host.flags = flags;
-          host.value = value[0].value;
+          host.value = host.initial;
+          setTimeout(() => {
+            const highSelect = host.shadowRoot.querySelector("high-select");
+            highSelect.value = host.value;
+          })
           return value;
         }
     },
-    render: ({languages, flags}) => html`
+    initial: "en",
+    render: ({languages, flags, initial}) => html`
     <style>
         .option-container {
             display: flex;

@@ -23,7 +23,8 @@ class Chamber {
             int pressureSensor,
             uint16_t minPressure,
             uint16_t maxPressure,
-            float deflationSpeed = 1.0
+            float deflationSpeed = 1.0,
+            unsigned int deflationShock = 700
         );
         Chamber();
         ~Chamber();
@@ -83,6 +84,8 @@ class Chamber {
 
         unsigned long _startedInflating;
         unsigned long _startedDeflating;
+
+        unsigned int _deflationShock;
 
         PumpNg* _pump;
 

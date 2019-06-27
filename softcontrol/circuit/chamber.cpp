@@ -16,7 +16,8 @@ Chamber::Chamber(
         int  pressureSensor,
         uint16_t  minPressure,
         uint16_t  maxPressure,
-        float deflationSpeed
+        float deflationSpeed,
+        unsigned int deflationShock
     ) {
     strcpy(_name, name);
     _entryValve = entryValve;
@@ -33,6 +34,7 @@ Chamber::Chamber(
     _pressureReadSum = 0;
     _startedInflating = 0;
     _startedDeflating = 0;
+    _deflationShock = deflationShock;
 }
 
 Chamber::Chamber() {
@@ -106,7 +108,7 @@ void Chamber::update(unsigned long now) {
                      inflate(1.0);
                 } 
                 else if (_state == DEFLATING && 
-                        now - _startedDeflating > DEFLATE_SHOCK_PERIOD &&
+                        now - _startedDeflating > _deflationShock &&
                         (_pressure <= _destinationPressure + PRESSURE_LEEWAY  || _pressure <= _minPressure + PRESSURE_LEEWAY )) {
                     if (_oscillating) {
                         _destinationPressure = _oscillateMax;

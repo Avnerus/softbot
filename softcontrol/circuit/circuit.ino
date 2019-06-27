@@ -16,7 +16,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             new Valve(4,26,5,25), // CHAMBER A-2
             &pump,
             A10, 
-            80, 
+            70, 
             210,
             1.0
            // 0.220
@@ -46,7 +46,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             new Valve(48,22,7,25), // CHAMBER D-2
             &pump,
             A18,
-            85,
+            90,
             120,
             1.0 
              //   0.29
@@ -56,10 +56,10 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             new Valve(21,19,8,25), // CHAMBER E-2
             &pump,
             A17,
-            90,
-            105,
-            1.0
-            
+            85,
+            102,
+            1.0,
+            1000
              //   0.29
     ),
     new Chamber("Arms",
@@ -69,7 +69,8 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             A16,
             120, 
             175,
-            0.5
+            1.0,
+            170
     ),
     new Chamber("Mouth",
             new Valve(45,44,3,25), // CHAMBER H-1
@@ -77,11 +78,11 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             &pump,
             A14,
             85, 
-            105,
+            110,
             1.0
     )
 };
-Arm* rightArmSensor = new Arm(2, 54, 20, -8);
+Arm* rightArmSensor = new Arm(2, 54, 17, -8);
 Arm* leftArmSensor = new Arm(1, 10, 20, -8);
 
 const int killPin = 39;

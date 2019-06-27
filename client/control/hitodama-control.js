@@ -18,23 +18,29 @@ const look = (host, event) => {
     if (direction == "left") {
         Hitodama.deflate(
             host.socketController,
-            CHAMBERS.RIGHT_NECK
+            CHAMBERS.RIGHT_NECK,
+            500
         )
-        Hitodama.inflateTo(
-            host.socketController,
-            CHAMBERS.LEFT_NECK,
-            0.8
-        )
+        .then(() => {
+            Hitodama.inflateTo(
+                host.socketController,
+                CHAMBERS.LEFT_NECK,
+                1.0
+            )
+        })
     } else if (direction == "right") {
         Hitodama.deflate(
             host.socketController,
-            CHAMBERS.LEFT_NECK
+            CHAMBERS.LEFT_NECK,
+            500
         )
-        Hitodama.inflateTo(
-            host.socketController,
-            CHAMBERS.RIGHT_NECK,
-            0.8
-        )
+        .then(() => {
+            Hitodama.inflateTo(
+                host.socketController,
+                CHAMBERS.RIGHT_NECK,
+                1.0
+            )
+        })
     } else if (direction == "center") {
         Hitodama.deflate(
             host.socketController,
@@ -59,8 +65,8 @@ const express = (host, event) => {
         Hitodama.inflateTo(
             host.socketController,
             CHAMBERS.EYES,
-            0.8,
-            1500
+            0.9,
+            2000
         )
         .then(() => {
             Hitodama.deflate(
@@ -68,6 +74,12 @@ const express = (host, event) => {
                 CHAMBERS.EYES
             )
         });
+        store.dispatch(addTranscript({
+            from: "You",
+            text: "😠",
+            class: "expression"
+        }));
+
 
     }
     else if (emotion == "happy") {
@@ -83,6 +95,11 @@ const express = (host, event) => {
                 CHAMBERS.CHEEKS
             )
         });
+        store.dispatch(addTranscript({
+            from: "You",
+            text: "☺️:",
+            class: "expression"
+        }));
     } 
     else if (emotion == "astonished") {
         /*
@@ -110,12 +127,12 @@ const express = (host, event) => {
                 CHAMBERS.MOUTH
             )
         });
+        store.dispatch(addTranscript({
+            from: "You",
+            text: "😲",
+            class: "expression"
+        }));
     } 
-    store.dispatch(addTranscript({
-        from: "You",
-        text: "*" + emotion + " face*",
-        class: "expression"
-    }));
 }
 
 export default {
