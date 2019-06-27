@@ -38,6 +38,7 @@ export default {
     externalEvents: {
         set: (host, value, lastValue) => {
             console.log("Listen to left arm release", value);
+            /*
             value.on('arm-release', ({id}) => {
                 if (id == 1  && host.picState[ROLES.AVATAR] != PIC_STATE.READY) {
                     console.log("Cycle language!");
@@ -53,7 +54,7 @@ export default {
 
                     langaugeSelect.selected = languages[newIndex].value;
                 }
-            });
+            });*/
             value.on('arm-long-press', () => {
                 console.log("Long press!");
                 const languageSelect = host.shadowRoot.querySelector("language-select");
