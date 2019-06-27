@@ -79,7 +79,8 @@ export default {
                             [
                                 {value: 'en', title: 'English', flag: 'us'},
                                 {value: 'fi', title: 'Finnish', flag: 'fi'},
-                                {value: 'ar', title: 'Arabic', flag: 'arx'}
+                                {value: 'ar', title: 'Arabic', flag: 'arx'},
+                                {value: 'ca', title: 'Catalan', flag: 'catalonia'}
                             ]
                         }></language-select>
                     </div>
