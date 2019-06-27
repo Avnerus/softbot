@@ -12,7 +12,8 @@ const languages =
         {value: 'en-US', title: 'English', flag: 'us'},
         {value: 'fi-FI', title: 'Finnish', flag: 'fi'},
         {value: 'ar-IQ', title: 'Arabic', flag: 'arx'},
-        {value: 'he-IL', title: 'Hebrew', flag: 'il'}
+        {value: 'he-IL', title: 'Hebrew', flag: 'il'},
+        {value: 'ca-ES', title: 'Catalan ', flag: 'catalonia'}
     ]
 ;
 
