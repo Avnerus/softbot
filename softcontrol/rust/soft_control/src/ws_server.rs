@@ -133,7 +133,7 @@ fn handle_message(
                         &mut state.soft_admin
                     ];
                     if let Some(soft_target) = targets[role as usize] {
-                        return Err(SoftError::new("Cannot register - user already connected!"));
+                        return Err(SoftError::new("There is already a controller connected. Please try again later!"));
                     } else {
                         *(targets[role as usize]) =  Some(server.ws.clone());
                          state.tokens.insert(server.ws.token(), role);
@@ -150,6 +150,10 @@ fn handle_message(
                         } 
                          else if role as usize == CONTROL_ROLE {
                              state.soft_controller_name = Some(str::from_utf8(&data[2..]).unwrap().to_string());
+                              if let Some(sc) = targets[0] {
+                                 println!("Notifying controller");
+                                 sc.send("IYou are now in control of Hitodama.").unwrap();
+                              }
                          }
                     }
                 }

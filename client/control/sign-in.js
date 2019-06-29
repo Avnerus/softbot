@@ -36,7 +36,6 @@ export default {
 				display: inline-block;
             }
             language-select {
-                --size: 80px;
 				display: inline-block;
 				padding-left: 12px;
             }
@@ -73,13 +72,16 @@ export default {
 					<input required type="text" name="name">
 				</div>
 				<div class="language-field">
-					<label> Preferred Language:  </label>
+					<label> Native tounge:  </label>
 					<span class="language-select">
                         <language-select languages=${
                             [
                                 {value: 'en', title: 'English', flag: 'us'},
                                 {value: 'fi', title: 'Finnish', flag: 'fi'},
+                                {value: 'sv', title: 'Swedish', flag: 'se'},
+                                {value: 'ru', title: 'Russian', flag: 'ru'},
                                 {value: 'ar', title: 'Arabic', flag: 'arx'},
+                                {value: 'he', title: 'Hebrew', flag: 'il'},
                                 {value: 'ca', title: 'Catalan', flag: 'catalonia'}
                             ]
                         }></language-select>

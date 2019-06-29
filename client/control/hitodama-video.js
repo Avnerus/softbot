@@ -144,10 +144,11 @@ export default {
     },
     cameraStream: connect(store, (state) => state.cameraStream),
     picState: connect(store, (state) => state.picState),
+    softbotState: connect(store, (state) => state.softbotState),
     waiting: true,
     pressPlay: false,
     phase: connect(store, (state) => state.phase),
-    render: ({state, cameraStream, waiting, phase, pressPlay, picState}) => { 
+    render: ({state, cameraStream, waiting, phase, pressPlay, picState, softbotState}) => { 
        console.log("Rendering HITODAMA Video!");
        return html`
         <style>
@@ -166,7 +167,7 @@ export default {
             video {
                 width: 100%;
                 height: 100%;
-                max-width: 800px;
+                max-width: 72vh;
                 display: ${pressPlay && picState[ROLES.CONTROLLER] < PIC_STATE.CHOSE_1 ? 'none' : 'block'};
             }
             .wait {
@@ -202,7 +203,7 @@ export default {
             ▶️ 
         </a>
         <div id="video-container">
-            ${cameraStream && html`
+            ${cameraStream && softbotState[ROLES.CONTROLLER] == 1 && html`
                 <video 
                     srcObject=${cameraStream} 
                     id="hitodama-video"

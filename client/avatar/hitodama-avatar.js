@@ -11,6 +11,8 @@ const languages =
     [
         {value: 'en-US', title: 'English', flag: 'us'},
         {value: 'fi-FI', title: 'Finnish', flag: 'fi'},
+        {value: 'sv-SE', title: 'Swedish', flag: 'se'},
+        {value: 'ru-RU', title: 'Russian', flag: 'ru'},
         {value: 'ar-IQ', title: 'Arabic', flag: 'arx'},
         {value: 'he-IL', title: 'Hebrew', flag: 'il'},
         {value: 'ca-ES', title: 'Catalan ', flag: 'catalonia'}

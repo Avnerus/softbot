@@ -79,6 +79,8 @@ export default {
                             [
                                 {value: 'en', title: 'English', flag: 'us'},
                                 {value: 'fi', title: 'Finnish', flag: 'fi'},
+                                {value: 'sv', title: 'Swedish', flag: 'se'},
+                                {value: 'ru', title: 'Russian', flag: 'ru'},
                                 {value: 'ar', title: 'Arabic', flag: 'arx'},
                                 {value: 'ca', title: 'Catalan', flag: 'catalonia'}
                             ]
