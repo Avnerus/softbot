@@ -49,7 +49,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             90,
             120,
             1.0 
-             //   0.29
+            //   0.29
     ),
     new Chamber("Cheeks",
             new Valve(21,20,8,25), // CHAMBER E-1
@@ -69,8 +69,8 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             A16,
             120, 
             175,
-            1.0,
-            170
+            0.315,
+            4500
     ),
     new Chamber("Mouth",
             new Valve(45,44,3,25), // CHAMBER H-1
