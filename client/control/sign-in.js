@@ -11,6 +11,7 @@ const languages =
         {value: 'ru', title: 'Russian', flag: 'ru'},
         {value: 'ar', title: 'Arabic', flag: 'arx'},
         {value: 'so', title: 'Somali', flag: 'so'},
+        {value: 'de', title: 'German', flag: 'de'},
         {value: 'he', title: 'Hebrew', flag: 'il'},
         {value: 'ca', title: 'Catalan', flag: 'catalonia'}
     ]

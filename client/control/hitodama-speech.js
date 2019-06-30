@@ -82,6 +82,8 @@ export default {
                                 {value: 'sv', title: 'Swedish', flag: 'se'},
                                 {value: 'ru', title: 'Russian', flag: 'ru'},
                                 {value: 'ar', title: 'Arabic', flag: 'arx'},
+                                {value: 'de', title: 'German', flag: 'de'},
+                                {value: 'he', title: 'Hebrew', flag: 'il'},
                                 {value: 'ca', title: 'Catalan', flag: 'catalonia'}
                             ]
                         }></language-select>

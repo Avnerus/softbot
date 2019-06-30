@@ -139,7 +139,7 @@ void Chamber::inflateTo(float max, float speed) {
     if (_destinationPressure > _pressure) {
         inflate(speed);
     } else if (_destinationPressure < _pressure) {
-        deflate(speed);
+        deflate(_deflationSpeed);
     }
 }
 

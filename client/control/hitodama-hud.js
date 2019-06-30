@@ -31,8 +31,9 @@ export default {
               grid-template-columns:  50% 50% ;
               grid-template-rows: ${
                 phase == PHASE.HUD_PICS_VIDEO ? '200px auto 105px 105px 80px;' : 'auto 105px 105px 80px;'
-              } 
-            }
+              }
+            } 
+
             hitodama-transcript {
                 grid-row: ${
                   phase == PHASE.HUD_PICS_VIDEO ? '1 / 3;' : '1;'
@@ -92,6 +93,46 @@ export default {
                     phase == PHASE.HUD_PICS_VIDEO ? '30vh;' : '48vh;'
                 }
             }
+            @media screen and (max-width: 800px) {
+                #hud-container {
+                    grid-template-columns: auto;
+                    grid-template-rows: auto 115px 95px 90px 80px;     
+                }
+                hitodama-transcript {
+                    grid-row: 4;
+                    grid-column: 1 / 3;
+                }
+                hitodama-video {
+                    grid-row: 1;
+                    grid-column: 1 / 3;
+                }
+                hitodama-speech {
+                    grid-row: 5; 
+                    grid-column: 1 / 3; 
+                }
+                hitodama-control {
+                    grid-row: 2;
+                    grid-column: 1 / 3;
+                    --icon-size: 40px;
+                }
+                hitodama-pics-control {
+                    grid-row: 3;
+                    grid-column: 1 / 3; 
+                    --icon-size: 30px;
+                }
+                hitodama-vision-control {
+                    grid-row: 2;
+                    grid-column: 1 / 3; 
+                    --icon-size: 50px;
+                    display: none;
+                }
+                hitodama-pics {
+                    grid-row: 1;
+                    grid-column: 1 / 3; 
+                    --max-pic-width-tall: 40vw;
+                    --max-pic-width-wide: 40vw;
+            }
+   
         </style>
         <div id="hud-container">
             <hitodama-video
