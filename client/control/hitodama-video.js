@@ -208,6 +208,7 @@ export default {
         <div id="video-container">
             ${cameraStream && softbotState[ROLES.CONTROLLER] == 1 && html`
                 <video 
+                    playsinline
                     srcObject=${cameraStream} 
                     id="hitodama-video"
                     onloadedmetadata=${metadataLoaded}
