@@ -116,7 +116,7 @@ const reducer = (state = {
             Hitodama.inflateTo(
                 state.socketController,
                 CHAMBERS.ARMS,
-                1.0 
+                0.8
             )
         }
 

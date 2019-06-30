@@ -10,11 +10,11 @@ const TARGET_VOICES = {
     "ar" : "Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)",
     "ru": "Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)",
     "it": "Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)",
-    "es": "Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)",
-    "ru": "Microsoft Server Speech Text to Speech Voice (ru-RU, Pavel, Apollo)",
-    "fr": "Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)",
-    "de": "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)",
-    "ca": "Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)"
+    "es": "Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)``",
+    "fr": "Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)",
+    "de": "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)",
+    "ca": "Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)",
+    "sv": "Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)"
 }
 
 function getAccessToken(subscriptionKey) {

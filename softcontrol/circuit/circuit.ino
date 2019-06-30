@@ -70,7 +70,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             120, 
             175,
             0.315,
-            4500
+            5000
     ),
     new Chamber("Mouth",
             new Valve(45,44,3,25), // CHAMBER H-1
