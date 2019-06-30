@@ -3,13 +3,28 @@ import store, {connect, changePhase, setTranscribeTarget, PHASE} from '../common
 
 import '../common/language-select'
 
+const languages = 
+    [
+        {value: 'en', title: 'English', flag: 'us'},
+        {value: 'fi', title: 'Finnish', flag: 'fi'},
+        {value: 'sv', title: 'Swedish', flag: 'se'},
+        {value: 'ru', title: 'Russian', flag: 'ru'},
+        {value: 'ar', title: 'Arabic', flag: 'arx'},
+        {value: 'so', title: 'Somali', flag: 'so'},
+        {value: 'he', title: 'Hebrew', flag: 'il'},
+        {value: 'ca', title: 'Catalan', flag: 'catalonia'}
+    ]
+;
+
 const signIn = (host, e) => {
     e.preventDefault();
     const transcribeTarget = e.target.querySelector("language-select").value;
-    const name = e.target.querySelector('input[name="name"]').value;
-    console.log("Sign in with transcribe target " + transcribeTarget + " and name " + name);
+    const transcribeTitle = languages.find(e => e.value == transcribeTarget).title;
 
-    host.socketController.send("R" + String.fromCharCode(0) + name);
+    const name = e.target.querySelector('input[name="name"]').value;
+    console.log("Sign in with transcribe target " + transcribeTarget + ", name: " + name + ", title: " + transcribeTitle);
+
+    host.socketController.send("R" + String.fromCharCode(0) + name + " (Speaks: " + transcribeTitle + ")");
 
     store.dispatch(setTranscribeTarget(transcribeTarget));
     store.dispatch(changePhase(PHASE.HUD_NOPICS))
@@ -74,17 +89,7 @@ export default {
 				<div class="language-field">
 					<label> Native tounge:  </label>
 					<span class="language-select">
-                        <language-select languages=${
-                            [
-                                {value: 'en', title: 'English', flag: 'us'},
-                                {value: 'fi', title: 'Finnish', flag: 'fi'},
-                                {value: 'sv', title: 'Swedish', flag: 'se'},
-                                {value: 'ru', title: 'Russian', flag: 'ru'},
-                                {value: 'ar', title: 'Arabic', flag: 'arx'},
-                                {value: 'he', title: 'Hebrew', flag: 'il'},
-                                {value: 'ca', title: 'Catalan', flag: 'catalonia'}
-                            ]
-                        }></language-select>
+                        <language-select languages=${languages}></language-select>
 					</span>
 				</div>
 				<div id="teleport-button">
