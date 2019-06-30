@@ -85,6 +85,7 @@
     "tmp": "^0.1.0",
     "tone": "^13.4.9",
     "typed.js": "^2.0.2",
+    "unsplash-js": "^5.0.0",
     "wav": "^1.0.2",
     "webrtc-adapter": "^7.2.4",
     "x-tag": "^2.0.3-beta",

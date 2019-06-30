@@ -17,7 +17,19 @@ const KEYWORDS = [
     "love",
     "toy",
     "robot",
-    "music"
+    "music",
+    "food",
+    "house",
+    "family",
+    "nature",
+    "farm",
+    "technology",
+    "money",
+    "politics",
+    "religion",
+    "love",
+    "business",
+    "school"
 ]
 
 export async function getRandomImage(seed, id) {
@@ -55,15 +67,17 @@ export async function getRandomImage(seed, id) {
 
             keys[key] = cache;
 
-            let options = {
-                method: 'GET',
-            }
-            const url = 'https://source.unsplash.com/random?' + keyword;
-            console.log("URL: ", url);
-            return fetch(
-                url,
-                options
-            )
+            return randomUnsplashApi(keyword)
+            .then((url) => {
+                console.log("URL: ", url);
+                const options = {
+                    method: 'GET',
+                }
+                return fetch(
+                    url,
+                    options
+                )
+            })
             .then((res) => {
                 const {headers, body} = res;
                 cache.headers = headers;
@@ -95,4 +109,22 @@ export async function getRandomImage(seed, id) {
         const stream = fs.createReadStream(cache.file.name)
         return {headers: cache.headers, bodyStream: stream}
     })
+}
+
+function randomUnsplashSource(keyword) {
+    const url = 'https://source.unsplash.com/random?' + keyword;
+    return Promise.resolve(url);
+}
+
+function randomUnsplashApi(keyword) {
+   console.log("Getting random photo from unsplash api")
+   const url = "https://api.unsplash.com/photos/random?query=" + keyword + "&client_id=" + process.env['UNSPLASH_KEY'];
+   const options = {
+        method: 'GET',
+   }
+   return fetch(url,options)
+  .then(res => res.json())
+  .then(data => {
+      return data.urls.full;
+  })
 }
