@@ -72,6 +72,7 @@ const attach = (host, janus) => {
             onremotestream: (stream) => {
                 console.log("Got remote stream!", stream);
                 console.log("Vision acquired!");
+                host.waiting = false;
                 store.dispatch(setCameraStream(stream));
                 //Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 
@@ -168,7 +169,9 @@ export default {
                 width: 100%;
                 height: 100%;
                 max-width: 72vh;
-                display: ${pressPlay && picState[ROLES.CONTROLLER] < PIC_STATE.CHOSE_1 ? 'none' : 'block'};
+                display: ${
+                    waiting ||
+                    (pressPlay && picState[ROLES.CONTROLLER] < PIC_STATE.CHOSE_1) ? 'none' : 'block'};
             }
             .wait {
                 padding: 20px;
