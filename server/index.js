@@ -13,6 +13,7 @@ import WebpackHotMiddleware from 'webpack-hot-middleware'
 import opus from 'node-opus'
 import ogg from 'ogg'
 import wav from 'wav'
+import ffmpeg from 'fluent-ffmpeg'
 
 import * as MSTTS from './ms-tts' 
 import * as GoogleTranslate from './google-translate'
@@ -104,7 +105,8 @@ app.post('/transcribe', async function(req, res) {
             res.send(500,"Invalid request");
             return;
         }
-        const file = fs.createReadStream(await Forms.getFile(req,'audio'));
+        //const file = fs.createReadStream(await Forms.getFile(req,'audio'));
+        //
         const opusDecodeStream = new opus.Decoder(48000, 2, 4800);
         const oggDecode = new ogg.Decoder();
         oggDecode.on('stream', function (stream) {
@@ -178,7 +180,19 @@ app.post('/transcribe', async function(req, res) {
             res.status(500).send({status: "error", error: "Error decoding ogg: " + err.toString()});
         });
 
-        file.pipe(oggDecode);
+        const fileName = await Forms.getFile(req,'audio');
+        ffmpeg(fileName)
+        .format('ogg')
+        .audioCodec('copy')
+        .output(oggDecode)
+        .on('error', function(err, stdout, stderr) {
+            console.log('Error decoding recording:' + err.message);
+            res.status(500).send({status: "error", error: "Error decoding recording: " + err.message});
+        })
+       .on('start', function(commandLine) {
+            console.log('Spawned Ffmpeg with command: ' + commandLine);
+       })
+       .run();
     }
     catch (err) {
         console.log(err);

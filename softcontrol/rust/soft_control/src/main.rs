@@ -107,22 +107,24 @@ fn main() {
                     //match port_read.read(serial_buf.as_mut_slice()) {
                     match port_read.read_exact(&mut buf) {
                         Ok(t) => {
-                            let c = buf[0] as char;
-                            match c  {
-                                '>' => {
-                                    serial_buf.drain(..);
-                                }
-                                '<' => {
-                                    if serial_buf[0] as char == 'D' {
-                                        let date = Local::now();
-                                        log.write_all(format!("{} ",date.format("%H:%M:%S")).as_bytes());
-                                        log.write_all(&serial_buf);
-                                        log.write_all(b"\n");
+                            if buf.len() > 0 {
+                                let c = buf[0] as char;
+                                match c  {
+                                    '>' => {
+                                        serial_buf.drain(..);
                                     }
-                                    sensing_in.send(serial_buf.clone()).unwrap();
-                                }
-                                _ => {
-                                    serial_buf.extend_from_slice(&buf);
+                                    '<' => {
+                                        if serial_buf[0] as char == 'D' {
+                                            let date = Local::now();
+                                            log.write_all(format!("{} ",date.format("%H:%M:%S")).as_bytes());
+                                            log.write_all(&serial_buf);
+                                            log.write_all(b"\n");
+                                        }
+                                        sensing_in.send(serial_buf.clone()).unwrap();
+                                    }
+                                    _ => {
+                                        serial_buf.extend_from_slice(&buf);
+                                    }
                                 }
                             }
                            // io::stdout().write_all(&serial_buf[..t]).unwrap();

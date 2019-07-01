@@ -82,12 +82,10 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             1.0
     )
 };
-Arm* rightArmSensor = new Arm(2, 54, 17, -8);
-Arm* leftArmSensor = new Arm(1, 10, 20, -8);
+Arm rightArmSensor = Arm(2, 53, 17, -8);
+Arm leftArmSensor =  Arm(1, 51, 20, -8);
 
-const int killPin = 39;
-
-Processor processor(chambers, &pump);
+Processor* processor = new Processor(chambers, &pump);
 
 void setup() {
   Serial.begin(9600); 
@@ -104,8 +102,8 @@ void setup() {
      chambers[i]->init();
   }
 
-  rightArmSensor->init();
-  leftArmSensor->init();
+  rightArmSensor.init();
+  leftArmSensor.init();
 
 
   //etChamber(RIGHT_CHAMBER)->oscillate(241,245);
@@ -119,8 +117,8 @@ void loop() {
     for (unsigned int i = 0; i < NUM_OF_CHAMBERS; i++) {
        chambers[i]->update(now);
     }
-    rightArmSensor->update(now);
-    leftArmSensor->update(now);
+    rightArmSensor.update(now);
+    leftArmSensor.update(now);
 
     // Kill switch
     /*
@@ -130,7 +128,7 @@ void loop() {
 
     while (Serial.available() > 0) {
         byte input = Serial.read();
-        processor.processByte(input);
+        processor->processByte(input);
     }
 
 }
@@ -195,7 +193,6 @@ void down(float speed) {
     }
 }
 void up(float speed) {
-    /*
     if (chambers[LEFT_CHAMBER].getState() == IDLE && chambers[RIGHT_CHAMBER].getState() == IDLE) {
         chambers[DOWN_CHAMBER].inflateMax(speed);
     }

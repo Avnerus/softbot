@@ -24,7 +24,7 @@ class Arm {
         float _releaseThreshold;
         float _currentThreshold;
         unsigned long _lastCheck;
-        BME280* _sensor;
+        BME280 _sensor;
         Statistic* _calibrationStats; 
 };
 #endif

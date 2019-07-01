@@ -16,7 +16,7 @@ Arm::Arm(int id, int pin, float threshold, float releaseThreshold) {
     _currentThreshold = threshold;
     _lastCheck = 0;
 
-    _sensor = new BME280();
+    _sensor = BME280();
     _calibrationStats = new Statistic();
 }
 
@@ -24,7 +24,6 @@ Arm::~Arm() {
 
 }
 void Arm::init() {
-    _calibrationStats->clear();
 /*
     if (_sensor.beginSPI(_pin) == false) { //Begin communication over SPI. Use pin 10 as CS. 
         Logger::Printf("The Arm sensor at %d did not respond :(",_pin);
@@ -33,15 +32,16 @@ void Arm::init() {
         _active = true;
         _lastCheck = millis();
     }*/
-    _sensor->beginSPI(_pin);
-     //Logger::Printf("The Arm sensor at ", _pin, " initialized! threshold",_threshold);
+    _sensor.beginSPI(_pin);
+    _calibrationStats->clear();
+     Logger::Printf("The Arm sensor at ", _pin, " initialized! threshold",_threshold);
     _active = true;
 }
 void Arm::update(unsigned long now) {
     if (_active) {
         if (now - _lastCheck >= CHECK_INTERVAL) {
             _lastCheck = now;
-            float pressure = (_sensor->readFloatPressure());
+            float pressure = (_sensor.readFloatPressure());
             _calibrationStats->add(pressure);
             if (_calibrationStats->count() >= CALIBRATION_SAMPLES) {
                 //float stdDev = _calibrationStats.pop_stdev();
@@ -52,8 +52,9 @@ void Arm::update(unsigned long now) {
             } 
             if (_idlePressure != 0) {
                 float diff = pressure - _idlePressure;
-                
+
                 /*
+                
                 if (_id == 2) {
                     Serial.print(">SAD ");
                     Serial.print(pressure);
@@ -62,8 +63,7 @@ void Arm::update(unsigned long now) {
                     Serial.print(',');
                     Serial.print(diff);
                     Serial.print("<");
-                }
-                */
+                }*/
 
                 if (_pushed && diff < _releaseThreshold) {
                     _pushed = false;
