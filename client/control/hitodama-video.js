@@ -72,7 +72,6 @@ const attach = (host, janus) => {
             onremotestream: (stream) => {
                 console.log("Got remote stream!", stream);
                 console.log("Vision acquired!");
-                host.waiting = false;
                 store.dispatch(setCameraStream(stream));
                 //Janus.attachMediaStream($('#waitingvideo').get(0), stream);
 

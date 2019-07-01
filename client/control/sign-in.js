@@ -78,8 +78,13 @@ export default {
                 cursor: not-allowed;
             }
 
+            #sign-in-container {
+                width: 100%;
+                margin-left: 20px;
+            }
+
         </style>
-        <div>
+        <div id="sign-in-container">
             <h1>Teleport to HITODAMA</h1>
             <div>
             <form onsubmit="${signIn}">
