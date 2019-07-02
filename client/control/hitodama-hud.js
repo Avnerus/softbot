@@ -95,8 +95,8 @@ export default {
             }
             @media screen and (max-width: 800px) {
                 #hud-container {
-                    grid-template-columns: auto;
-                    grid-template-rows: auto 115px 95px 90px 80px;     
+                    grid-template-columns: 30% 70%;
+                    grid-template-rows: auto 130px 70px 90px 80px;     
                 }
                 hitodama-transcript {
                     grid-row: 4;
@@ -112,7 +112,7 @@ export default {
                 }
                 hitodama-control {
                     grid-row: 2;
-                    grid-column: 1 / 3;
+                    grid-column: 2;
                     --icon-size: 40px;
                 }
                 hitodama-pics-control {
@@ -122,9 +122,9 @@ export default {
                 }
                 hitodama-vision-control {
                     grid-row: 2;
-                    grid-column: 1 / 3; 
-                    --icon-size: 50px;
-                    display: none;
+                    grid-column: 1; 
+                    --icon-size: 40px;
+                    --button-direction: column;
                 }
                 hitodama-pics {
                     grid-row: 1;

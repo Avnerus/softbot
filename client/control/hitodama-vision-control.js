@@ -64,7 +64,7 @@ export default {
                 border-radius: 5px;
                 box-shadow: 2px 2px gray;
                 display:flex;
-                font-size: 70px;
+                font-size: var(--icon-size, 70px);
                 text-decoration: none;
                 align-items: center;
                 justify-content: center;
@@ -75,23 +75,14 @@ export default {
             }
             .button-row {
                 display: flex;
-                flex-direction: row;
                 justify-content: space-evenly;
-                margin-top: 10px;
+                flex-direction: var(--button-direction,row);
+                align-items: center;
+                height: 100%;
             }
         </style>
         <div id="control-container">
             <div class="button-row">
-                <a 
-                    data-direction="down" 
-                    class="control-button"
-                    onmousedown="${look}"
-                    onmouseup="${stop}"
-                    onclick="${click}"
-                    href=""
-                >
-                        ⬇️
-                </a>
                 <a 
                     data-direction="up" 
                     class="control-button"
@@ -101,6 +92,16 @@ export default {
                     href=""
                 >
                     ⬆️
+                </a>
+                <a 
+                    data-direction="down" 
+                    class="control-button"
+                    onmousedown="${look}"
+                    onmouseup="${stop}"
+                    onclick="${click}"
+                    href=""
+                >
+                        ⬇️
                 </a>
             </div>
         </div>
