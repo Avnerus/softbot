@@ -1,4 +1,6 @@
 import Tone from 'tone'
+import {CHAMBERS} from '../common/state'
+import * as Hitodama from '../common/hitodama'
 
 export default class Voice {
     constructor(audioContext, socketController, expression, textOutput) {
@@ -27,12 +29,45 @@ export default class Voice {
             }
             const player = new Tone.GrainPlayer({url: uri , detune: -250,  onload: () => {
                 console.log("Buffer is loaded!");
+                this.speakExpression();
                 player.start();
             }}).toMaster();
 
         });
     }
+    
+    speakExpression() {
+        Hitodama.inflateTo(
+            this.socketController,
+            CHAMBERS.MOUTH,
+            0.8,
+            800
+        )
+        .then(() => {
+            return Hitodama.deflate(
+                this.socketController,
+                CHAMBERS.MOUTH,
+                800
+            )
+        })
+        .then(() => {
+            return Hitodama.inflateTo(
+                this.socketController,
+                CHAMBERS.MOUTH,
+                0.8,
+                800
+            )
+        })
+        .then(() => {
+            return Hitodama.deflate(
+                this.socketController,
+                CHAMBERS.MOUTH,
+            )
+        });
+    }
 
+
+        /*
     voiceStart() {
         // Speaking movement
         events.emit("voice_start");
@@ -41,7 +76,7 @@ export default class Voice {
             this.expression.applyPoseByName("Speaking");
             this.textOutput.fadeIn();
         },timeout);
-    }
+    }*/
 
     voiceBoundary(event) {
         console.log(event.name + ' boundary reached after ' + event.elapsedTime + ' milliseconds.');
