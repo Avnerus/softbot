@@ -33,7 +33,7 @@ const  DONE_2:u8 = 7;
 
 const LAST_EXPLAINED:usize = 2;
 
-const CONTROLLER_TIMEOUT:Duration = Duration::from_secs(10);
+const CONTROLLER_TIMEOUT:Duration = Duration::from_secs(300);
 
 
 struct ServerState {
