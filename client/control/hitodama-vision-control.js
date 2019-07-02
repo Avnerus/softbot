@@ -20,7 +20,8 @@ const look = (host, event) => {
         Hitodama.inflateTo(
             host.socketController,
             CHAMBERS.DOWN_NECK,
-            0.8
+            1.0
+            
         )
     } else if (direction == "down") {
         Hitodama.deflate(
