@@ -12,7 +12,7 @@ use std::rc::Rc;
 use std::io::{Error, ErrorKind};
 use std::collections::HashMap;
 use std::sync::mpsc::channel;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{SystemTime, UNIX_EPOCH, Duration};
 
 use soft_error::SoftError;
 use Config;
@@ -33,6 +33,8 @@ const  DONE_2:u8 = 7;
 
 const LAST_EXPLAINED:usize = 2;
 
+const CONTROLLER_TIMEOUT:Duration = Duration::from_secs(10);
+
 
 struct ServerState {
     soft_admin: Option<Sender>,
@@ -44,7 +46,9 @@ struct ServerState {
     comm_tx: mpsc::Sender<Vec<u8>>,
     pic_state: Vec<u8>,
     pic_key: String,
-    soft_controller_name: Option<String>
+    soft_controller_name: Option<String>,
+    soft_controller_last_action: SystemTime,
+    sc_token : Option<Token>
 }
 
 
@@ -154,6 +158,9 @@ fn handle_message(
                                  println!("Notifying controller");
                                  sc.send("IYou are now in control of Hitodama.").unwrap();
                               }
+
+                              state.soft_controller_last_action = SystemTime::now();
+                              state.sc_token = Some(server.ws.token());
                          }
                     }
                 }
@@ -166,6 +173,9 @@ fn handle_message(
     }
     else {
         if let Some(role) = state.tokens.get(&server.ws.token()) {
+            if *role as usize == CONTROL_ROLE {
+                state.soft_controller_last_action = SystemTime::now();
+            }
             match command {
                 'S' => {
                     // Start command
@@ -263,7 +273,7 @@ fn handle_message(
                 _ => return Err(SoftError::new("Unknown command"))
             }
         } else {
-            return Err(SoftError::new("Not registered"))
+            return Err(SoftError::new("Disconnected. Please refresh and try again."))
         }
     }
 
@@ -310,6 +320,7 @@ impl Handler for Server {
                     }
                 } else if *role as usize == CONTROL_ROLE {
                     state.soft_controller_name = None;                    
+                    state.sc_token = None;
                 }
             } 
         }
@@ -340,7 +351,9 @@ pub fn start(
         comm_tx: comm_out.clone(),
         pic_state : pic_state,
         pic_key : String::new(),
-        soft_controller_name : None
+        soft_controller_name : None,
+        soft_controller_last_action: UNIX_EPOCH,
+        sc_token : None
     }));
 
     let comm_state = state.clone();
@@ -385,6 +398,44 @@ pub fn start(
             }
         }
     }); 
+    let timeout_state = state.clone();
+    let timeout_thread = thread::spawn(move || {
+        loop {
+            {
+                let mut state =  &mut *timeout_state.lock().unwrap();
+                let mut state_changed:bool = false;
+                {
+                    let mut sc_handle = &mut state.soft_controller;
+                    if sc_handle.is_some() {
+                        let timeSinceLastAction = 
+                            SystemTime::now().duration_since(state.soft_controller_last_action).unwrap();
+                        //println!("Time since last action: {:?}" ,timeSinceLastAction);
+                        if timeSinceLastAction > CONTROLLER_TIMEOUT {
+                            state_changed = true;
+                            println!("Time to go!");
+                            {
+                                let sc = sc_handle.as_ref().unwrap();
+                                sc.send("EYou were disconnected due to inactivity. Please refresh to try again.").unwrap();
+                            }
+
+                            *(sc_handle) = None;
+                            if let Some(token) = state.sc_token {
+                                println!("Removing sc token");
+                                state.tokens.remove(&token);
+                            }
+                            state.sc_token = None;
+                            state.soft_controller_name = None;
+                        }
+                    }
+                }
+                if (state_changed) {
+                    send_softbot_state(state);
+                }
+            }
+            thread::sleep(Duration::from_secs(1));
+        }
+    }); 
+
 
     listen(("0.0.0.0",config.server.port), move |out| {
         println!("Connection");
