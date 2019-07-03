@@ -125,6 +125,6 @@ function randomUnsplashApi(keyword) {
    return fetch(url,options)
   .then(res => res.json())
   .then(data => {
-      return data.urls.full;
+      return data.urls.regular;
   })
 }
