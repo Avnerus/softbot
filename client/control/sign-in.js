@@ -13,7 +13,8 @@ const languages =
         {value: 'so', title: 'Somali', flag: 'so'},
         {value: 'de', title: 'German', flag: 'de'},
         {value: 'he', title: 'Hebrew', flag: 'il'},
-        {value: 'ca', title: 'Catalan', flag: 'catalonia'}
+        {value: 'ca', title: 'Catalan', flag: 'catalonia'},
+        {value: 'fa', title: 'Persian', flag: 'ir'}
     ]
 ;
 
