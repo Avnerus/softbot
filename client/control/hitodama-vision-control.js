@@ -70,6 +70,7 @@ export default {
                 align-items: center;
                 justify-content: center;
                 color: #f46161;
+                -webkit-touch-callout: none;
             }
             .control-button.active {
                 background-color: red;
@@ -89,6 +90,8 @@ export default {
                     class="control-button"
                     onmousedown="${look}"
                     onmouseup="${stop}"
+                    ontouchstart="${look}"
+                    ontouchend="${stop}"
                     onclick="${click}"
                     href=""
                 >
@@ -99,6 +102,8 @@ export default {
                     class="control-button"
                     onmousedown="${look}"
                     onmouseup="${stop}"
+                    ontouchstart="${look}"
+                    ontouchend="${stop}"
                     onclick="${click}"
                     href=""
                 >
