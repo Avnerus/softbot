@@ -86,8 +86,8 @@ const express = (host, event) => {
         Hitodama.inflateTo(
             host.socketController,
             CHAMBERS.CHEEKS,
-            0.8,
-            2500
+            0.9,
+            4500
         )
         .then(() => {
             Hitodama.deflate(
