@@ -56,6 +56,7 @@ export default {
                 grid-column: 2; 
             }
             hitodama-youtube {
+                display: none;
                 grid-row: ${
                   phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
                 } 
