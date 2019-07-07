@@ -4,7 +4,6 @@
        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
         <title>Softbot</title>
     </head>
@@ -19,6 +18,9 @@
                url('../fonts/roboto-v19-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
                url('../fonts/roboto-v19-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
         }
+        #youtube {
+            position: absolute;
+        }
         </style>
         <script src="lib/dat.gui.min.js"></script>
         <script src="lib/jquery-2.2.4.min.js"></script>
@@ -27,6 +29,8 @@
         <script src="../avatar-bundle.js"></script>
 
         <div id="game">
+            <div id="youtube">
+            </div>
             <div id="voice-anim">
               <span class="blue"></span>
               <span class="red"></span>

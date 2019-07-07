@@ -7,6 +7,7 @@ import HitodamaControl from './hitodama-control'
 import HitodamaVisionControl from './hitodama-vision-control'
 import HitodamaPicsControl from '../common/hitodama-pics-control'
 import HitodamaPics from '../common/hitodama-pics'
+import HitodamaYouTube from './hitodama-youtube'
 
 define('hitodama-video', HitodamaVideo);
 define('hitodama-speech', HitodamaSpeech);
@@ -15,6 +16,7 @@ define('hitodama-control', HitodamaControl);
 define('hitodama-vision-control', HitodamaVisionControl);
 define('hitodama-pics-control', HitodamaPicsControl);
 define('hitodama-pics', HitodamaPics);
+define('hitodama-youtube', HitodamaYouTube);
 
 export default {
     phase: connect(store, (state) => state.phase),
@@ -52,6 +54,12 @@ export default {
                   phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
                 } 
                 grid-column: 2; 
+            }
+            hitodama-youtube {
+                grid-row: ${
+                  phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
+                } 
+                grid-column: 1; 
             }
             hitodama-control {
                 grid-row: ${
@@ -131,7 +139,10 @@ export default {
                     grid-column: 1 / 3; 
                     --max-pic-width-tall: 40vw;
                     --max-pic-width-wide: 40vw;
-            }
+                }
+                hitodama-youtube {
+                    display: none;
+                }
    
         </style>
         <div id="hud-container">
@@ -145,6 +156,7 @@ export default {
             </hitodama-transcript>
             <hitodama-pics-control identity=${'CONTROL'}></hitodama-pics-control>
             <hitodama-control></hitodama-control>
+            <hitodama-youtube></hitodama-youtube>
             <hitodama-speech></hitodama-speech>
         </div>
      `
