@@ -28,6 +28,7 @@ export default class YoutubePlayer {
 
     playYoutube(id) {
         console.log("Play Youtube!", id);
+        this.stopVideo();
         if (this.YouTube) {
             this.player = new this.YouTube.Player(
                 this.playerContainer,{
@@ -56,7 +57,9 @@ export default class YoutubePlayer {
 
     stopVideo() {
         console.log("Stop video!");
-        this.player.stopVideo();
-        this.player.destroy();
+        if (this.player) {
+            this.player.stopVideo();
+            this.player.destroy();
+        }
     }
 }
