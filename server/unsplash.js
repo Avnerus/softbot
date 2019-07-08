@@ -7,30 +7,27 @@ const keys = {};
 const emitter = new EventEmitter();
 let LAST_SEED = "";
 
-const KEYWORDS = [
+const KEYWORDS1 = [
     "animal",
-    "person",
-    "culture",
-    "fashion",
     "game",
-    "war",
-    "love",
-    "toy",
-    "robot",
-    "music",
     "food",
-    "house",
+    "music",
+    "fun",
+    "pain",
+    "spiritual",
+    "technology"
+]
+const KEYWORDS2 = [
+    "toy",
+    "culture",
+    "robot",
     "family",
-    "nature",
-    "farm",
-    "technology",
     "money",
     "politics",
-    "religion",
-    "love",
     "business",
-    "school"
+    "nature"
 ]
+
 
 export async function getRandomImage(seed, id) {
     const key = seed + "-" + id;
@@ -49,8 +46,10 @@ export async function getRandomImage(seed, id) {
             return keys[key]
         } else {
             console.log("Downloading " + key + "....");
-            let keyword = KEYWORDS[Math.floor(Math.random() * KEYWORDS.length)];
-
+            const keyword = id == '1' ? 
+                KEYWORDS1[Math.floor(Math.random() * KEYWORDS1.length)]:
+                KEYWORDS2[Math.floor(Math.random() * KEYWORDS2.length)]
+            ;
             const cache = new Proxy( {
                 ready: false,
                 file: tmp.fileSync(),
@@ -67,7 +66,7 @@ export async function getRandomImage(seed, id) {
 
             keys[key] = cache;
 
-            return randomUnsplashApi(keyword)
+            return randomUnsplashSource(keyword)
             .then((url) => {
                 console.log("URL: ", url);
                 const options = {
