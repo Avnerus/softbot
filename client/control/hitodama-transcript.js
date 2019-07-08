@@ -1,14 +1,33 @@
-import { html, render } from 'hybrids';
+import { html, render, define } from 'hybrids';
 import store, {connect} from '../common/state'
 
 const scrollDown = (host) => {
+    /*
     setTimeout(() => {
         const container = host.shadowRoot.querySelector("#transcript-container");
         if (container) {
             container.scrollTop = container.scrollHeight;
         }
-    },0)
+    },0)*/
 }
+
+const scrollToBottom = (host, event) => {
+    host.scrollTop = host.scrollHeight;
+}
+const autoScroller = {
+    render: () => html`
+        <style>
+            :host {
+                overflow: scroll;
+                height: 100%;
+                width: 100%;
+            } 
+        </style>
+        <slot onslotchange="${scrollToBottom}"></slot>
+    `
+}
+
+define('auto-scroller', autoScroller);
 
 export default {
     transcript: connect(store, (state) => state.transcript),
@@ -16,21 +35,18 @@ export default {
        return html`
         <style>
             :host {
-                height: 100%;
+                height: 95%;
+                width: 99%;
+                margin-top: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                overflow: hidden;
-            }
-            #transcript-container {
-                height: 95%;
-                width: 100%;
                 background-color: #fffffff2;
-                margin-right: 5px;
-                overflow: scroll;
+                overflow: hidden;
             }
             .transcript-line {
                 margin-top: 10px;
+                margin-left: 5px;
             }
             .transcript-line.error {
                 color: red;
@@ -45,11 +61,11 @@ export default {
                 font-style: italic;
             }
         </style>
-        <div id="transcript-container" scrollTop=${scrollDown(host)}>
+        <auto-scroller>
             ${host.transcript.map(( line ) => html
                 `<div class="transcript-line ${line.class ? line.class : line.from.toLowerCase()}">${line.from} : ${line.text}</div>
             `)}
-        </div>
-     `
+        </auto-scroller>
+        `
    }
 }

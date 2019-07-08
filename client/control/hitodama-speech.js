@@ -71,7 +71,7 @@ export default {
             <div id="speech-container">
                     <div id="speech-text">
                         <label>Say: </label>
-                        <input name="text" type="text">
+                        <input autocomplete="off" name="text" type="text">
                     </div>
                     <div id="speech-language">
                         <label>In: </label>
