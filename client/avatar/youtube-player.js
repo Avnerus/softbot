@@ -12,8 +12,18 @@ export default class YoutubePlayer {
                 this.stopVideo();
 
             } else if (typeof(data.volume) != 'undefined' && this.player) {
-                this.player.setVolume(data.volume);
                 console.log("Volume!", data.volume);
+                this.player.setVolume(data.volume);
+            } else if (typeof(data.visible) != 'undefined' && this.player) {
+                if (data.visible) {
+                    $("#youtube").css("height", "100vh");
+                    $("#youtube").css("width", "100vw");
+                    $("#youtube").css("z-index", "1");
+                } else {
+                    $("#youtube").css("height", "0");
+                    $("#youtube").css("width", "0");
+                    $("#youtube").css("z-index", "0");
+                }
             }
             else if (data.id){
                 this.playYoutube(data.id);
@@ -37,7 +47,7 @@ export default class YoutubePlayer {
                 videoId: id,
                 events : {
                     onReady: () => {this.onPlayerReady()},
-                    onStateChange: () => {this.onPlayerStateChange()}
+                    onStateChange: (e) => {this.onPlayerStateChange(e)}
                 }
                }
             );
@@ -47,12 +57,16 @@ export default class YoutubePlayer {
 
     onPlayerReady() {
         console.log("Player ready!", this.player);
-        this.player.setVolume(10);
         this.player.playVideo();
     }
 
-    onPlayerStateChange() {
-        console.log("Player state change!")
+    onPlayerStateChange(e) {
+        console.log("Player state change:  " + e.data);
+        if (e.data == 1) { // Playing
+            this.player.setVolume(95);
+        } else if (e.data == 0) { // Ended
+            this.stopVideo();
+        }
     }
 
     stopVideo() {
@@ -60,6 +74,7 @@ export default class YoutubePlayer {
         if (this.player) {
             this.player.stopVideo();
             this.player.destroy();
+            this.player = null;
         }
     }
 }

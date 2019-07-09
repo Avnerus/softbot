@@ -20,8 +20,8 @@ define('hitodama-hud', HitodamaHUD);
 
 console.log("Loading control");
 //const socketController = new SocketController('ws://127.0.0.1:3012',() => store.dispatch(setSocketController(socketController, true)));
+//const socketController = new SocketController('ws://10.100.40.56:3012',() => store.dispatch(setSocketController(socketController, true)));
 const socketController = new SocketController('wss://incarnation.hitodama.online',() => store.dispatch(setSocketController(socketController, true)));
-//const socketController = new SocketController('ws://10.100.7.97:3012',() => store.dispatch(setSocketController(socketController, true)));
 socketController.init();
 
 store.dispatch(setIdentity(ROLES.CONTROLLER));

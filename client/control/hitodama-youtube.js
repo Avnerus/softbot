@@ -7,7 +7,7 @@ const play = (host, event) => {
     event.preventDefault();
     const form = event.target.closest("form");
     const link = form.querySelector('input[name="link"]').value;
-    console.log("Youtube link!", link);
+    console.log("Play youtube link!", host, link);
     store.dispatch(addTranscript({
         from: "You",
         text: "Play youtube link: " + link,
@@ -27,6 +27,8 @@ const play = (host, event) => {
             command: 'youtube',
             id: id,
         } );
+
+        host.shadowRoot.querySelector("#youtube-visible input").checked = false;
     }
     catch(e) {
         store.dispatch(addTranscript({
@@ -44,7 +46,24 @@ const stop = (host, event) => {
         command: 'youtube',
         stop: true
     } );
+    host.shadowRoot.querySelector("#youtube-visible input").checked = false;
 };
+
+const visible = (host, event) => {
+    console.log("Visibility change", event.target.checked);
+    host.socketController.sendJSONCommand({
+        command: 'youtube',
+        visible: event.target.checked
+    } );
+}
+
+const volume = (host, event) => {
+    console.log("volume change change", event.target.value);
+    host.socketController.sendJSONCommand({
+        command: 'youtube',
+        volume: event.target.value
+    } );
+}
 
 
 export default {
@@ -64,7 +83,7 @@ export default {
                 width: 100%;
             }
             #youtube-link {
-                width: 70%
+                width: 55%
             }
             input[name="link"] {
                 width: 100%;
@@ -90,15 +109,44 @@ export default {
                 margin-left: 5px;
                 background-color: #f94444;
             }
+            #youtube-visible {
+                margin-left: 5px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 50%;
+            }
+            #youtube-volume {
+                margin-left: 5px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 50%;
+                margin-right: 5px;
+            }
+            #youtube-volume input {
+                transform: rotate(270deg);
+                width: 30px;
+                position: relative;
+                top: 5px;
+            }
         </style>
         <form>
             <div id="youtube-container">
                     <div id="youtube-link">
-                        <label>Play youtube link: </label>
+                        <label>Play youtube song (link): </label>
                         <input name="link" type="text">
                     </div>
                     <button id="play-button" type="submit" onclick=${play} disabled=${socketController ? '' : 'disabled'}>Play</button>
                     <button id="stop-button" type="button" onclick=${stop} disabled=${socketController ? '' : 'disabled'}>Stop</button>
+                    <div id="youtube-visible">
+                        <label>Video:</label>
+                        <input onchange=${visible} name="visible" type="checkbox">
+                    </div>
+                    <div id="youtube-volume">
+                        <label>Vol:</label>
+                        <input onchange=${volume} name="volume" type="range" min="1" max="100">
+                    </div>
                 </div>
         </form>
      `

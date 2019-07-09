@@ -56,7 +56,6 @@ export default {
                 grid-column: 2; 
             }
             hitodama-youtube {
-                display: none;
                 grid-row: ${
                   phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
                 } 
@@ -181,5 +180,8 @@ if (module.hot) {
     })
     module.hot.accept('../common/hitodama-pics.js', function() {
         define('hitodama-pics', HitodamaPics);
+    })
+    module.hot.accept('./hitodama-youtube.js', function() {
+        define('hitodama-youtube', HitodamaYouTube);
     })
 }

@@ -42,6 +42,9 @@ export default {
             #speech-text {
                 width: 80%
             }
+            #speech-text label {
+                display: block;
+            }
             input[name="text"] {
                 width: 87%;
                 min-width: 0px;
