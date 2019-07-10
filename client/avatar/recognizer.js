@@ -25,7 +25,7 @@ export default class Recognizer {
             source: source
         });
         this.showAnimation();
-        this.synth.recordSound();
+        //this.synth.recordSound();
         this.wasStarted = true;
         //this.expression.applyPoseMilliseconds("Thinking", 2000);
     }
@@ -34,7 +34,7 @@ export default class Recognizer {
         console.log("Stopping recognizing!");
         this.stopAnimation();
         this.wasStarted = false;
-        this.synth.stopRecordSound();
+        //this.synth.stopRecordSound();
         this.socketController.sendJSONCommand({
             command: 'stop-recognizing'
         });

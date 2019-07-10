@@ -8,7 +8,7 @@ export default class Synth {
     init() {
         console.log("Synth init");
         const oscillator =  new Tone.Oscillator(0, 'sine').toMaster().start();
-        Tone.Transport.start();
+        //Tone.Transport.start();
     }
     recordSound() {
         const synth = new Tone.Synth().toMaster();
