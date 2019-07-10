@@ -14,7 +14,8 @@ const TARGET_VOICES = {
     "fr": "Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)",
     "de": "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)",
     "ca": "Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)",
-    "sv": "Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)"
+    "sv": "Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)",
+    "es-MX": "Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)"
 }
 
 function getAccessToken(subscriptionKey) {
@@ -35,7 +36,8 @@ export async function getSpeech(text, target = 'en') {
 
     let token = await getAccessToken(process.env['MS_KEY']);
 
-    console.log("Token: ", token);
+    //console.log("Token: ", token);
+    console.log("Speaking", TARGET_VOICES[target]);
 
     let xmlBody = xmlbuilder.create('speak')
         .att('version', '1.0')

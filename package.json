@@ -65,7 +65,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "formidable": "^1.2.1",
     "fullscreen": "^1.1.0",
-    "high-select": "^0.1.0",
+    "high-select": "github:Avnerus/high-select#wrap-var",
     "hybrids": "^4.0.2",
     "lodash": "^4.17.10",
     "moment": "^2.18.1",

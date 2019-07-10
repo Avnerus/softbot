@@ -30,6 +30,7 @@ export default {
             }
             language-select {
                 display: inline-block;
+                overflow: hidden;
             }
             #speech-container {
                 display: flex;
@@ -84,6 +85,7 @@ export default {
                                 {value: 'fi', title: 'Finnish', flag: 'fi'},
                                 {value: 'sv', title: 'Swedish', flag: 'se'},
                                 {value: 'ru', title: 'Russian', flag: 'ru'},
+                                {value: 'es-MX', title: 'Spanish (Mexico)', flag: 'mx'},
                                 {value: 'ar', title: 'Arabic', flag: 'arx'},
                                 {value: 'de', title: 'German', flag: 'de'},
                                 {value: 'he', title: 'Hebrew', flag: 'il'},

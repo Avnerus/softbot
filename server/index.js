@@ -75,7 +75,8 @@ app.get('/api/ms-speak', async (req, res) => {
             res.send(500,"Invalid request");
             return;
         }
-        let text = req.query.target ? await GoogleTranslate.translate(req.query.text, req.query.target) : req.query.text;
+        const googleTarget = req.query.target ? req.query.target.split("-")[0] : null;
+        let text = googleTarget ? await GoogleTranslate.translate(req.query.text, googleTarget) : req.query.text;
         console.log("Text ", text);
         let {bodyStream, headers} = await MSTTS.getSpeech(text, req.query.target);
         console.log("Response headers", headers);

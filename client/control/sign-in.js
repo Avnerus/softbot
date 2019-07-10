@@ -10,6 +10,7 @@ const languages =
         {value: 'sv', title: 'Swedish', flag: 'se'},
         {value: 'ru', title: 'Russian', flag: 'ru'},
         {value: 'ar', title: 'Arabic', flag: 'arx'},
+        {value: 'es', title: 'Spanish (Mexico)', flag: 'mx'},
         {value: 'so', title: 'Somali', flag: 'so'},
         {value: 'de', title: 'German', flag: 'de'},
         {value: 'he', title: 'Hebrew', flag: 'il'},

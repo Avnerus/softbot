@@ -60,8 +60,9 @@ const LanguageSelect =  {
            width: var(--size, 60px);
        }
        high-select {
-           width: var(--size, 60px);
+           width: var(--size, 70px);
            text-align: center;
+            --caller-white-space: normal;
        }
     </style>
     <high-select onchange="${languageChanged}" class="option-container">
