@@ -104,7 +104,7 @@ export default {
             @media screen and (max-width: 800px) {
                 #hud-container {
                     grid-template-columns: 30% 70%;
-                    grid-template-rows: auto 130px 70px 90px 80px;     
+                    grid-template-rows: auto 130px 70px 90px 80px 80px;     
                 }
                 hitodama-transcript {
                     grid-row: 4;
@@ -115,7 +115,7 @@ export default {
                     grid-column: 1 / 3;
                 }
                 hitodama-speech {
-                    grid-row: 5; 
+                    grid-row: 6; 
                     grid-column: 1 / 3; 
                 }
                 hitodama-control {
@@ -141,7 +141,8 @@ export default {
                     --max-pic-width-wide: 40vw;
                 }
                 hitodama-youtube {
-                    display: none;
+                    grid-row: 5; 
+                    grid-column: 1 / 3; 
                 }
    
         </style>

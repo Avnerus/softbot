@@ -134,7 +134,7 @@ export default {
         <form>
             <div id="youtube-container">
                     <div id="youtube-link">
-                        <label>Play youtube song (link): </label>
+                        <label>Youtube (link)</label>
                         <input name="link" type="text">
                     </div>
                     <button id="play-button" type="submit" onclick=${play} disabled=${socketController ? '' : 'disabled'}>Play</button>
