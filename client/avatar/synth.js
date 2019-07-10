@@ -8,25 +8,27 @@ export default class Synth {
     init() {
         console.log("Synth init");
         const oscillator =  new Tone.Oscillator(0, 'sine').toMaster().start();
-        this.synth = new Tone.Synth().toMaster();
+        Tone.Transport.start();
     }
     recordSound() {
-        this.synth.triggerAttackRelease("C4", "16n");
-        this.synth.triggerAttackRelease("A4", "16n");
-        this.synth.triggerAttackRelease("F5", "16n");
+        const synth = new Tone.Synth().toMaster();
+        synth.volume.value = -30;
+        synth.sync();
+        synth.triggerAttackRelease("C4", "16n");
+        synth.triggerAttackRelease("A4", "16n", '+8n');
+        synth.triggerAttackRelease("F5", "16n", '+16n');
         /*
         this.playFreq(620,{start: 0, type:'sine', end: 0.5});
         this.playFreq(780,{start:0.05, type: 'sine', end:0.6});
         this.playFreq(880,{start:0.15, type: 'sine', end:0.6}); */
     }
     stopRecordSound() {
-        this.synth.triggerAttackRelease("C4", "16n");
-        this.synth.triggerAttackRelease("A4", "16n");
-        this.synth.triggerAttackRelease("F4", "16n");
-        /*
-        this.playFreq(820,{start: 0, type:'sine', end: 0.1});
-        this.playFreq(580,{start:0.05, type: 'sine', end:0.1});
-        this.playFreq(480,{start:0.15, type: 'square', end:0.1}); */
+        const synth = new Tone.Synth().toMaster();
+        synth.volume.value = -30;
+        synth.sync();
+        synth.triggerAttackRelease("F5", "16n");
+        synth.triggerAttackRelease("A4", "16n", '+8n');
+        synth.triggerAttackRelease("C4", "16n", '+16n');
     }
     playFreq(freq, {start = 0, end = 0.1, type = 'sine'} = {start: 0, end: 0.1, type: 'sine'}) {
         console.log("Play freq", freq);
