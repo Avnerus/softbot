@@ -15,7 +15,8 @@ const TARGET_VOICES = {
     "de": "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)",
     "ca": "Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)",
     "sv": "Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)",
-    "es-MX": "Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)"
+    "es-MX": "Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)",
+    "tr" : "Microsoft Server Speech Text to Speech Voice (tr-TR, SedaRUS)"
 }
 
 function getAccessToken(subscriptionKey) {

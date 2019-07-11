@@ -87,6 +87,7 @@ export default {
                                 {value: 'ru', title: 'Russian', flag: 'ru'},
                                 {value: 'es-MX', title: 'Spanish (Mexico)', flag: 'mx'},
                                 {value: 'ar', title: 'Arabic', flag: 'arx'},
+                                {value: 'tr', title: 'Turkish', flag: 'tr'},
                                 {value: 'de', title: 'German', flag: 'de'},
                                 {value: 'he', title: 'Hebrew', flag: 'il'},
                                 {value: 'ca', title: 'Catalan', flag: 'catalonia'}
