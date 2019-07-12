@@ -1,35 +1,28 @@
 import { html, render } from 'hybrids';
 import store, {connect, CHAMBERS} from '../common/state'
 
+import RaiseArm from './images/raise-arm.png'
+import LowerArm from './images/lower-arm.png'
+
 import * as Hitodama from '../common/hitodama'
 
-const look = (host, event) => {
+const raiseArm = (host, event) => {
     event.preventDefault();
-    const direction = $(event.target).attr("data-direction");
-    $(event.target).addClass("active");
-    console.log("Look " + direction);
-    if (direction == "up") {
-        Hitodama.inflateTo(
-            host.socketController,
-            CHAMBERS.DOWN_NECK,
-            1.0
-            
-        )
-    } else if (direction == "down") {
-        Hitodama.deflate(
-            host.socketController,
-            CHAMBERS.DOWN_NECK
-        )
-    } 
+    console.log("Raise arm!");
+    Hitodama.inflateTo(
+        host.socketController,
+        CHAMBERS.ARMS,
+        0.8
+    )
 }
-const stop = (host, event) => {
+const lowerArm = (host, event) => {
     event.preventDefault();
-    console.log("Stop!");
-    $(event.target).removeClass("active");
-    Hitodama.stop(host.socketController, CHAMBERS.DOWN_NECK);
+    console.log("Lower arm!");
+    Hitodama.deflate(
+        host.socketController,
+        CHAMBERS.ARMS
+    )
 }
-const click = (host, event) => event.preventDefault();
-
 export default {
     socketController: connect(store, (state) => state.socketController),
     render: ({socketController}) => { 
@@ -62,7 +55,6 @@ export default {
                 align-items: center;
                 justify-content: center;
                 color: #f46161;
-                -webkit-touch-callout: none;
                 margin-left: 5px;
                 margin-right: 5px;
             }
@@ -80,28 +72,18 @@ export default {
         <div id="control-container">
             <div class="button-row">
                 <a 
-                    data-direction="up" 
                     class="control-button"
-                    onmousedown="${look}"
-                    onmouseup="${stop}"
-                    ontouchstart="${look}"
-                    ontouchend="${stop}"
-                    onclick="${click}"
+                    onclick="${raiseArm}"
                     href=""
                 >
-                    ⬆️
+                    <img src=${RaiseArm}>
                 </a>
                 <a 
-                    data-direction="down" 
                     class="control-button"
-                    onmousedown="${look}"
-                    onmouseup="${stop}"
-                    ontouchstart="${look}"
-                    ontouchend="${stop}"
-                    onclick="${click}"
+                    onclick="${lowerArm}"
                     href=""
                 >
-                        ⬇️
+                    <img src=${LowerArm}>
                 </a>
             </div>
         </div>

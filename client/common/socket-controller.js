@@ -53,9 +53,7 @@ export default class SocketController {
                 console.log(json);
                 let obj = JSON.parse(json);
                 if (this.commands[obj.command]) {
-                    for (let func of this.commands[obj.command]) {
-                        func(obj);
-                    }
+                    this.commands[obj.command](obj);
                 }
             }
             if (prefix == 'U') {
@@ -66,9 +64,7 @@ export default class SocketController {
                 let obj = JSON.parse(json);
                 console.log(obj);
                 if (this.commands[obj.command]) {
-                    for (let func of this.commands[obj.command]) {
-                        func(obj);
-                    }
+                    this.commands[obj.command](obj);
                 }
             }
         }
@@ -124,9 +120,11 @@ export default class SocketController {
     }
 
     on(command, func) {
-        if (!this.commands[command]) {
-            this.commands[command] = [];
+        this.commands[command] = func;
+    }
+    off(command) {
+        if (this.commands[command]) {
+            delete this.commands[command];
         }
-        this.commands[command].push(func);
     }
 }

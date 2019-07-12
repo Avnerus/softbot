@@ -20,6 +20,11 @@ const speak = (host, event) => {
     form.querySelector('input[name="text"]').value = "";
 };
 
+const typing = (host, event) => {
+    console.log("Typing...");
+    host.socketController.send("T");
+}
+
 export default {
     socketController: connect(store, (state) => state.socketController),
     render: ({socketController}) => { 
@@ -75,7 +80,7 @@ export default {
             <div id="speech-container">
                     <div id="speech-text">
                         <label>Say: </label>
-                        <input autocomplete="off" name="text" type="text">
+                        <input oninput=${typing} autocomplete="off" name="text" type="text">
                     </div>
                     <div id="speech-language">
                         <label>In: </label>

@@ -60,6 +60,7 @@ const reducer = (state = {
     transcribeTarget: "en",
     transcribeSource: "en-US",
     transcriptionResult: null,
+    controllerTitle: "",
     cameraStream: null
 }, action) => {
   switch (action.type) {
@@ -88,6 +89,9 @@ const reducer = (state = {
             action.socketController.on('stop-recognizing',() => {
                 store.dispatch(stopRecognizing());
             });
+            if (state.phase > PHASE.SIGN_IN) {
+                action.socketController.send("R" + String.fromCharCode(0) + state.controllerTitle);
+            }
         }
         action.socketController.on('pic-state', (data) => {
             console.log("New pic state!", data.state);
@@ -176,6 +180,9 @@ const reducer = (state = {
     case 'SET_IDENTITY' : {
         return {...state, identity : action.value}
     }
+    case 'SET_CONTROLLER_TITLE' : {
+        return {...state, controllerTitle : action.value}
+    }
     default:
       return state;
   };
@@ -252,6 +259,11 @@ export const setTranscriptionResult = (value) => ({
 
 export const setIdentity = (value) => ({
     type: 'SET_IDENTITY',
+    value
+})
+
+export const setControllerTitle = (value) => ({
+    type: 'SET_CONTROLLER_TITLE',
     value
 })
 

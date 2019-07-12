@@ -34,6 +34,7 @@ const  DONE_2:u8 = 7;
 const LAST_EXPLAINED:usize = 2;
 
 const CONTROLLER_TIMEOUT:Duration = Duration::from_secs(600);
+const TYPING_TIMEOUT:Duration = Duration::from_secs(2);
 
 
 struct ServerState {
@@ -48,7 +49,9 @@ struct ServerState {
     pic_key: String,
     soft_controller_name: Option<String>,
     soft_controller_last_action: SystemTime,
-    sc_token : Option<Token>
+    sc_token : Option<Token>,
+    soft_controller_typing: bool,
+    soft_controller_last_typing: SystemTime
 }
 
 
@@ -97,13 +100,15 @@ fn send_softbot_state(state: &ServerState) {
         \"state\": {{
             \"CONTROL\": {},
             \"AVATAR\": {},
-            \"softControllerName\" : \"{}\"
+            \"softControllerName\" : \"{}\",
+            \"softControllerTyping\" : {}
         }}
     }}
     ", 
     if state.soft_controller.is_some() { '1' } else { '0' },
     if state.soft_avatar.is_some() { '1' } else { '0' },
-    controller_name
+    controller_name,
+    if state.soft_controller_typing { "true" } else { "false" },
     );
 
     if let Some(sc) = &state.soft_controller {
@@ -265,6 +270,15 @@ fn handle_message(
 
                     }
                 }
+                'T' => {
+                    println!("Typing!");
+                    state.soft_controller_last_typing = SystemTime::now();
+
+                    if !state.soft_controller_typing {
+                        state.soft_controller_typing = true;
+                        send_softbot_state(state);
+                    }
+                }
                 '>' => {
                     // Send to serial
                     server.motor_tx.send(data);
@@ -353,7 +367,9 @@ pub fn start(
         pic_key : String::new(),
         soft_controller_name : None,
         soft_controller_last_action: UNIX_EPOCH,
-        sc_token : None
+        sc_token : None,
+        soft_controller_typing: false,
+        soft_controller_last_typing: UNIX_EPOCH
     }));
 
     let comm_state = state.clone();
@@ -425,6 +441,15 @@ pub fn start(
                             }
                             state.sc_token = None;
                             state.soft_controller_name = None;
+                        }
+                        if state.soft_controller_typing {
+                            let timeSinceLastTyping = 
+                                SystemTime::now().duration_since(state.soft_controller_last_typing).unwrap();
+                            if timeSinceLastTyping > TYPING_TIMEOUT {
+                                println!("Stopped typing!");
+                                state.soft_controller_typing = false;
+                                state_changed = true;
+                            }
                         }
                     }
                 }

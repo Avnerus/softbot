@@ -153,7 +153,15 @@ export default {
                 </div>
                 <div>
                 ${softbotState.softControllerName.length > 0 ? html`
-                        <span>Connected to:</span> <span class="controller-name">${softbotState.softControllerName}</span>
+                        <div>
+                            <span>Connected to:</span> <span class="controller-name">${softbotState.softControllerName}</span>
+                        </div>
+                    ${softbotState.softControllerTyping && html`
+                            <div>
+                                Typing...
+                            </div>
+
+                    `}
                 ` : html`
                     <span>Waiting for controller..</span>.
                 `}

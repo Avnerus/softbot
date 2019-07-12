@@ -1,5 +1,5 @@
 import { html, render } from 'hybrids';
-import store, {connect, changePhase, setTranscribeTarget, PHASE} from '../common/state'
+import store, {connect, changePhase, setTranscribeTarget, setControllerTitle, PHASE} from '../common/state'
 
 import '../common/language-select'
 
@@ -29,8 +29,10 @@ const signIn = (host, e) => {
     const name = e.target.querySelector('input[name="name"]').value;
     console.log("Sign in with transcribe target " + transcribeTarget + ", name: " + name + ", title: " + transcribeTitle);
 
-    host.socketController.send("R" + String.fromCharCode(0) + name + " (Speaks: " + transcribeTitle + ")");
+    const controllerTitle = name + " (Speaks: " + transcribeTitle + ")";
+    host.socketController.send("R" + String.fromCharCode(0) + controllerTitle);
 
+    store.dispatch(setControllerTitle(controllerTitle));
     store.dispatch(setTranscribeTarget(transcribeTarget));
     store.dispatch(changePhase(PHASE.HUD_NOPICS))
 } 

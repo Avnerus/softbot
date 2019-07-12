@@ -8,6 +8,7 @@ import HitodamaVisionControl from './hitodama-vision-control'
 import HitodamaPicsControl from '../common/hitodama-pics-control'
 import HitodamaPics from '../common/hitodama-pics'
 import HitodamaYouTube from './hitodama-youtube'
+import HitodamaArmControl from './hitodama-arm-control'
 
 define('hitodama-video', HitodamaVideo);
 define('hitodama-speech', HitodamaSpeech);
@@ -17,6 +18,7 @@ define('hitodama-vision-control', HitodamaVisionControl);
 define('hitodama-pics-control', HitodamaPicsControl);
 define('hitodama-pics', HitodamaPics);
 define('hitodama-youtube', HitodamaYouTube);
+define('hitodama-arm-control', HitodamaArmControl);
 
 export default {
     phase: connect(store, (state) => state.phase),
@@ -56,6 +58,9 @@ export default {
                 grid-column: 2; 
             }
             hitodama-youtube {
+                display: ${
+                    phase == PHASE.HUD_PICS ? 'none;' : 'flex;'
+                }
                 grid-row: ${
                   phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
                 } 
@@ -67,11 +72,16 @@ export default {
                 } 
                 grid-column: 2; 
             }
-            hitodama-vision-control {
+            #below-camera {
                 grid-row: ${
                   phase == PHASE.HUD_PICS_VIDEO ? '3;' : '2;'
                 } 
                 grid-column: 1; 
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                width: 100%;
+                background-color: #fbf5fb;
             }
             hitodama-pics-control {
                 grid-row: ${
@@ -151,7 +161,10 @@ export default {
                 streamURL="${'https://stream.hitodama.online/janus'}"
               >
              </hitodama-video>
-            <hitodama-vision-control></hitodama-vision-control>
+            <div id="below-camera">
+                <hitodama-vision-control></hitodama-vision-control>
+                <hitodama-arm-control></hitodama-arm-control>
+            </div>
             <hitodama-pics identity=${'CONTROL'}></hitodama-pics>
             <hitodama-transcript>
             </hitodama-transcript>
@@ -184,5 +197,8 @@ if (module.hot) {
     })
     module.hot.accept('./hitodama-youtube.js', function() {
         define('hitodama-youtube', HitodamaYouTube);
+    })
+    module.hot.accept('./hitodama-arm-control.js', function() {
+        define('hitodama-arm-control', HitodamaArmControl);
     })
 }
