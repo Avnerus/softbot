@@ -34,13 +34,13 @@ export default {
               padding: 0px 10px;
               grid-template-columns:  50% 50% ;
               grid-template-rows: ${
-                phase == PHASE.HUD_PICS_VIDEO ? '200px auto 105px 105px 80px;' : 'auto 105px 105px 80px;'
+                phase == PHASE.HUD_PICS_VIDEO ? '200px 80px auto 105px 65px 80px;' : 'auto 105px 105px 80px;'
               }
             } 
 
             hitodama-transcript {
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO ? '1 / 3;' : '1;'
+                  phase == PHASE.HUD_PICS_VIDEO ? '1 / 4;' : '1;'
                 } 
                 grid-column: 2;
             }
@@ -53,7 +53,7 @@ export default {
             }
             hitodama-speech {
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
+                  phase == PHASE.HUD_PICS_VIDEO ? '6;' : '4;'
                 } 
                 grid-column: 2; 
             }
@@ -62,30 +62,33 @@ export default {
                     phase == PHASE.HUD_PICS ? 'none;' : 'flex;'
                 }
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO ? '5;' : '4;'
+                  phase == PHASE.HUD_PICS_VIDEO ? '6;' : '4;'
                 } 
                 grid-column: 1; 
             }
             hitodama-control {
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO ? '3 / 5;' : '2 / 4;'
+                  phase == PHASE.HUD_PICS_VIDEO ? '4 / 6;' : '2 / 4;'
                 } 
                 grid-column: 2; 
             }
+            hitodama-vision-control, hitodama-arm-control {
+                --icon-size: ${
+                      phase == PHASE.HUD_PICS_VIDEO ? '40px;' : '70px;'
+                  }
+            }             
             #below-camera {
-                grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO ? '3;' : '2;'
-                } 
+                grid-row: 2;
                 grid-column: 1; 
                 display: flex;
                 align-items: center;
                 justify-content: space-evenly;
-                width: 100%;
+                width: 97%;
                 background-color: #fbf5fb;
             }
             hitodama-pics-control {
                 grid-row: ${
-                  phase == PHASE.HUD_PICS_VIDEO && '4 ;'
+                  phase == PHASE.HUD_PICS_VIDEO && '5 ;'
                 }
                 ${
                   phase == PHASE.HUD_PICS && '4;'
@@ -95,10 +98,14 @@ export default {
                 } 
 
                 grid-column: 1; 
+
+                --icon-size: ${
+                      phase == PHASE.HUD_PICS_VIDEO ? '40px;' : '70px;'
+                 }
             }
             hitodama-pics {
                 grid-row: ${
-                    phase == PHASE.HUD_PICS_VIDEO ? '2 / 4;' : '1 / 4;'
+                    phase == PHASE.HUD_PICS_VIDEO ? '3 / 5;' : '1 / 4;'
                 }
                 grid-column: 1; 
                 display: ${

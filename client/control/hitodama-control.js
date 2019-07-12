@@ -153,8 +153,8 @@ export default {
                 width: 100%;:
             }
             .control-button {
-                width: var(--icon-size, 70px);
-                height: var(--icon-size, 65px);
+                width: var(--icon-size, 60px);
+                height: var(--icon-size, 60px);
                 padding: 5px;
                 background-color: #dfdbfb;
                 border-style: solid;
@@ -162,7 +162,7 @@ export default {
                 border-radius: 5px;
                 box-shadow: 2px 2px gray;
                 display:flex;
-                font-size: 70px;
+                font-size: 60px;
             }
             .button-row {
                 display: flex;

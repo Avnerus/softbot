@@ -215,7 +215,6 @@ fn handle_message(
                         let pic_state = data[4];
                         println!("PIC State! {}", pic_state);
                         state.pic_state[*role as usize] = pic_state;
-                        let mut explain_role = state.pic_state[LAST_EXPLAINED] as usize;
 
                         if state.pic_state[CONTROL_ROLE] == READY &&
                             state.pic_state[AVATAR_ROLE] == READY {
@@ -231,19 +230,15 @@ fn handle_message(
                             state.pic_state[AVATAR_ROLE]  >= CHOSE_1 && 
                             state.pic_state[AVATAR_ROLE] <= CHOSE_2 {
                                 
-                                state.pic_state[LAST_EXPLAINED] = 1 - state.pic_state[LAST_EXPLAINED];
-                                explain_role = state.pic_state[LAST_EXPLAINED] as usize;
-                                state.pic_state[explain_role] += 2;
+                                println!("Both chose!");
+                                state.pic_state[AVATAR_ROLE] += 2;
+                                state.pic_state[CONTROL_ROLE] += 2;
                         }
-                        if state.pic_state[*role as usize] >= DONE_1 {
-                            let other_role = (1 - *role as usize);
-                            if state.pic_state[other_role] < DONE_1 {
-                                state.pic_state[other_role] += 2;
-                            } else {
-                                // Reset!
-                                state.pic_state[other_role] = WAITING;
-                                state.pic_state[*role as usize] = WAITING;
-                            }
+                        if state.pic_state[CONTROL_ROLE] >= DONE_1 &&
+                           state.pic_state[AVATAR_ROLE] >= DONE_1 {
+                            // Reset!
+                            state.pic_state[CONTROL_ROLE] = WAITING;
+                            state.pic_state[AVATAR_ROLE] = WAITING;
                         }
                         send_pic_state(state);
                     }
@@ -332,7 +327,9 @@ impl Handler for Server {
                         println!("Notifying controller");
                         sc.send("IAvatar disconnected.").unwrap();
                     }
+                    state.pic_state[CONTROL_ROLE] = 0;
                 } else if *role as usize == CONTROL_ROLE {
+                    state.pic_state[AVATAR_ROLE] = 0;
                     state.soft_controller_name = None;                    
                     state.sc_token = None;
                 }

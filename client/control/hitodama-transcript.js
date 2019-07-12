@@ -35,7 +35,7 @@ export default {
        return html`
         <style>
             :host {
-                height: 95%;
+                height: 97%;
                 width: 99%;
                 margin-top: 10px;
                 display: flex;

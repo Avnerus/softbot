@@ -45,8 +45,8 @@ export default class  {
         //
     
         store.dispatch(setIdentity(ROLES.AVATAR));
-        this.socketController = new SocketController("wss://incarnation.hitodama.online");
-        //this.socketController = new SocketController("ws://127.0.0.1:3012");
+        //this.socketController = new SocketController("wss://incarnation.hitodama.online");
+        this.socketController = new SocketController("ws://127.0.0.1:3012");
         //this.socketController = new SocketController("ws://10.100.40.56:3012");
         events.on('socket_connected', () => {
             console.log("Socket connected registering avatar");
