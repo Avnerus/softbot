@@ -9,6 +9,7 @@ import HitodamaPicsControl from '../common/hitodama-pics-control'
 import HitodamaPics from '../common/hitodama-pics'
 import HitodamaYouTube from './hitodama-youtube'
 import HitodamaArmControl from './hitodama-arm-control'
+import HitodamaSense from './hitodama-sense'
 
 define('hitodama-video', HitodamaVideo);
 define('hitodama-speech', HitodamaSpeech);
@@ -19,6 +20,7 @@ define('hitodama-pics-control', HitodamaPicsControl);
 define('hitodama-pics', HitodamaPics);
 define('hitodama-youtube', HitodamaYouTube);
 define('hitodama-arm-control', HitodamaArmControl);
+define('hitodama-sense', HitodamaSense);
 
 export default {
     phase: connect(store, (state) => state.phase),
@@ -118,6 +120,14 @@ export default {
                     phase == PHASE.HUD_PICS_VIDEO ? '30vh;' : '48vh;'
                 }
             }
+            hitodama-sense {
+                position: absolute;
+                width: 88%;
+                height: 94%;
+                top: 3%;
+                left: 6%;
+                pointer-events: none;
+            }
             @media screen and (max-width: 800px) {
                 #hud-container {
                     grid-template-columns: 30% 70%;
@@ -145,7 +155,7 @@ export default {
                     grid-column: 1 / 3; 
                     --icon-size: 30px;
                 }
-                hitodama-vision-control {
+                hitodama-vision-control, hitodama-arm-control {
                     grid-row: 2;
                     grid-column: 1; 
                     --icon-size: 40px;
@@ -179,6 +189,7 @@ export default {
             <hitodama-control></hitodama-control>
             <hitodama-youtube></hitodama-youtube>
             <hitodama-speech></hitodama-speech>
+            <hitodama-sense></hitodama-sense>
         </div>
      `
 }
@@ -207,5 +218,8 @@ if (module.hot) {
     })
     module.hot.accept('./hitodama-arm-control.js', function() {
         define('hitodama-arm-control', HitodamaArmControl);
+    })
+    module.hot.accept('./hitodama-sense.js', function() {
+        define('hitodama-sense', HitodamaSense);
     })
 }
