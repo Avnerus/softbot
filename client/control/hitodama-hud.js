@@ -130,7 +130,7 @@ export default {
             }
             @media screen and (max-width: 800px) {
                 #hud-container {
-                    grid-template-columns: 30% 70%;
+                    grid-template-columns: 50% 50%;
                     grid-template-rows: auto 130px 70px 90px 80px 80px;     
                 }
                 hitodama-transcript {

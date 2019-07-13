@@ -61,7 +61,11 @@ const reducer = (state = {
     transcribeSource: "en-US",
     transcriptionResult: null,
     controllerTitle: "",
-    cameraStream: null
+    cameraStream: null,
+    arms: {
+        0: 0,
+        1: 0
+    }
 }, action) => {
   switch (action.type) {
     case 'CHANGE_PHASE':
@@ -82,6 +86,15 @@ const reducer = (state = {
                     text: msg.slice(1)
                 }));
             });
+            action.socketController.subscribeToPrefix('S', (data) => {
+                let text = new TextDecoder("utf-8").decode(new Uint8Array(data,2))
+                const armId = parseInt(text[1]);
+                if (text[0] == 'P') {
+                    store.dispatch(setArmState(armId,1));
+                } else if (text[0] == 'R') {
+                    store.dispatch(setArmState(armId,0));
+                }
+            })
 
             action.socketController.on('start-recognizing',(data) => {
                 store.dispatch(startRecognizing(data.source));
@@ -183,6 +196,10 @@ const reducer = (state = {
     case 'SET_CONTROLLER_TITLE' : {
         return {...state, controllerTitle : action.value}
     }
+    case 'SET_ARM_STATE' : {
+        console.log("New arm state!", action.id, action.value);
+        return {...state, arms : {...state.arms, [action.id] : action.value}}
+    }
     default:
       return state;
   };
@@ -264,6 +281,12 @@ export const setIdentity = (value) => ({
 
 export const setControllerTitle = (value) => ({
     type: 'SET_CONTROLLER_TITLE',
+    value
+})
+
+export const setArmState = (id, value) => ({
+    type: 'SET_ARM_STATE',
+    id,
     value
 })
 

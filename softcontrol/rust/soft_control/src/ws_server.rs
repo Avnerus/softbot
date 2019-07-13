@@ -383,10 +383,10 @@ pub fn start(
                         'A' => {
                             println!("Arm sensing message! {}", String::from_utf8(msg.clone()).unwrap());
                             if let Some(sa) = & state.soft_avatar {
-                               sa.send(msg).unwrap();
+                               sa.send(msg.clone()).unwrap();
                             }
                             if let Some(sc) = & state.soft_controller {
-                               sc.send(msg).unwrap();
+                               sc.send(msg.clone()).unwrap();
                             }
                         }
                         'P' => {

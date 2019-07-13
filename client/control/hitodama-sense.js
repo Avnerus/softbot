@@ -3,7 +3,8 @@ import store, {connect, CHAMBERS} from '../common/state'
 
 export default {
     socketController: connect(store, (state) => state.socketController),
-    render: ({socketController}) => { 
+    arms: connect(store, (state) => state.arms),
+    render: ({socketController, arms}) => { 
        return html`
         <style>
             :host {
@@ -20,8 +21,8 @@ export default {
                 background-color: rgba(15, 182, 206, 0.14);
             }
         </style>
-        <div class="pressed" id="right-arm"></div>
-        <div class="pressed" id="left-arm"></div>
+        <div class="${arms[0] ? 'pressed' : 'normal'}" id="right-arm"></div>
+        <div class="${arms[1] ? 'pressed' : 'normal'}" id="left-arm"></div>
      `
    }
 }
