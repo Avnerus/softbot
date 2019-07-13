@@ -82,8 +82,8 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             1.0
     )
 };
-Arm rightArmSensor = Arm(2, 53, 17, -8);
-Arm leftArmSensor =  Arm(1, 51, 20, -8);
+Arm rightArmSensor = Arm(2, 53, 20, -8);
+Arm leftArmSensor =  Arm(1, 51, 40, -8);
 
 Processor* processor = new Processor(chambers, &pump);
 
