@@ -10,7 +10,10 @@ const readyClick = (host, event) => {
 const ready = (host) => {
     if (host.softbotState[OTHER[host.identity]]) {
         console.log("Ready!", host.identity);
-        if (host.picState[host.identity] == PIC_STATE.WAITING) {
+        if (host.picState[host.identity] == PIC_STATE.WAITING &&
+            (host.picState[ROLES.CONTROLLER] != PIC_STATE.WAITING ||
+             host.identity == ROLES.CONTROLLER)
+        ) {
             host.socketController.send("SPIC" + String.fromCharCode(PIC_STATE.READY));
             if (host.identity == ROLES.CONTROLLER) {
                 console.log("Open arms!");
@@ -34,8 +37,17 @@ const getGuidelines = (picState, identity) => {
     let readyButton = false;
 
     if (picState[identity] == PIC_STATE.WAITING) {
-        guidelines.push("READY FOR THE NEXT IMAGES ?")
-        readyButton = true;
+        if (identity == ROLES.CONTROLLER) {
+            guidelines.push("OPEN ARMS TO PLAY ANOTHER ROUND?")
+            readyButton = true;
+        } else {
+            if (picState[ROLES.CONTROLLER] == PIC_STATE.WAITING) {
+                guidelines.push("Arms are closed")
+            } else {
+                guidelines.push("READY FOR NEXT ROUND?")
+                readyButton = true;
+            }
+        }
     }
     else if (picState[identity] == PIC_STATE.READY && picState[OTHER[identity]] == PIC_STATE.WAITING) {
         guidelines.push("Waiting for your partner to be ready...");
