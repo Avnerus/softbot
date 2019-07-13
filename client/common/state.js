@@ -63,8 +63,8 @@ const reducer = (state = {
     controllerTitle: "",
     cameraStream: null,
     arms: {
-        0: 0,
-        1: 0
+        1: 0,
+        2: 0
     }
 }, action) => {
   switch (action.type) {

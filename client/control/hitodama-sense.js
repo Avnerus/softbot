@@ -21,8 +21,8 @@ export default {
                 background-color: rgba(15, 182, 206, 0.14);
             }
         </style>
-        <div class="${arms[0] ? 'pressed' : 'normal'}" id="right-arm"></div>
-        <div class="${arms[1] ? 'pressed' : 'normal'}" id="left-arm"></div>
+        <div class="${arms[1] ? 'pressed' : 'normal'}" id="right-arm"></div>
+        <div class="${arms[2] ? 'pressed' : 'normal'}" id="left-arm"></div>
      `
    }
 }
