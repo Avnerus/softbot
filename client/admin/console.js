@@ -89,6 +89,19 @@ export default class Console {
 
     }
 
+    dummyPressures() {
+        this.pressures = {
+            "LeftNeck": 96,
+            "RightNeck": 95,
+            "DownNeck": 110,
+            "Eyes" : 90,
+            "Cheeks": 89,
+            "Arms": 120,
+            "Mouth": 87
+        }
+        this.renderPressures();
+    }
+
     renderPressures() {
         let list = $("#pressure-list");
         list.html("");

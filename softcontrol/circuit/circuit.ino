@@ -47,7 +47,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             &pump,
             A18,
             90,
-            120,
+            117,
             1.0 
             //   0.29
     ),
@@ -57,7 +57,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             &pump,
             A17,
             85,
-            102,
+            103,
             1.0,
             1000
              //   0.29
@@ -69,7 +69,7 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             A16,
             120, 
             175,
-            0.315,
+            0.318,
             5000
     ),
     new Chamber("Mouth",
@@ -77,13 +77,13 @@ Chamber* chambers[NUM_OF_CHAMBERS] = {
             new Valve(45,43,3,25), // CHAMBER H-2
             &pump,
             A14,
-            85, 
-            110,
+            90, 
+            115,
             1.0
     )
 };
-Arm rightArmSensor = Arm(2, 53, 20, -8);
-Arm leftArmSensor =  Arm(1, 51, 40, -8);
+Arm rightArmSensor = Arm(1, 53, 20, -8);
+Arm leftArmSensor =  Arm(2, 51, 40, -8);
 
 Processor* processor = new Processor(chambers, &pump);
 
