@@ -39,21 +39,21 @@ export default class Voice {
     speakExpression() {
         Hitodama.inflateTo(
             this.socketController,
-            CHAMBERS.MOUTH,
+            CHAMBERS.CHEEKS,
             0.8,
             800
         )
         .then(() => {
             return Hitodama.deflate(
                 this.socketController,
-                CHAMBERS.MOUTH,
+                CHAMBERS.CHEEKS,
                 800
             )
         })
         .then(() => {
             return Hitodama.inflateTo(
                 this.socketController,
-                CHAMBERS.MOUTH,
+                CHAMBERS.CHEEKS,
                 0.8,
                 800
             )
@@ -61,7 +61,7 @@ export default class Voice {
         .then(() => {
             return Hitodama.deflate(
                 this.socketController,
-                CHAMBERS.MOUTH,
+                CHAMBERS.CHEEKS,
             )
         });
     }

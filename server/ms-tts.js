@@ -37,7 +37,7 @@ export async function getSpeech(text, target = 'en') {
 
     let token = await getAccessToken(process.env['MS_KEY']);
 
-    //console.log("Token: ", token);
+    console.log("Token: ", token);
     console.log("Speaking", TARGET_VOICES[target]);
 
     let xmlBody = xmlbuilder.create('speak')

@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser'
+import basicAuth from 'express-basic-auth'
 import _ from 'lodash';
 import fs from 'fs';
 import {Server} from 'http'
@@ -26,6 +27,7 @@ const options = {
     key: fs.readFileSync('./server/ssl/server.key'),
     cert: fs.readFileSync('./server/ssl/server.crt')
 };
+
 const app = express();
 //const server = require('https').Server(options, app);
 const server = Server(app);
@@ -34,7 +36,6 @@ const server = Server(app);
 const signaling = new Signaling(io);
 signaling.init(); */
 
-app.use(express.static('public'));
 
 const compiler = webpack(webpackConfig);
 app.use(
@@ -216,6 +217,12 @@ app.get('/api/random-image', async (req, res) => {
         res.send("Error " + e);
     }
 });
+
+app.use(basicAuth({
+            challenge: true,
+	    users: { [process.env.HITODAMA_USER]: process.env.HITODAMA_PASSWORD }
+}))
+app.use(express.static('public'));
 
 server.listen(3080, () => {
     console.log('listening on port 3080!');

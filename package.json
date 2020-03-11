@@ -62,6 +62,7 @@
     "body-parser": "^1.18.3",
     "emoji-replace": "^1.0.1",
     "express": "^4.14.0",
+    "express-basic-auth": "^1.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "formidable": "^1.2.1",
     "fullscreen": "^1.1.0",

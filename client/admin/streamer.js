@@ -57,6 +57,7 @@ export default class Streamer {
                         this.stream = stream;
                         events.emit("transcript", {from: "System", text: "Vision acquired!"});
                         Janus.attachMediaStream($('#waitingvideo').get(0), stream);
+                        $('#waitingvideo').get(0).play();
 
                         if (this.recorder) {
                             this.recorder.initWithStream(this.streaming, stream);
