@@ -32,8 +32,8 @@ export default class Main {
         //this.socketController = new SocketController("ws://10.0.1.41:9540/ws");
         //this.socketController.init();
         
-        //this.socketController = new SocketController("ws://127.0.0.1:3012");
-        this.socketController = new SocketController("wss://incarnation.hitodama.online");
+        this.socketController = new SocketController("ws://127.0.0.1:3012");
+        //this.socketController = new SocketController("wss://incarnation.hitodama.online");
         events.on('socket_connected', () => {
             console.log("Socket connected registering control");
             events.emit("transcript", {from: "System", text: "Socket connected"});
@@ -77,6 +77,7 @@ export default class Main {
 
         this.console = new Console(this.socketController, this.expression, $('#console'));
         this.console.init();
+        this.console.dummyPressures();
 
         this.keyboard = new Keyboard();
 
