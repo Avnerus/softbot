@@ -68,7 +68,7 @@
     "fullscreen": "^1.1.0",
     "high-select": "github:Avnerus/high-select#wrap-var",
     "hybrids": "^4.0.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "moment": "^2.18.1",
     "nipplejs": "^0.7.1",
     "node-fetch": "^2.3.0",
