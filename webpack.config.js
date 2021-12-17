@@ -30,7 +30,7 @@ module.exports = {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/env', "@babel/preset-react"],
+              presets: ['@babel/env'],
               plugins: ["@babel/plugin-transform-runtime"]
             }
           }
