@@ -34,7 +34,7 @@ body {
 
 #nipple_0_0 {
     left: 50%;
-    top: 50%;
+    top: 40%;
 }
 
 .recognize-button {
@@ -121,7 +121,7 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    bottom: -60%;
+    bottom: -50%;
 }
 
 .record-button {

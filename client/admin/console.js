@@ -77,11 +77,12 @@ export default class Console {
         });
 
         this.socketController.subscribeToPrefix('S', (msg) => {
-            //console.log("Control sensing", msg);
-            let chars = new Uint8Array(msg, 2,10);
+            console.log("Control sensing", msg);
+            let chars = new Uint8Array(msg, 2);
             let end = chars.findIndex(n => n == 0);
+            console.log("End", end);
             let chamber = new TextDecoder("utf-8").decode(chars.slice(0,end));
-            let pressure = new Uint16Array(msg,12,1)[0];
+            let pressure = new Uint16Array(msg,end + 1,1)[0];
             this.pressures[chamber] = pressure;
             this.renderPressures();
         })
