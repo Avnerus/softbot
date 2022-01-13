@@ -77,13 +77,11 @@ export default class Console {
         });
 
         this.socketController.subscribeToPrefix('S', (msg) => {
-            console.log("Control sensing", msg);
             let chars = new Uint8Array(msg, 2);
             let end = chars.findIndex(n => n == 0);
-            console.log("End", end);
             let chamber = new TextDecoder("utf-8").decode(chars.slice(0,end));
-            let pressure = new Uint16Array(msg,end + 1,1)[0];
-            this.pressures[chamber] = pressure;
+            let pressure = new DataView(msg,end + 2);
+            this.pressures[chamber] = pressure.getInt16();
             this.renderPressures();
         })
 
@@ -119,7 +117,8 @@ export default class Console {
     onSlide(ui) {
         let container = $(ui.handle).parent().parent();
         let command = container.data("command");
-        this.socketController.sendSerialCommand(command, ui.value);
+       
+        this.socketController.sendValueCommand("M" + command, 0, ui.value);
 
         // Save the pose
         let selectedPose = this.consoleContainer.find("select option:selected").val();

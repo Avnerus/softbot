@@ -94,12 +94,13 @@ export default class SocketController {
         this.send(buffer);
     }
     sendValueCommand(command, ...values) {
-        console.log("Sending Value command ", command);
-        let buffer = new ArrayBuffer(1 + values.length);
+        let buffer = new ArrayBuffer(command.length + values.length);
         let z = new Uint8Array(buffer);
-        z[0] = command.charCodeAt(0); 
+        for (let i = 0; i < command.length; i++) {
+            z[i] = command.charCodeAt(i); 
+        }
         for (let i = 0; i < values.length; i++) {
-            z[i + 1] = values[i];
+            z[i + command.length] = values[i];
         }
         this.send(buffer);
     }
