@@ -70,10 +70,11 @@ export default class Console {
         });
 
         this.consoleContainer.find(".chamber-button").click((e) => {
-            const chamberIndex = parseInt(this.consoleContainer.find('select[name="chambers"]').val());
-            const chamberState = parseInt($(e.currentTarget).attr("data-state-id"))
+            const chamberIndex = this.consoleContainer.find('select[name="chambers"]').val();
+            const chamberState = $(e.currentTarget).attr("data-state-id");
             console.log("Change chamber " + chamberIndex + " to state " + chamberState + "!!");
-            this.socketController.sendSerialCommand('H',chamberIndex, chamberState);
+            //this.socketController.sendSerialCommand('H',chamberIndex, chamberState);
+            this.socketController.sendValueCommand("A" + chamberIndex, 0, chamberState.charCodeAt(0), 255);
         });
 
         this.socketController.subscribeToPrefix('S', (msg) => {
@@ -118,7 +119,7 @@ export default class Console {
         let container = $(ui.handle).parent().parent();
         let command = container.data("command");
        
-        this.socketController.sendValueCommand("M" + command, 0, ui.value);
+        this.socketController.sendValueCommand("A" + command, 0, 'C', ui.value);
 
         // Save the pose
         let selectedPose = this.consoleContainer.find("select option:selected").val();
