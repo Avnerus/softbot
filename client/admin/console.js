@@ -119,7 +119,7 @@ export default class Console {
         let container = $(ui.handle).parent().parent();
         let command = container.data("command");
        
-        this.socketController.sendValueCommand("A" + command, 0, 'C', ui.value);
+        this.socketController.sendValueCommand("A" + command, 0, "C".charCodeAt(0), ui.value);
 
         // Save the pose
         let selectedPose = this.consoleContainer.find("select option:selected").val();
