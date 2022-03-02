@@ -79,7 +79,7 @@
     "tone": "^13.8.34",
     "typed.js": "^2.0.12",
     "unsplash-js": "^5.0.0",
-    "url-parse": "^1.5.3",
+    "url-parse": "^1.5.9",
     "wav": "^1.0.2",
     "webrtc-adapter": "^7.7.1",
     "x-tag": "^2.0.3-beta",
